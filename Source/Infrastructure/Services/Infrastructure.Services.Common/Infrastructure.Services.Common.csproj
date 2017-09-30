@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Database\Infrastructure.Database.Repository\Infrastructure.Database.Repository.csproj" />
+    <ProjectReference Include="..\..\Data\Infrastructure.Data.Common\Infrastructure.Data.Common.csproj" />
+    <ProjectReference Include="..\Infrastructure.Services.Multitenancy\Infrastructure.Services.Multitenancy.csproj" />
+  </ItemGroup>
+
+</Project>

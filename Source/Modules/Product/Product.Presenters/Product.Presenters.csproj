@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Infrastructure\Services\Infrastructure.Services.ContentServer\Infrastructure.Services.ContentServer.csproj" />
+      <ProjectReference Include="..\..\Administration\Administration.Bll\Administration.Bll.csproj" />
+      <ProjectReference Include="..\..\Administration\Administration.Presenters\Administration.Presenters.csproj" />
+      <ProjectReference Include="..\..\Manufacturer\Manufacturer.Bll\Manufacturer.Bll.csproj" />
+      <ProjectReference Include="..\..\Store\Store.Bll\Store.Bll.csproj" />
+      <ProjectReference Include="..\..\Supplier\Supplier.Bll\Supplier.Bll.csproj" />
+      <ProjectReference Include="..\Product.Bll\Product.Bll.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,35 @@
+@if (TempData["HasErrors"] != null && (bool)TempData["HasErrors"])
+{
+    <div class="validation-summary-errors">
+        <ul>
+            @foreach (var message in (string[])TempData["Errors"])
+            {
+                <li>@message</li>
+            }
+        </ul>
+    </div>
+}
+
+@if (TempData["HasWarnings"] != null && (bool)TempData["HasWarnings"])
+{
+    <div class="validation-summary-warnings">
+        <ul>
+            @foreach (var message in (string[])TempData["Warnings"])
+            {
+                <li>@message</li>
+            }
+        </ul>
+    </div>
+}
+
+@if (TempData["HasSuccesses"] != null && (bool)TempData["HasSuccesses"])
+{
+    <div class="validation-summary-successes">
+        <ul>
+            @foreach (var message in (string[])TempData["Successes"])
+            {
+                <li>@message</li>
+            }
+        </ul>
+    </div>
+}

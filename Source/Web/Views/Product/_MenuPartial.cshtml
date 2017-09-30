@@ -1,0 +1,30 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@*@using Sku.Services.Cache;*@
+
+@inject IViewLocalizer Localizer
+@*@inject ICacheService cacheService*@
+
+@*@{
+    var modulePrivileges = cacheService.Get<Sku.Data.Models.ModulePrivilege>("module_privilege");
+}*@
+
+<section id="module-menu">
+    <strong>@Localizer["Actions"]</strong>
+    <ul>
+        <li><a asp-controller="product" asp-action="index">@Localizer["List"]</a></li>
+        @*@if (modulePrivileges.ProductWrite)
+        {*@
+            <li><a asp-controller="product" asp-action="edit" asp-route-id="">@Localizer["Add product"]</a></li>
+        @*}
+
+        @if (modulePrivileges.CategoryRead)
+        {*@
+            <li><a asp-controller="product" asp-action="categories">@Localizer["List categories"]</a></li>
+        @*}
+
+        @if (modulePrivileges.CategoryWrite)
+        {*@
+            <li><a asp-controller="product" asp-action="editcategory">@Localizer["Add category"]</a></li>
+        @*}*@
+    </ul>
+</section>

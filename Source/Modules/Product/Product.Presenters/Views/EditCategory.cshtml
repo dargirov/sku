@@ -1,0 +1,33 @@
+@model Product.Presenters.Dtos.EditCategoryViewModel
+
+@{
+    ViewData["Title"] = "Edit category";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Product", subaction = "Categories", id = Model.Id })*@
+
+    @Html.Partial("_StatusPartial")
+
+    <div class="content-box">
+        <form method="post" asp-controller="Product" asp-action="EditCategory" class="main-form">
+            <div>
+                <label>@Localizer["Name"]</label>
+                <input asp-for="Name" class="form-control">
+            </div>
+            <input asp-for="Id">
+            <input type="submit" class="hidden">
+            <input type="reset" class="hidden">
+        </form>
+    </div>
+
+</section>
+
+@section footer {
+    @await Component.InvokeAsync("FooterActions", new { controller = "Product", action = "Categories", deleteAction = "DeleteCategory", id = Model.Id })
+}

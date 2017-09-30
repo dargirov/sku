@@ -1,0 +1,40 @@
+@model Product.Presenters.Dtos.CategoriesViewModel
+
+@{
+    ViewData["Title"] = "Categories list";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Product", subaction = "Categories" })*@
+
+    <div id="search-result">
+        <div>
+            <h2>@Localizer["Categories"]</h2>
+        </div>
+        <table id="search-result-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Created on"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in Model.Categories)
+                {
+                    <tr>
+                        <td><input type="checkbox" data-store-id="@category.Id"></td>
+                        <td><a asp-controller="product" asp-action="editcategory" asp-route-id="@category.Id">@category.Name</a></td>
+                        <td>@category.CreatedOn.ToString("dd.MM.yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</section>

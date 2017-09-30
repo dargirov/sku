@@ -1,0 +1,22 @@
+{
+  "name": "tooltipster",
+  "main": [
+    "dist/js/tooltipster.bundle.js",
+    "dist/css/tooltipster.bundle.css"
+  ],
+  "dependencies": {
+    "jquery": ">=1.10"
+  },
+  "homepage": "https://github.com/iamceege/tooltipster",
+  "version": "4.1.2",
+  "_release": "4.1.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "4.1.2",
+    "commit": "41b55346d8684c683f41d5f77d742f9287ba8901"
+  },
+  "_source": "https://github.com/iamceege/tooltipster.git",
+  "_target": "^4.1.2",
+  "_originalSource": "tooltipster",
+  "_direct": true
+}

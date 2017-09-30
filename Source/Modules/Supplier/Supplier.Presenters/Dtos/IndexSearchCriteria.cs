@@ -1,0 +1,17 @@
+﻿namespace Supplier.Presenters.Dtos
+{
+    public class IndexSearchCriteria
+    {
+        public string Name { get; set; }
+
+        public string Mol { get; set; }
+
+        public string Phone { get; set; }
+
+        public string Address { get; set; }
+
+        public string Email { get; set; }
+
+        public string Url { get; set; }
+    }
+}

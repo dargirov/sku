@@ -1,0 +1,92 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.0</TargetFramework>
+        <UserSecretsId>3d1415c5-921b-42e8-9477-a2810864ea9f</UserSecretsId>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Infrastructure\Database\Infrastructure.Database.DbConfig\Infrastructure.Database.DbConfig.csproj" />
+        <ProjectReference Include="..\Infrastructure\Database\Infrastructure.Database.Repository\Infrastructure.Database.Repository.csproj" />
+        <ProjectReference Include="..\Infrastructure\Services\Infrastructure.Services.Common\Infrastructure.Services.Common.csproj" />
+        <ProjectReference Include="..\Infrastructure\Services\Infrastructure.Services.ContentServer\Infrastructure.Services.ContentServer.csproj" />
+        <ProjectReference Include="..\Modules\ModulesCommon\ModulesCommon.csproj" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <ViewsWebDir>Views</ViewsWebDir>
+        <RescourcesWebDir>Resources</RescourcesWebDir>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- ModulesCommon -->
+        <CommonSharedResourcesSource Include="..\Modules\ModulesCommon\Resources\*.resx" />
+        <CommonImportViewsSource Include="..\Modules\ModulesCommon\Views\*.cshtml" />
+        <CommonShareViewsSource Include="..\Modules\ModulesCommon\Views\Shared\*.cshtml" />
+        <!-- Administration -->
+        <AdministrationViewsSource Include="..\Modules\Administration\Administration.Presenters\Views\*.cshtml" />
+        <AdministrationViewComponentFooterActionsSource Include="..\Modules\Administration\Administration.Presenters\Views\Components\FooterActions\*.cshtml" />
+        <!-- Store -->
+        <StoreViewsSource Include="..\Modules\Store\Store.Presenters\Views\*.cshtml" />
+        <StoreResourcesSource Include="..\Modules\Store\Store.Presenters\Resources\*.resx" />
+        <!-- Supplier -->
+        <SupplierViewsSource Include="..\Modules\Supplier\Supplier.Presenters\Views\*.cshtml" />
+        <SupplierResourcesSource Include="..\Modules\Supplier\Supplier.Presenters\Resources\*.resx" />
+        <!-- Manufacturer -->
+        <ManufacturerViewsSource Include="..\Modules\Manufacturer\Manufacturer.Presenters\Views\*.cshtml" />
+        <ManufacturerResourcesSource Include="..\Modules\Manufacturer\Manufacturer.Presenters\Resources\*.resx" />
+        <!-- Client -->
+        <ClientViewsSource Include="..\Modules\Client\Client.Presenters\Views\*.cshtml" />
+        <ClientResourcesSource Include="..\Modules\Client\Client.Presenters\Resources\*.resx" />
+        <!-- Product -->
+        <ProductViewsSource Include="..\Modules\Product\Product.Presenters\Views\*.cshtml" />
+        <ProductResourcesSource Include="..\Modules\Product\Product.Presenters\Resources\*.resx" />
+        
+        <Compile Remove="Views\**" />
+        <Content Remove="Views\**" />
+        <EmbeddedResource Remove="Views\**" />
+        <None Remove="Views\**" />
+        <Compile Include="$(Views)">
+            <Visible>false</Visible>
+        </Compile>
+    </ItemGroup>
+    
+    <!-- Main targets start -->
+    <Target Name="CopyToWeb" DependsOnTargets="DeleteFromWeb;CopyViewsToWeb;CopyResourcesToWeb" BeforeTargets="BeforeBuild" />
+    <Target Name="DeleteFromWeb" DependsOnTargets="DeleteViewsFromWeb;DeleteResourcesFromWeb" BeforeTargets="BeforeClean" />
+    <!-- Main targets end -->
+    
+    <Target Name="DeleteViewsFromWeb">
+        <RemoveDir Directories="$(ViewsWebDir)" />
+    </Target>
+
+    <Target Name="DeleteResourcesFromWeb">
+        <RemoveDir Directories="$(RescourcesWebDir)" />
+    </Target>
+
+    <Target Name="CopyViewsToWeb">
+        <Copy SourceFiles="@(CommonImportViewsSource)" DestinationFolder="$(ViewsWebDir)" />
+        <Copy SourceFiles="@(CommonShareViewsSource)" DestinationFolder="$(ViewsWebDir)\Shared" />
+        <Copy SourceFiles="@(AdministrationViewsSource)" DestinationFolder="$(ViewsWebDir)\Administration" />
+        <Copy SourceFiles="@(AdministrationViewComponentFooterActionsSource)" DestinationFolder="$(ViewsWebDir)\Shared\Components\FooterActions" />
+        <Copy SourceFiles="@(StoreViewsSource)" DestinationFolder="$(ViewsWebDir)\Store" />
+        <Copy SourceFiles="@(SupplierViewsSource)" DestinationFolder="$(ViewsWebDir)\Supplier" />
+        <Copy SourceFiles="@(ManufacturerViewsSource)" DestinationFolder="$(ViewsWebDir)\Manufacturer" />
+        <Copy SourceFiles="@(ClientViewsSource)" DestinationFolder="$(ViewsWebDir)\Client" />
+        <Copy SourceFiles="@(ProductViewsSource)" DestinationFolder="$(ViewsWebDir)\Product" />
+    </Target>
+
+    <Target Name="CopyResourcesToWeb">
+        <Copy SourceFiles="@(CommonSharedResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Shared" />
+        <Copy SourceFiles="@(StoreResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Store" />
+        <Copy SourceFiles="@(SupplierResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Supplier" />
+        <Copy SourceFiles="@(ManufacturerResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Manufacturer" />
+        <Copy SourceFiles="@(ClientResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Client" />
+        <Copy SourceFiles="@(ProductResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Product" />
+    </Target>
+
+</Project>

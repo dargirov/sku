@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ImageSharp" Version="1.0.0-alpha3-00005" />
+        <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+        <PackageReference Include="WindowsAzure.Storage" Version="8.1.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Modules\Administration\Administration.Bll\Administration.Bll.csproj" />
+        <ProjectReference Include="..\..\..\Modules\Administration\Administration.Entities\Administration.Entities.csproj" />
+        <ProjectReference Include="..\..\..\Modules\Product\Product.Entities\Product.Entities.csproj" />
+        <ProjectReference Include="..\Infrastructure.Services.Common\Infrastructure.Services.Common.csproj" />
+    </ItemGroup>
+
+</Project>

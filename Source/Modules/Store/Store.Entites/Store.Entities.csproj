@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>Store.Entities</AssemblyName>
+    <RootNamespace>Store.Entities</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Infrastructure\Data\Infrastructure.Data.Common\Infrastructure.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Administration\Administration.Entities\Administration.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

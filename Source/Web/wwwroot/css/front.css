@@ -1,0 +1,171 @@
+﻿html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+	font-style: normal;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    font-family: Arial;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    color: white;
+    background-image: url(../images/bg.jpg);
+    background-position-y: bottom;
+    background-attachment: fixed;
+    color: black;
+}
+
+body > main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#container {
+    width: 300px;
+    min-height: 400px;
+    padding: 30px;
+    box-sizing: border-box;
+    background-color: #fdfdfd;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: 0px 0px 1px 3px rgba(115,115,115,1);
+    -moz-box-shadow: 0px 0px 1px 3px rgba(115,115,115,1);
+    box-shadow: 0px 0px 1px 3px rgba(115,115,115,1);
+}
+
+#spacer {
+    width: 500px;
+}
+
+h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+input[type=submit] {
+    display: none;
+}
+
+input[type=text], input[type=password], input[type=email] {
+    width: 87%;
+    height: 28px;
+    padding-left: 13%;
+    font-size: 14px;
+    line-height: 1.42857;
+    color: #555555;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px inset;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #cccccc;
+    resize: none;
+    position: relative;
+    outline: none;
+}
+
+#login, #register {
+    display: inline-block;
+    background-color: #08da94;
+    font-size: 14px;
+    color: white;
+    border: 0;
+    margin: 10px 0;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+#register {
+    background-color: #e4aa10;
+}
+
+#forgotten-password {
+    text-decoration: none;
+    font-size: 12px;
+    color: #333;
+    margin-top: 30px;
+}
+
+#container form > div {
+    position: relative;
+}
+
+form .fa {
+    position: absolute;
+    color: black;
+    top: 35px;
+    left: 9px;
+    z-index: 1;
+    font-size: 18px;
+}
+
+form strong {
+    font-size: 13px;
+    margin-top: 20px;
+    display: block;
+}
+
+label {
+    margin-top: 10px;
+    display: inline-block;
+    font-size: 14px;
+    color: #696969;
+}
+
+.field-validation-error {
+    color: #bbb122;
+    font-size: 12px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.validation-error {
+    background-color: #ebefa1;
+    padding: 10px;
+}
+
+.validation-error ul {
+    list-style-type: none;
+    color: #bbb122;
+    font-size: 12px;
+}
+
+input[data-val-required] {
+    background-color: #fffdd2;
+}
+
+.notifyjs-error-base {
+    font-size: 12px;
+    color: #b94a48;
+    font-weight: bold;
+    background-color: #f2dede;
+    border: 1px solid #fbeed5;
+    padding: 10px;
+}
+
+@media all and (max-width: 1020px) {
+    #spacer {
+        display: none;
+    }
+}
