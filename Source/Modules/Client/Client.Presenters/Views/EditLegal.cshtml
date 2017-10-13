@@ -3,7 +3,16 @@
     ViewData["Title"] = "Edit legal client";
 }
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Administration.Bll
+
 @inject IViewLocalizer Localizer
+@inject IAuthorizationServices AuthorizationServices
+
+@{
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+    var isReadOnly = !modulePrivileges.ClientWrite;
+    var readOnlyClass = modulePrivileges.ClientWrite ? string.Empty : "readonly";
+}
 
 @Html.Partial("_MenuPartial")
 
@@ -26,39 +35,43 @@
             <div class="form-split">
                 <div class="padding-right">
                     <label asp-for="Eik">@Localizer["Eik"]</label>
-                    <input asp-for="Eik" class="form-control">
+                    <input asp-for="Eik" class="form-control @readOnlyClass" readonly="@isReadOnly">
 
                     <label asp-for="HasDds">@Localizer["Is DDS registered"]</label>
-                    <input asp-for="HasDds">
+                    <input asp-for="HasDds" readonly="@isReadOnly">
 
                     <label asp-for="FirmName">@Localizer["Firm Name"]</label>
-                    <input asp-for="FirmName" class="form-control">
+                    <input asp-for="FirmName" class="form-control @readOnlyClass" readonly="@isReadOnly">
 
                     <label asp-for="Mol">@Localizer["Mol"]</label>
-                    <input asp-for="Mol" class="form-control">
+                    <input asp-for="Mol" class="form-control @readOnlyClass" readonly="@isReadOnly">
                 </div>
                 <div>
                     <label asp-for="Address">@Localizer["Address"]</label>
-                    <input asp-for="Address" class="form-control">
+                    <input asp-for="Address" class="form-control @readOnlyClass" readonly="@isReadOnly">
 
                     <label asp-for="CityId">@Localizer["City"]</label>
-                    <select asp-for="CityId" asp-items="Model.Cities" class="form-control"></select>
+                    <select asp-for="CityId" asp-items="Model.Cities" class="form-control @readOnlyClass"></select>
 
                     <label asp-for="CountryId">@Localizer["Country"]</label>
-                    <select asp-for="CountryId" asp-items="Model.Countries" class="form-control"></select>
+                    <select asp-for="CountryId" asp-items="Model.Countries" class="form-control @readOnlyClass"></select>
 
                     <label asp-for="Phone">@Localizer["Phone"]</label>
-                    <input asp-for="Phone" class="form-control">
+                    <input asp-for="Phone" class="form-control @readOnlyClass" readonly="@isReadOnly">
 
                     <label asp-for="Email">@Localizer["Email"]</label>
-                    <input asp-for="Email" class="form-control">
+                    <input asp-for="Email" class="form-control @readOnlyClass" readonly="@isReadOnly">
 
                     <label asp-for="Comment">@Localizer["Comment"]</label>
-                    <input asp-for="Comment" class="form-control">
+                    <input asp-for="Comment" class="form-control @readOnlyClass" readonly="@isReadOnly">
                 </div>
             </div>
             <input asp-for="Id">
-            <input type="submit" class="hidden">
+            @if (!isReadOnly)
+            {
+                <input type="submit" class="hidden">
+            }
+
             <input type="reset" class="hidden">
         </form>
     </div>
@@ -66,5 +79,5 @@
 </section>
 
 @section footer {
-    @await Component.InvokeAsync("FooterActions", new { controller = "Client", id = Model.Id, routeParam = (int)Client.Entities.ClientType.Legal })
+    @await Component.InvokeAsync("FooterActions", new { controller = "Client", id = Model.Id, routeParam = (int)Client.Entities.ClientTypeEnum.Legal, showEdit = !isReadOnly, showDelete = modulePrivileges.ClientDelete })
 }

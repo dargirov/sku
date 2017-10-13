@@ -14,7 +14,7 @@ namespace Administration.Presenters.ViewComponents
             this.localizer = localizer;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string controller, string action = "index", string deleteAction = "delete", int id = 0, int routeParam = 0, bool showReset = true, bool showDelete = true)
+        public async Task<IViewComponentResult> InvokeAsync(string controller, string action = "index", string deleteAction = "delete", int id = 0, int routeParam = 0, bool showReset = true, bool showEdit = true, bool showDelete = true)
         {
             var viewModel = new FooterActionsViewModel()
             {
@@ -27,6 +27,7 @@ namespace Administration.Presenters.ViewComponents
                 LocalizedBack = localizer["Back"],
                 LocalizedDelete = localizer["Delete"],
                 ShowReset = showReset,
+                ShowEdit = showEdit,
                 ShowDelete = showDelete && id > 0,
                 LocalizedEdit = id > 0 ? localizer["Edit"] : localizer["Create"]
             };

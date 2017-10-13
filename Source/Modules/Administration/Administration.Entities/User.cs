@@ -50,9 +50,7 @@ namespace Administration.Entities
         [Required]
         public bool IsAdmin { get; set; }
 
-        //[Required]
-        //public virtual ModulePrivilege ModulePrivilege { get; set; }
-
-        //public virtual ICollection<StorePrivilege> StorePrivileges { get; set; }
+        [Required]
+        public virtual ModulePrivilege ModulePrivilege { get; set; }
     }
 }

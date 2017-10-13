@@ -3,11 +3,13 @@ using Administration.Presenters;
 using Infrastructure.Services.Common;
 using Manufacturer.Bll;
 using Manufacturer.Presenters.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Manufacturer.Presenters
 {
+    [Authorize(Policy = "LoggedIn")]
     public class ManufacturerController : BaseController
     {
         private readonly IManufacturerServices _manufacturerServices;

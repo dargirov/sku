@@ -5,7 +5,16 @@
 }
 
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Administration.Bll
+
 @inject IViewLocalizer Localizer
+@inject IAuthorizationServices AuthorizationServices
+
+@{
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+    var isReadOnly = !modulePrivileges.StoreWrite;
+    var readOnlyClass = modulePrivileges.StoreWrite ? string.Empty : "readonly";
+}
 
 @Html.Partial("_MenuPartial")
 
@@ -21,27 +30,31 @@
             <div class="form-split">
                 <div class="padding-right">
                     <label asp-for="Name">@Localizer["Name"]</label>
-                    <input asp-for="Name" class="form-control">
+                    <input asp-for="Name" class="form-control @readOnlyClass" readonly="@isReadOnly">
                 </div>
                 <div>
                     <label asp-for="CityId">@Localizer["City"]</label>
-                    <select asp-for="CityId" asp-items="Model.Cities" class="form-control"></select>
+                    <select asp-for="CityId" asp-items="Model.Cities" class="form-control @readOnlyClass"></select>
 
                     <label asp-for="Address">@Localizer["Address"]</label>
-                    <input asp-for="Address" class="form-control">
+                    <input asp-for="Address" class="form-control @readOnlyClass" readonly="@isReadOnly">
 
                     <label asp-for="Bank">@Localizer["Bank"]</label>
-                    <input asp-for="Bank" class="form-control">
+                    <input asp-for="Bank" class="form-control @readOnlyClass" readonly="@isReadOnly">
 
                     <label asp-for="Iban">@Localizer["IBAN"]</label>
-                    <input asp-for="Iban" class="form-control">
+                    <input asp-for="Iban" class="form-control @readOnlyClass" readonly="@isReadOnly">
 
                     <label>@Localizer["Description"]</label>
-                    <input asp-for="Description" class="form-control">
+                    <input asp-for="Description" class="form-control @readOnlyClass" readonly="@isReadOnly">
                 </div>
             </div>
             <input asp-for="Id">
-            <input type="submit" class="hidden">
+            @if (!isReadOnly)
+            {
+                <input type="submit" class="hidden">
+            }
+
             <input type="reset" class="hidden">
         </form>
     </div>
@@ -49,5 +62,5 @@
 </section>
 
 @section footer {
-    @await Component.InvokeAsync("FooterActions", new { controller = "Store", id = Model.Id })
+    @await Component.InvokeAsync("FooterActions", new { controller = "Store", id = Model.Id, showEdit = !isReadOnly, showDelete = modulePrivileges.StoreDelete })
 }

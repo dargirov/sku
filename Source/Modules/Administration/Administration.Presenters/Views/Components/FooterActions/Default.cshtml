@@ -2,7 +2,11 @@
 
 <div>
     <ul>
-        <li><a href="" class="btn-submit"><i class="fa fa-floppy-o" aria-hidden="true"></i><span>@Model.LocalizedEdit</span></a></li>
+        @if (Model.ShowEdit)
+        {
+            <li><a href="" class="btn-submit"><i class="fa fa-floppy-o" aria-hidden="true"></i><span>@Model.LocalizedEdit</span></a></li>
+        }
+
         @if (Model.ShowReset)
         {
             <li><a href="" class="btn-reset"><i class="fa fa-eraser" aria-hidden="true"></i><span>@Model.LocalizedReset</span></a></li>

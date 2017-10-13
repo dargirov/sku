@@ -4,11 +4,13 @@ using Client.Bll;
 using Client.Entities;
 using Client.Presenters.Dtos;
 using Infrastructure.Services.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Client.Presenters
 {
+    [Authorize(Policy = "LoggedIn")]
     public class ClientController : BaseController
     {
         private readonly IClientServices _clientServices;
@@ -66,7 +68,7 @@ namespace Client.Presenters
                 });
             }
 
-            var client = await _clientServices.GetByIdAsync(id, ClientType.Legal);
+            var client = await _clientServices.GetByIdAsync(id, ClientTypeEnum.Legal);
 
             if (client == null)
             {
@@ -95,7 +97,7 @@ namespace Client.Presenters
                 });
             }
 
-            var client = await _clientServices.GetByIdAsync(id, ClientType.Natural);
+            var client = await _clientServices.GetByIdAsync(id, ClientTypeEnum.Natural);
 
             if (client == null)
             {
@@ -113,7 +115,7 @@ namespace Client.Presenters
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditLegal(EditLegalRequestModel model)
         {
-            var client = await _clientServices.GetByIdAsync(model.Id, ClientType.Legal);
+            var client = await _clientServices.GetByIdAsync(model.Id, ClientTypeEnum.Legal);
 
             if (model.Id > 0 && client == null)
             {
@@ -138,7 +140,7 @@ namespace Client.Presenters
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditNatural(EditNaturalRequestModel model)
         {
-            var client = await _clientServices.GetByIdAsync(model.Id, ClientType.Natural);
+            var client = await _clientServices.GetByIdAsync(model.Id, ClientTypeEnum.Natural);
 
             if (model.Id > 0 && client == null)
             {

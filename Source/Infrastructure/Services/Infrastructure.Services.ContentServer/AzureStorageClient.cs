@@ -132,7 +132,7 @@ namespace Infrastructure.Services.ContentServer
             return new Administration.Entities.File()
             {
                 Guid = fileInfo.guid,
-                StorageType = StorageType.Azure,
+                StorageType = StorageTypeEnum.Azure,
                 User = User,
                 Path = $"{ContainerName}{Path.DirectorySeparatorChar}{fileInfo.name}",
                 ContentType = formFile.ContentType,

@@ -14,6 +14,8 @@
         <ProjectReference Include="..\Infrastructure\Database\Infrastructure.Database.Repository\Infrastructure.Database.Repository.csproj" />
         <ProjectReference Include="..\Infrastructure\Services\Infrastructure.Services.Common\Infrastructure.Services.Common.csproj" />
         <ProjectReference Include="..\Infrastructure\Services\Infrastructure.Services.ContentServer\Infrastructure.Services.ContentServer.csproj" />
+        <ProjectReference Include="..\Modules\Administration\Administration.Bll\Administration.Bll.csproj" />
+        <ProjectReference Include="..\Modules\Administration\Administration.Entities\Administration.Entities.csproj" />
         <ProjectReference Include="..\Modules\ModulesCommon\ModulesCommon.csproj" />
     </ItemGroup>
 
@@ -45,10 +47,15 @@
         <!-- Product -->
         <ProductViewsSource Include="..\Modules\Product\Product.Presenters\Views\*.cshtml" />
         <ProductResourcesSource Include="..\Modules\Product\Product.Presenters\Resources\*.resx" />
+        <Compile Remove="Resources\Pages\**" />
         
         <Compile Remove="Views\**" />
+        
+        <Content Remove="Resources\Pages\**" />
         <Content Remove="Views\**" />
+        <EmbeddedResource Remove="Resources\Pages\**" />
         <EmbeddedResource Remove="Views\**" />
+        <None Remove="Resources\Pages\**" />
         <None Remove="Views\**" />
         <Compile Include="$(Views)">
             <Visible>false</Visible>

@@ -131,6 +131,82 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.ToTable("Files");
                 });
 
+            modelBuilder.Entity("Administration.Entities.ModulePrivilege", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("CategoryDelete");
+
+                    b.Property<bool>("CategoryRead");
+
+                    b.Property<bool>("CategoryWrite");
+
+                    b.Property<bool>("ClientDelete");
+
+                    b.Property<bool>("ClientRead");
+
+                    b.Property<bool>("ClientWrite");
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IncomeDelete");
+
+                    b.Property<bool>("IncomeRead");
+
+                    b.Property<bool>("IncomeWrite");
+
+                    b.Property<bool>("InvoiceDelete");
+
+                    b.Property<bool>("InvoiceRead");
+
+                    b.Property<bool>("InvoiceWrite");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("ManufacturerDelete");
+
+                    b.Property<bool>("ManufacturerRead");
+
+                    b.Property<bool>("ManufacturerWrite");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<bool>("ProductDelete");
+
+                    b.Property<bool>("ProductRead");
+
+                    b.Property<bool>("ProductWrite");
+
+                    b.Property<bool>("SaleDelete");
+
+                    b.Property<bool>("SaleRead");
+
+                    b.Property<bool>("SaleWrite");
+
+                    b.Property<bool>("StoreDelete");
+
+                    b.Property<bool>("StoreRead");
+
+                    b.Property<bool>("StoreWrite");
+
+                    b.Property<bool>("SupplierDelete");
+
+                    b.Property<bool>("SupplierRead");
+
+                    b.Property<bool>("SupplierWrite");
+
+                    b.Property<Guid>("TenantId");
+
+                    b.Property<int>("Version");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ModulePrivileges");
+                });
+
             modelBuilder.Entity("Administration.Entities.Organization", b =>
                 {
                     b.Property<int>("Id")
@@ -204,6 +280,8 @@ namespace Infrastructure.Database.DbConfig.Migrations
 
                     b.Property<DateTime?>("ModifiedOn");
 
+                    b.Property<int>("ModulePrivilegeId");
+
                     b.Property<int>("OrganizationId");
 
                     b.Property<string>("Password")
@@ -218,6 +296,8 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.Property<int>("Version");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ModulePrivilegeId");
 
                     b.HasIndex("OrganizationId");
 
@@ -390,7 +470,7 @@ namespace Infrastructure.Database.DbConfig.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
-                    b.Property<int>("SupplierId");
+                    b.Property<int?>("SupplierId");
 
                     b.Property<Guid>("TenantId");
 
@@ -488,8 +568,6 @@ namespace Infrastructure.Database.DbConfig.Migrations
 
                     b.Property<DateTime?>("ModifiedOn");
 
-                    b.Property<int>("ProductVariantId");
-
                     b.Property<int>("Quantity");
 
                     b.Property<int>("QuantityMeasureType");
@@ -498,13 +576,15 @@ namespace Infrastructure.Database.DbConfig.Migrations
 
                     b.Property<Guid>("TenantId");
 
+                    b.Property<int>("VariantId");
+
                     b.Property<int>("Version");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductVariantId");
-
                     b.HasIndex("StoreId");
+
+                    b.HasIndex("VariantId");
 
                     b.ToTable("ProductStocks");
                 });
@@ -590,6 +670,42 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.ToTable("Stores");
                 });
 
+            modelBuilder.Entity("Store.Entities.StorePrivilege", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<bool>("Delete");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<bool>("Read");
+
+                    b.Property<int>("StoreId");
+
+                    b.Property<Guid>("TenantId");
+
+                    b.Property<int>("UserId");
+
+                    b.Property<int>("Version");
+
+                    b.Property<bool>("Write");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoreId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("StorePrivileges");
+                });
+
             modelBuilder.Entity("Supplier.Entities.Supplier", b =>
                 {
                     b.Property<int>("Id")
@@ -644,6 +760,11 @@ namespace Infrastructure.Database.DbConfig.Migrations
 
             modelBuilder.Entity("Administration.Entities.User", b =>
                 {
+                    b.HasOne("Administration.Entities.ModulePrivilege", "ModulePrivilege")
+                        .WithMany()
+                        .HasForeignKey("ModulePrivilegeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Administration.Entities.Organization", "Organization")
                         .WithMany("Users")
                         .HasForeignKey("OrganizationId")
@@ -698,8 +819,7 @@ namespace Infrastructure.Database.DbConfig.Migrations
 
                     b.HasOne("Supplier.Entities.Supplier", "Supplier")
                         .WithMany()
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SupplierId");
                 });
 
             modelBuilder.Entity("Product.Entities.ProductPicture", b =>
@@ -722,14 +842,14 @@ namespace Infrastructure.Database.DbConfig.Migrations
 
             modelBuilder.Entity("Product.Entities.ProductStock", b =>
                 {
-                    b.HasOne("Product.Entities.ProductVariant", "Variant")
-                        .WithMany("Stocks")
-                        .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Store.Entities.Store", "Store")
                         .WithMany()
                         .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Product.Entities.ProductVariant", "Variant")
+                        .WithMany("Stocks")
+                        .HasForeignKey("VariantId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -746,6 +866,19 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.HasOne("Administration.Entities.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Store.Entities.StorePrivilege", b =>
+                {
+                    b.HasOne("Store.Entities.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Administration.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

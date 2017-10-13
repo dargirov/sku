@@ -1,20 +1,20 @@
 @using Microsoft.AspNetCore.Mvc.Localization
-@*@using Sku.Services.Cache;*@
+@using Administration.Bll
 
 @inject IViewLocalizer Localizer
-@*@inject ICacheService cacheService*@
+@inject IAuthorizationServices AuthorizationServices
 
-@*@{ 
-    var modulePrivileges = cacheService.Get<Sku.Data.Models.ModulePrivilege>("module_privilege");
-}*@
+@{
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+}
 
 <section id="module-menu">
     <strong>@Localizer["Actions"]</strong>
     <ul>
         <li><a asp-controller="manufacturer" asp-action="index">@Localizer["List"]</a></li>
-        @*@if (modulePrivileges.SupplierWrite)
-        {*@
+        @if (modulePrivileges.SupplierWrite)
+        {
             <li><a asp-controller="manufacturer" asp-action="edit" asp-route-id="">@Localizer["Add manufacturer"]</a></li>
-        @*}*@
+        }
     </ul>
 </section>

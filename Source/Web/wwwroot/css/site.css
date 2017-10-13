@@ -361,6 +361,11 @@ body > footer span {
     outline: none;
 }
 
+.form-control.readonly {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
 form select {
     height: 27px;
     border-style: none;

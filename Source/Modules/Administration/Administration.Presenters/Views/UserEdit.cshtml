@@ -1,0 +1,101 @@
+@model Administration.Presenters.Dtos.UserEditViewModel
+@{
+    ViewData["Title"] = "Create Employee";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "User", id = Model.Id })*@
+
+    <ul class="tabs">
+        <li class="active"><a asp-action="edit" asp-route-id="@Model.Id">@Localizer["Info"]</a></li>
+        @if (!Model.IsAdmin && Model.IsSaved)
+        {
+            <li><a asp-action="moduleprivileges" asp-route-id="@Model.Id">@Localizer["Modules Privileges"]</a></li>
+            <li><a asp-controller="store" asp-action="privileges" asp-route-id="@Model.Id">@Localizer["Stores Privileges"]</a></li>
+        }
+    </ul>
+
+    @Html.Partial("_StatusPartial")
+
+    <div asp-validation-summary="All"></div>
+
+    <div class="content-box">
+        <h3>@Localizer["Profile info"]</h3>
+        <form method="post" asp-controller="administration" asp-action="useredit" class="main-form">
+            <div class="form-split">
+                <div class="padding-right">
+                    <label asp-for="Email">@Localizer["Email"]</label>
+                    <input asp-for="Email" class="form-control">
+
+                    @if (Model.IsSaved)
+                    {
+                        <label asp-for="ChangePassword">@Localizer["Change password"]</label>
+                        <input asp-for="ChangePassword">
+                    }
+
+                    <div class="@(Model.IsSaved ? "hidden" : "")">
+                        <label asp-for="Password">@Localizer["Password"]</label>
+                        <input asp-for="Password" class="form-control" data-notify-skip="@(Model.IsSaved ? "true" : "false")">
+
+                        <label asp-for="ConfirmPassword">@Localizer["Repeat Password"]</label>
+                        <input asp-for="ConfirmPassword" class="form-control" data-notify-skip="@(Model.IsSaved ? "true" : "false")">
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="FirstName">@Localizer["First Name"]</label>
+                    <input asp-for="FirstName" class="form-control">
+
+                    <label asp-for="LastName">@Localizer["Last Name"]</label>
+                    <input asp-for="LastName" class="form-control">
+
+                    <label asp-for="Address">@Localizer["Address"]</label>
+                    <input asp-for="Address" class="form-control">
+
+                    <label asp-for="Comment">@Localizer["Comment"]</label>
+                    <input asp-for="Comment" class="form-control">
+                </div>
+            </div>
+
+            <input asp-for="Id">
+            <input type="submit" class="hidden">
+            <input type="reset" class="hidden">
+        </form>
+    </div>
+
+</section>
+
+@section footer {
+    @await Component.InvokeAsync("FooterActions", new { controller = "Administration", id = Model.Id })
+}
+
+@section scripts {
+    <script>
+        $(function () {
+
+            if ($('#ChangePassword').prop('checked')) {
+                $('#ChangePassword').parent().find('div').removeClass('hidden');
+                $('#Password').data('notify-skip', false);
+                $('#ConfirmPassword').data('notify-skip', false);
+            }
+
+            $('#ChangePassword').on('change', changePasswordChange);
+            function changePasswordChange(e) {
+                if ($(this).prop('checked')) {
+                    $('#Password').data('notify-skip', false);
+                    $('#ConfirmPassword').data('notify-skip', false);
+                    $(this).parent().find('div').slideDown();
+                } else {
+                    $('#Password').data('notify-skip', true);
+                    $('#ConfirmPassword').data('notify-skip', true);
+                    $(this).parent().find('div').slideUp();
+                }
+            }
+
+         });
+    </script>
+}

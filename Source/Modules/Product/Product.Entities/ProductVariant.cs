@@ -15,13 +15,13 @@ namespace Product.Entities
         public decimal PriceNet { get; set; }
 
         [Required]
-        public CurrencyType PriceNetType { get; set; }
+        public CurrencyTypeEnum PriceNetType { get; set; }
 
         [Required]
         public decimal PriceCustomer { get; set; }
 
         [Required]
-        public CurrencyType PriceCustomerType { get; set; }
+        public CurrencyTypeEnum PriceCustomerType { get; set; }
 
         [Required]
         public int ProductId { get; set; }

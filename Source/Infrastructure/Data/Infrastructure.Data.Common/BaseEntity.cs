@@ -25,6 +25,12 @@ namespace Infrastructure.Data.Common
         {
             get
             {
+                // entity framework sets temporary negative number for the key
+                if (Id.GetType() == typeof(int))
+                {
+                    return Convert.ToInt32(Id) > 0;
+                }
+
                 return Id != null && !object.Equals(Id, default(T));
             }
         }

@@ -1,1 +1,123 @@
-Admin index
+﻿@model Administration.Presenters.Dtos.IndexViewModel
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Administration.Bll
+
+@inject IViewLocalizer Localizer
+@inject IAuthorizationServices AuthorizationServices
+
+@{
+    ViewData["Title"] = "Administration index";
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+}
+
+<section id="home-page-section">
+    @*@if (Model.Products.Count() > 0)
+    {
+        <div class="low-quantity-products-alert">
+            <h4>Low Quantity</h4>
+            <ul>
+                @foreach (var product in Model.Products)
+                {
+                    <li><a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id">@product.Name</a></li>
+                }
+            </ul>
+        </div>
+    }*@
+
+    <div>
+        <ul id="module-select-menu">
+            @if (modulePrivileges.StoreRead)
+            {
+                <li>
+                    <a asp-controller="store" asp-action="index">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        Складове
+                    </a>
+                </li>
+            }
+
+            @if (modulePrivileges.SupplierRead)
+            {
+                <li>
+                    <a asp-controller="manufacturer" asp-action="index">
+                        <i class="fa fa-gears" aria-hidden="true"></i>
+                        Производители
+                    </a>
+                </li>
+            }
+
+            @if (modulePrivileges.SupplierRead)
+            {
+                <li>
+                    <a asp-controller="supplier" asp-action="index">
+                        <i class="fa fa-truck" aria-hidden="true"></i>
+                        Доставчици
+                    </a>
+                </li>
+            }
+
+            @if (modulePrivileges.ProductRead)
+            {
+                <li>
+                    <a asp-controller="product" asp-action="index">
+                        <i class="fa fa-wrench" aria-hidden="true"></i>
+                        Продукти
+                    </a>
+                </li>
+            }
+            @*<li>
+                    <a href="#">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        Оператори
+                    </a>
+                </li>*@
+
+            @if (modulePrivileges.ClientRead)
+            {
+                <li>
+                    <a asp-controller="client" asp-action="index">
+                        <i class="fa fa-user-plus" aria-hidden="true"></i>
+                        Клиенти
+                    </a>
+                </li>
+            }
+
+            @if (modulePrivileges.IncomeRead)
+            {
+                <li>
+                    <a href="#">
+                        <i class="fa fa-sign-in" aria-hidden="true"></i>
+                        Приемане
+                    </a>
+                </li>
+            }
+
+            @if (modulePrivileges.SaleRead)
+            {
+                <li>
+                    <a href="#">
+                        <i class="fa fa-eur" aria-hidden="true"></i>
+                        Продажби
+                    </a>
+                </li>
+            }
+            @*<li>
+                    <a href="#">
+                        <i class="fa fa-cogs" aria-hidden="true"></i>
+                        Настройки
+                    </a>
+                </li>*@
+
+            @if (modulePrivileges.InvoiceRead)
+            {
+                <li>
+                    <a asp-controller="document" asp-action="index">
+                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                        Документи
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</section>

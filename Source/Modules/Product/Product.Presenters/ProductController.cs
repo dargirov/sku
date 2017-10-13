@@ -2,6 +2,7 @@
 using Infrastructure.Services.Common;
 using Infrastructure.Services.ContentServer;
 using Manufacturer.Bll;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Product.Bll;
 using Product.Presenters.Dtos;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Product.Presenters
 {
+    [Authorize(Policy = "LoggedIn")]
     public class ProductController : BaseController
     {
         private readonly IProductServices _productServices;
@@ -32,6 +34,7 @@ namespace Product.Presenters
 
         public async Task<IActionResult> Index([FromQuery]IndexRequestModel model)
         {
+            //await _productServices.Test();
             if (IsAjax())
             {
                 var (products, count) = await _productServices.GetListAsync(
@@ -137,7 +140,7 @@ namespace Product.Presenters
             else
             {
                 var pictures = product?.Pictures;
-                product = Mapper.Map<Entities.Product>(model);
+                product = Mapper.Map(model, product);
                 //var pictures = product.Pictures ?? new List<ProductPicture>();
                 product.Pictures = pictures ?? new List<Entities.ProductPicture>();
 
@@ -158,8 +161,7 @@ namespace Product.Presenters
                     }
                 }
 
-                //product.Pictures = pictures;
-                await _productServices.EditAsync(product);
+                await _productServices.EditAsync(product, model.Variants, Messages);
                 Messages.AddSuccess("Product Edited");
             }
 

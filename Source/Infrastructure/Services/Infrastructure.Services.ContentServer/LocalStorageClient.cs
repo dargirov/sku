@@ -60,7 +60,7 @@ namespace Infrastructure.Services.ContentServer
             return new Administration.Entities.File()
             {
                 Guid = info.guid,
-                StorageType = Administration.Entities.StorageType.Local,
+                StorageType = Administration.Entities.StorageTypeEnum.Local,
                 User = User,
                 Path = info.path,
                 ContentType = formFile.ContentType,

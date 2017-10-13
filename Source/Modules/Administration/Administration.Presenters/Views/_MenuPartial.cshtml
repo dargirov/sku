@@ -1,0 +1,11 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+<section id="module-menu">
+    <strong>@Localizer["Actions"]</strong>
+    <ul>
+        <li><a asp-controller="administration" asp-action="users">@Localizer["List"]</a></li>
+        <li><a asp-controller="administration" asp-action="useredit" asp-route-id="">@Localizer["Add user"]</a></li>
+    </ul>
+</section>

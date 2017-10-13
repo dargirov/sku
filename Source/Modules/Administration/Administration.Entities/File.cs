@@ -20,7 +20,7 @@ namespace Administration.Entities
         public User User { get; set; }
 
         [Required]
-        public StorageType StorageType { get; set; }
+        public StorageTypeEnum StorageType { get; set; }
 
         [Required]
         [MaxLength(100)]

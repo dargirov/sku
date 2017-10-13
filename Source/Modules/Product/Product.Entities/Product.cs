@@ -21,7 +21,7 @@ namespace Product.Entities
 
         public virtual Manufacturer.Entities.Manufacturer Manufacturer { get; set; }
 
-        public int SupplierId { get; set; }
+        public int? SupplierId { get; set; }
 
         public virtual Supplier.Entities.Supplier Supplier { get; set; }
 

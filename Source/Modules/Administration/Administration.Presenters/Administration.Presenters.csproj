@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Views\Users.cshtml" />
     <EmbeddedResource Include="Views\Index.cshtml" />
   </ItemGroup>
 
@@ -16,6 +17,23 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Infrastructure\Services\Infrastructure.Services.Common\Infrastructure.Services.Common.csproj" />
     <ProjectReference Include="..\Administration.Bll\Administration.Bll.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\UserEdit.bg.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Users.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Users.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ModulePrivileges.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ModulePrivileges.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\_MenuPartial.bg.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

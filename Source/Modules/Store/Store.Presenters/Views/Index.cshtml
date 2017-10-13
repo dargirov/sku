@@ -15,34 +15,34 @@
 
     <div id="search-criteria">
         <div>
-            <h2>Store Search</h2>
+            <h2>@Localizer["Store Search"]</h2>
         </div>
         <div>
             <form method="post" asp-controller="store" asp-action="index">
                 <div>
-                    <label asp-for="SearchCriteria.Name">Name</label>
+                    <label asp-for="SearchCriteria.Name">@Localizer["Name"]</label>
                     <input asp-for="SearchCriteria.Name">
                 </div>
                 <div>
-                    <label asp-for="SearchCriteria.CityId">City</label>
+                    <label asp-for="SearchCriteria.CityId">@Localizer["City"]</label>
                     <select asp-for="SearchCriteria.CityId" asp-items="Model.SearchCriteria.Cities" data-notify-skip="true"></select>
                 </div>
                 <div>
-                    <label asp-for="SearchCriteria.Address">Address</label>
+                    <label asp-for="SearchCriteria.Address">@Localizer["Address"]</label>
                     <input asp-for="SearchCriteria.Address">
                 </div>
                 <input type="submit">
             </form>
         </div>
         <div id="search-criteria-actions">
-            <a asp-controller="store" asp-action="index"><i class="fa fa-close" aria-hidden="true"></i> Clear</a>
-            <a class="action-primary action-submit"><i class="fa fa-search" aria-hidden="true"></i> Search</a>
+            <a asp-controller="store" asp-action="index"><i class="fa fa-close" aria-hidden="true"></i> @Localizer["Clear"]</a>
+            <a class="action-primary action-submit"><i class="fa fa-search" aria-hidden="true"></i> @Localizer["Search"]</a>
         </div>
     </div>
 
     <div id="search-result">
         <div>
-            <h2>Stores</h2>
+            <h2>@Localizer["Stores"]</h2>
         </div>
         <table id="search-result-table">
             <thead>

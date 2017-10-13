@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{DAF868DA-A95A-4B09-AACB-F840D27CF5CE}"
 EndProject
@@ -75,7 +75,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Entities", "Modules
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Presenters", "Modules\Product\Product.Presenters\Product.Presenters.csproj", "{BED0AC92-1198-4507-9FB6-7F964CA3B5A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Services.ContentServer", "Infrastructure\Services\Infrastructure.Services.ContentServer\Infrastructure.Services.ContentServer.csproj", "{8EFFF3E3-7EF5-45E2-B39E-4A87F889D750}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Services.ContentServer", "Infrastructure\Services\Infrastructure.Services.ContentServer\Infrastructure.Services.ContentServer.csproj", "{8EFFF3E3-7EF5-45E2-B39E-4A87F889D750}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

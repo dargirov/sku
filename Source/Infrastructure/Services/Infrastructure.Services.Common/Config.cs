@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Infrastructure.Services.Common.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Services.Common
 {
@@ -7,7 +9,9 @@ namespace Infrastructure.Services.Common
         public static void Register(IServiceCollection services)
         {
             Multitenancy.Config.Register(services);
+            services.AddSingleton<IAuthorizationHandler, LoggedInHandler>();
             services.AddTransient<IEntityServices, EntityServices>();
+            services.AddTransient<ICacheServices, CacheServices>();
         }
     }
 }

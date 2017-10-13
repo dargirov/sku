@@ -20,11 +20,11 @@ namespace Client.Bll
             _entityServices = entityServices;
         }
 
-        public Task<Entities.Client> GetByIdAsync(int id, ClientType type)
+        public Task<Entities.Client> GetByIdAsync(int id, ClientTypeEnum type)
         {
             IQueryable<Entities.Client> query = _repository.GetQueryable<NaturalClient, int>();
 
-            if (type == ClientType.Legal)
+            if (type == ClientTypeEnum.Legal)
             {
                 query = _repository.GetQueryable<LegalClient, int>();
             }
@@ -75,13 +75,13 @@ namespace Client.Bll
 
             var result = new List<Entities.Client>();
 
-            var legalClientIds = legalClients.Select(c => new { Id = c.Id, Type = ClientType.Legal });
-            var naturalClientIds = naturalClients.Select(c => new { Id = c.Id, Type = ClientType.Natural });
+            var legalClientIds = legalClients.Select(c => new { Id = c.Id, Type = ClientTypeEnum.Legal });
+            var naturalClientIds = naturalClients.Select(c => new { Id = c.Id, Type = ClientTypeEnum.Natural });
 
             var clientIds = legalClientIds.Union(naturalClientIds).ToList();
 
-            result.AddRange(await _repository.GetQueryable<LegalClient, int>().Include(c => c.City).Where(c => clientIds.Where(lc => lc.Type == ClientType.Legal).Select(lc => lc.Id).Contains(c.Id)).ToListAsync());
-            result.AddRange(await _repository.GetQueryable<NaturalClient, int>().Include(c => c.City).Where(c => clientIds.Where(nc => nc.Type == ClientType.Natural).Select(nc => nc.Id).Contains(c.Id)).ToListAsync());
+            result.AddRange(await _repository.GetQueryable<LegalClient, int>().Include(c => c.City).Where(c => clientIds.Where(lc => lc.Type == ClientTypeEnum.Legal).Select(lc => lc.Id).Contains(c.Id)).ToListAsync());
+            result.AddRange(await _repository.GetQueryable<NaturalClient, int>().Include(c => c.City).Where(c => clientIds.Where(nc => nc.Type == ClientTypeEnum.Natural).Select(nc => nc.Id).Contains(c.Id)).ToListAsync());
 
             return result;
         }

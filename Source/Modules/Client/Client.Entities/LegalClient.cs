@@ -6,7 +6,7 @@ namespace Client.Entities
     {
         public LegalClient()
         {
-            Type = ClientType.Legal;
+            Type = ClientTypeEnum.Legal;
         }
 
         [Required]

@@ -21,5 +21,7 @@ namespace Infrastructure.Database.Repository
         void Update<TEntity, T>(TEntity entity) where TEntity : BaseEntity<T>;
 
         Task<int> SaveAsync();
+
+        bool HasEntityChanges<TEntity, T>(TEntity entity) where TEntity : BaseEntity<T>;
     }
 }

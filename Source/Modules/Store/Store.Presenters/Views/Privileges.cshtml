@@ -1,0 +1,81 @@
+@model Store.Presenters.Dtos.PrivilegesViewModel
+@{
+    ViewData["Title"] = "Employee Store Privileges";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*<ul class="breadcrumb">
+        <li><a asp-area="sku" asp-controller="home" asp-action="index">@Localizer["Home"]</a></li>
+        <li><a asp-action="index">@Localizer["Users"]</a></li>
+        <li><a asp-action="moduleprivileges" asp-route-id="@Model.UserId">@Localizer["Stores Privileges"]</a></li>
+    </ul>*@
+
+    <ul class="tabs">
+        <li><a asp-controller="administration" asp-action="edit" asp-route-id="@Model.UserId">@Localizer["Info"]</a></li>
+        <li><a asp-controller="administration" asp-action="moduleprivileges" asp-route-id="@Model.UserId">@Localizer["Modules Privileges"]</a></li>
+        <li class="active"><a asp-controller="store" asp-action="privileges" asp-route-id="@Model.UserId">@Localizer["Stores Privileges"]</a></li>
+    </ul>
+
+    @Html.Partial("_StatusPartial")
+
+    <div asp-validation-summary="All"></div>
+
+    <div class="content-box privilages-container">
+        <h3>@Localizer["Stores privileges"]</h3>
+        <form method="post" asp-controller="store" asp-action="privileges" class="main-form">
+            <table>
+                <thead>
+                    <tr>
+                        <th>@Localizer["Store"]</th>
+                        <th>@Localizer["Read"]</th>
+                        <th>@Localizer["Write"]</th>
+                        <th>@Localizer["Delete"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ var i = 0; }
+                    @foreach (var store in Model.Stores)
+                    {
+                        var privilege = Model.StorePrivileges.Where(s => s.Store.Id == store.Id).FirstOrDefault();
+                        <tr>
+                            <td>
+                                <input type="hidden" name="StorePrivileges[@i].StoreId" value="@store.Id">
+                                <input type="hidden" name="StorePrivileges[@i].Id" value="@privilege?.Id">
+                                @store.Name
+                            </td>
+                            <td>
+                                <input name="StorePrivileges[@i].Read" value="true" type="checkbox" @Html.Raw(privilege != null && privilege.Read ? " checked=\"checked\"" : "")><i class="fa @Html.Raw(privilege != null && privilege.Read ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                                <input name="StorePrivileges[@i].Read" type="hidden" value="false">
+                            </td>
+                            <td>
+                                <input name="StorePrivileges[@i].Write" value="true" type="checkbox" @Html.Raw(privilege != null && privilege.Write ? " checked=\"checked\"" : "")><i class="fa @Html.Raw(privilege != null && privilege.Write ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                                <input name="StorePrivileges[@i].Write" type="hidden" value="false">
+                            </td>
+                            <td>
+                                <input name="StorePrivileges[@i].Delete" value="true" type="checkbox" @Html.Raw(privilege != null && privilege.Delete ? " checked=\"checked\"" : "")><i class="fa @Html.Raw(privilege != null && privilege.Delete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                                <input name="StorePrivileges[@i].Delete" type="hidden" value="false">
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+            <input asp-for="UserId">
+            <input type="submit" class="hidden">
+        </form>
+    </div>
+
+</section>
+
+@section footer {
+    @await Component.InvokeAsync("FooterActions", new { controller = "Store", id = Model.UserId, showReset = false })
+}
+
+@section scripts {
+    <script src="~/js/privilege.js"></script>
+}

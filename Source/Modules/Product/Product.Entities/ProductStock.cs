@@ -10,17 +10,17 @@ namespace Product.Entities
         public int Quantity { get; set; }
 
         [Required]
-        public MeasureType QuantityMeasureType { get; set; }
+        public MeasureTypeEnum QuantityMeasureType { get; set; }
 
         [Required]
         [Range(0, int.MaxValue)]
         public int LowQuantity { get; set; }
 
         [Required]
-        public MeasureType LowQuantityMeasureType { get; set; }
+        public MeasureTypeEnum LowQuantityMeasureType { get; set; }
 
         [Required]
-        public int ProductVariantId { get; set; }
+        public int VariantId { get; set; }
 
         public virtual ProductVariant Variant { get; set; }
 

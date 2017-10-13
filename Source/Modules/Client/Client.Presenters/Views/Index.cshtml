@@ -70,7 +70,7 @@
             <tbody>
                 @foreach (var client in Model.Clients)
                 {
-                    if (client.Type == Client.Entities.ClientType.Legal)
+                    if (client.Type == Client.Entities.ClientTypeEnum.Legal)
                     {
                         var legal = client as Client.Entities.LegalClient;
                         <tr>

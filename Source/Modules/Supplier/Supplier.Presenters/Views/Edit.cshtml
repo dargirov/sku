@@ -2,8 +2,18 @@
 @{
     ViewData["Title"] = "Edit Supplier";
 }
+
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Administration.Bll
+
 @inject IViewLocalizer Localizer
+@inject IAuthorizationServices AuthorizationServices
+
+@{
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+    var isReadOnly = !modulePrivileges.SupplierWrite;
+    var readOnlyClass = modulePrivileges.SupplierWrite ? string.Empty : "readonly";
+}
 
 @Html.Partial("_MenuPartial")
 
@@ -20,30 +30,34 @@
             <div class="form-split">
                 <div class="padding-right">
                     <label asp-for="Name">@Localizer["Name"]</label>
-                    <input asp-for="Name" class="form-control">
+                    <input asp-for="Name" class="form-control @readOnlyClass" readonly="@isReadOnly">
 
                     <label>@Localizer["Mol"]</label>
-                    <input asp-for="Mol" class="form-control">
+                    <input asp-for="Mol" class="form-control @readOnlyClass" readonly="@isReadOnly">
 
                     <label asp-for="Phone">@Localizer["Phone"]</label>
-                    <input asp-for="Phone" class="form-control">
+                    <input asp-for="Phone" class="form-control @readOnlyClass" readonly="@isReadOnly">
                     
                     <label asp-for="Address">@Localizer["Address"]</label>
-                    <input asp-for="Address" class="form-control">
+                    <input asp-for="Address" class="form-control @readOnlyClass" readonly="@isReadOnly">
                     
                     <label asp-for="Email">@Localizer["Email"]</label>
-                    <input asp-for="Email" class="form-control">
+                    <input asp-for="Email" class="form-control @readOnlyClass" readonly="@isReadOnly">
                     
                     <label asp-for="Url">@Localizer["Url"]:</label>
-                    <input asp-for="Url" class="form-control">
+                    <input asp-for="Url" class="form-control @readOnlyClass" readonly="@isReadOnly">
                 </div>
                 <div>
                     <label asp-for="Comment">@Localizer["Comment"]</label>
-                    <input asp-for="Comment" class="form-control">
+                    <input asp-for="Comment" class="form-control @readOnlyClass" readonly="@isReadOnly">
                 </div>
             </div>
             <input asp-for="Id">
-            <input type="submit" class="hidden">
+            @if (!isReadOnly)
+            {
+                <input type="submit" class="hidden">
+            }
+
             <input type="reset" class="hidden">
         </form>
     </div>
@@ -51,5 +65,5 @@
 </section>
 
 @section footer {
-    @await Component.InvokeAsync("FooterActions", new { controller = "Supplier", id = Model.Id })
+    @await Component.InvokeAsync("FooterActions", new { controller = "Supplier", id = Model.Id, showEdit = !isReadOnly, showDelete = modulePrivileges.SupplierDelete })
 }

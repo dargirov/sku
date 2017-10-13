@@ -38,16 +38,16 @@ namespace Infrastructure.Services.ContentServer
 
             switch (storageType)
             {
-                case StorageType.Azure:
+                case StorageTypeEnum.Azure:
                     Context = new ContentServerContext(new AzureStorageClient(user, Configuration["ContentServer:AzureStorage:Credentials:AccountName"], Configuration["ContentServer:AzureStorage:Credentials:Key1"]));
                     break;
-                case StorageType.Local:
+                case StorageTypeEnum.Local:
                     Context = new ContentServerContext(new LocalStorageClient(user, Configuration["ContentServer:LocalStorage:Folder"]));
                     break;
             }
         }
 
-        private StorageType GetAvailableStorageType()
+        private StorageTypeEnum GetAvailableStorageType()
         {
             var isLocal = Utils.TryParseBool(Configuration["ContentServer:StorageType:Local"]);
             var isAzure = Utils.TryParseBool(Configuration["ContentServer:StorageType:Azure"]);
@@ -64,12 +64,12 @@ namespace Infrastructure.Services.ContentServer
 
             if (isLocal.Value)
             {
-                return StorageType.Local;
+                return StorageTypeEnum.Local;
             }
 
             if (isAzure.Value)
             {
-                return StorageType.Azure;
+                return StorageTypeEnum.Azure;
             }
 
             throw new Exception("Unknown content server storage provider");

@@ -58,5 +58,10 @@ namespace Infrastructure.Database.Repository
         {
             return _dbContext.SaveChangesAsync();
         }
+
+        public bool HasEntityChanges<TEntity, T>(TEntity entity) where TEntity : BaseEntity<T>
+        {
+            return _dbContext.Entry(entity).State != EntityState.Unchanged;
+        }
     }
 }

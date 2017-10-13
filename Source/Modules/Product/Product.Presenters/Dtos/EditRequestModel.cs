@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Infrastructure.Services.Common.Mappings;
 using Microsoft.AspNetCore.Http;
+using Product.Bll.Dtos;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -33,12 +34,13 @@ namespace Product.Presenters.Dtos
         public ICollection<IFormFile> FormFiles { get; set; }
 
         [Required]
-        public IEnumerable<Entities.ProductVariant> Variants { get; set; }
+        [IgnoreMap]
+        public IEnumerable<VariantDto> Variants { get; set; }
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            //configuration.CreateMap<IFormFile, ProductPicture>()
-            //    .ForSourceMember(x => x, opt => opt.Ignore());
+            configuration.CreateMap<EditRequestModel, Entities.Product>()
+                .ForMember(x => x.Variants, x => x.Ignore());
         }
     }
 }

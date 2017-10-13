@@ -21,8 +21,10 @@ namespace Infrastructure.Database.DbConfig
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<File> Files { get; set; }
+        public virtual DbSet<ModulePrivilege> ModulePrivileges { get; set; }
 
         public virtual DbSet<Store.Entities.Store> Stores { get; set; }
+        public virtual DbSet<Store.Entities.StorePrivilege> StorePrivileges { get; set; }
 
         public virtual DbSet<Supplier.Entities.Supplier> Suppliers { get; set; }
 
@@ -47,9 +49,11 @@ namespace Infrastructure.Database.DbConfig
             modelBuilder.Entity<City>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<Country>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<File>().HasQueryFilter(x => !x.IsDeleted);
+            modelBuilder.Entity<ModulePrivilege>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
 
             // Store
             modelBuilder.Entity<Store.Entities.Store>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
+            modelBuilder.Entity<Store.Entities.StorePrivilege>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
 
             // Supplier
             modelBuilder.Entity<Supplier.Entities.Supplier>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);

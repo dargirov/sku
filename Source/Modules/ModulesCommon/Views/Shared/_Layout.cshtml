@@ -1,10 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
-@*@using Sku.Services.Cache;*@
+@using Administration.Bll
+
 @inject IViewLocalizer Localizer
-@*@inject ICacheService cacheService*@
-@*@{
-    var modulePrivileges = cacheService.Get<Sku.Data.Models.ModulePrivilege>("module_privilege");
-}*@
+@inject IAuthorizationServices AuthorizationServices
+
+@{
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -56,75 +58,83 @@
                     </div>
                 </div>
                 <ul id="header-module-select-menu">
-                    
-                        <li>
-                            <a asp-controller="store" asp-action="index">
-                                <i class="fa fa-home" aria-hidden="true"></i>
-                                @Localizer["Stores"]
-                            </a>
-                        </li>
-                   
-                        <li>
-                            <a asp-controller="manufacturer" asp-action="index">
-                                <i class="fa fa-gears" aria-hidden="true"></i>
-                                @Localizer["Manufacturers"]
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a asp-controller="supplier" asp-action="index">
-                                <i class="fa fa-truck" aria-hidden="true"></i>
-                                @Localizer["Suppliers"]
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a asp-controller="product" asp-action="index">
-                                <i class="fa fa-wrench" aria-hidden="true"></i>
-                                @Localizer["Producuts"]
-                            </a>
-                        </li>
-                    
+                    @if (modulePrivileges.StoreRead)
+                    {
+                    <li>
+                        <a asp-controller="store" asp-action="index">
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                            @Localizer["Stores"]
+                        </a>
+                    </li>
+                    }
+                    @if (modulePrivileges.ManufacturerRead)
+                    {
+                    <li>
+                        <a asp-controller="manufacturer" asp-action="index">
+                            <i class="fa fa-gears" aria-hidden="true"></i>
+                            @Localizer["Manufacturers"]
+                        </a>
+                    </li>
+                    }
+                    @if (modulePrivileges.SupplierRead)
+                    {
+                    <li>
+                        <a asp-controller="supplier" asp-action="index">
+                            <i class="fa fa-truck" aria-hidden="true"></i>
+                            @Localizer["Suppliers"]
+                        </a>
+                    </li>
+                    }
+                    @if (modulePrivileges.ProductRead)
+                    {
+                    <li>
+                        <a asp-controller="product" asp-action="index">
+                            <i class="fa fa-wrench" aria-hidden="true"></i>
+                            @Localizer["Producuts"]
+                        </a>
+                    </li>
+                    }
+                @*<li>
+                        <a href="#">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            Оператори
+                        </a>
+                    </li>*@
+                    @if (modulePrivileges.ClientRead)
+                    {
+                    <li>
+                        <a asp-controller="client" asp-action="index">
+                            <i class="fa fa-user-plus" aria-hidden="true"></i>
+                            @Localizer["Clients"]
+                        </a>
+                    </li>
+                    }
                     @*<li>
-                            <a href="#">
-                                <i class="fa fa-users" aria-hidden="true"></i>
-                                Оператори
-                            </a>
-                        </li>*@
-                   
-                        <li>
-                            <a asp-controller="client" asp-action="index">
-                                <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                @Localizer["Clients"]
-                            </a>
-                        </li>
+                        <a href="#">
+                            <i class="fa fa-sign-in" aria-hidden="true"></i>
+                            @Localizer["Incoming"]
+                        </a>
+                    </li>
                     
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-sign-in" aria-hidden="true"></i>
-                                @Localizer["Incoming"]
-                            </a>
-                        </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-eur" aria-hidden="true"></i>
+                            @Localizer["Sales"]
+                        </a>
+                    </li>*@
                     
-                        <li>
-                            <a href="#">
-                                <i class="fa fa-eur" aria-hidden="true"></i>
-                                @Localizer["Sales"]
-                            </a>
-                        </li>
-                    
-                    @*<li>
-                            <a href="#">
-                                <i class="fa fa-cogs" aria-hidden="true"></i>
-                                Настройки
-                            </a>
-                        </li>*@
-                        <li>
-                            <a asp-controller="document" asp-action="index">
-                                <i class="fa fa-file-text" aria-hidden="true"></i>
-                                Documents
-                            </a>
-                        </li>
+                @*<li>
+                        <a href="#">
+                            <i class="fa fa-cogs" aria-hidden="true"></i>
+                            Настройки
+                        </a>
+                    </li>*@
+                    <li>
+                        <a asp-controller="document" asp-action="index">
+                            <i class="fa fa-file-text" aria-hidden="true"></i>
+                            Documents
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -135,8 +145,8 @@
             <li><a href="#"><i class="fa fa-bars" aria-hidden="true"></i></a></li>
         </ul>
         <ul id="main-menu-container">
-            <li><a asp-area="sku" asp-controller="home" asp-action="index">Home</a></li>
-            <li><a asp-area="sku" asp-controller="user" asp-action="index">Users</a></li>
+            <li><a asp-controller="administration" asp-action="index">Home</a></li>
+            <li><a asp-controller="administration" asp-action="users">Users</a></li>
             <li><a href="#">Options</a></li>
         </ul>
     </nav>

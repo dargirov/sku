@@ -48,7 +48,7 @@ namespace Client.Presenters.Dtos
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<EditLegalRequestModel, LegalClient>()
-                .AfterMap((src, dest) => dest.Type = ClientType.Legal);
+                .AfterMap((src, dest) => dest.Type = ClientTypeEnum.Legal);
         }
     }
 }

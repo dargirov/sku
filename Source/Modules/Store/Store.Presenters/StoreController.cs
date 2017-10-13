@@ -1,6 +1,7 @@
 ﻿using Administration.Bll;
 using Administration.Presenters;
 using Infrastructure.Services.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.Bll;
 using Store.Presenters.Dtos;
@@ -8,15 +9,18 @@ using System.Threading.Tasks;
 
 namespace Store.Presenters
 {
+    [Authorize(Policy = "LoggedIn")]
     public class StoreController : BaseController
     {
         private readonly IStoreServices _storeServices;
         private readonly ICityServices _cityServices;
+        private readonly IUserServices _userServices;
 
-        public StoreController(IStoreServices storeServices, ICityServices cityServices)
+        public StoreController(IStoreServices storeServices, ICityServices cityServices, IUserServices userServices)
         {
             _storeServices = storeServices;
             _cityServices = cityServices;
+            _userServices = userServices;
         }
 
         public async Task<IActionResult> Index(IndexRequesModel model)
@@ -81,6 +85,63 @@ namespace Store.Presenters
             }
 
             return RedirectToAction(nameof(Edit), new { id = store?.Id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Privileges(int id)
+        {
+            var user = await _userServices.GetByIdAsync(id);
+            if (user.IsAdmin)
+            {
+                return BadRequest();
+            }
+
+            var viewModel = new PrivilegesViewModel()
+            {
+                Stores = await _storeServices.GetListAsync(),
+                UserId = id,
+                StorePrivileges = await _storeServices.GetPrivilegeForUserListAsync(id)
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Privileges(PrivilegeRequestModel model)
+        {
+            var user = await _userServices.GetByIdAsync(model.UserId);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            await _storeServices.EditPrivilegesAsync(user.Id, model.StorePrivileges);
+
+            //if (user.StorePrivileges.Count == 0)
+            //{
+            //    user.StorePrivileges = model.StorePrivileges.ToList();
+            //}
+            //else
+            //{
+            //    foreach (var priv in model.StorePrivileges)
+            //    {
+            //        var userPriv = user.StorePrivileges.FirstOrDefault(x => x.Id == priv.Id);
+            //        if (userPriv != null)
+            //        {
+            //            userPriv.Read = priv.Read;
+            //            userPriv.Write = priv.Write;
+            //            userPriv.Delete = priv.Delete;
+            //        }
+            //        else
+            //        {
+            //            user.StorePrivileges.Add(priv);
+            //        }
+            //    }
+            //}
+
+            //await this.usersService.SaveAsync(user);
+
+            return RedirectToAction(nameof(Privileges), new { id = model.UserId });
         }
     }
 }

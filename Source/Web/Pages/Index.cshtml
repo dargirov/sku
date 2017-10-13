@@ -8,7 +8,7 @@
 @*@inject IViewLocalizer Localizer*@
 
 <div id="container">
-    <form asp-controller="home" asp-action="login" asp-antiforgery="true">
+    <form asp-page="login" asp-antiforgery="true">
         <h1>LOGO</h1>
         @if (TempData["Error"] != null && (bool)TempData["Error"])
         {
@@ -35,7 +35,7 @@
         </div>
         <div>
             <a href="#disabled" id="login" class="go">Login</a>
-            <a asp-controller="home" asp-action="register" id="register">Register</a>
+            <a asp-page="register" id="register">Register</a>
             <input type="submit">
         </div>
         <div>
@@ -46,3 +46,7 @@
 </div>
 
 <div id="spacer"></div>
+
+@section Scripts {
+    <script src="~/js/front.js"></script>
+}

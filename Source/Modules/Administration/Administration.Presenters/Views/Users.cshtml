@@ -1,0 +1,62 @@
+﻿@model Administration.Presenters.Dtos.UsersViewModel
+
+@{
+    ViewData["Title"] = "Employees list";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*<ul class="breadcrumb">
+        <li><a asp-controller="administration" asp-action="index">@Localizer["Home"]</a></li>
+        <li><a asp-controller="administration" asp-action="users">@Localizer["Users"]</a></li>
+    </ul>*@
+
+    <table id="search-result-table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="row-checkbox-all"></th>
+                <th>@Localizer["Email"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Stores"]</th>
+                <th>@Localizer["Last log in"]</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td><input type="checkbox" data-product-id="@user.Id" class="row-checkbox"></td>
+                    <td>
+                        <a asp-controller="administration" asp-action="useredit" asp-route-id="@user.Id">
+                            @if (user.IsAdmin)
+                            {
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            }
+                            @user.Email
+                        </a>
+                    </td>
+                    <td>@user.FirstName @user.LastName</td>
+                    <td>@*@string.Join(", ", user.Stores.Select(s => s.Name))*@</td>
+                    <td>
+                        @if (user.LastLogIn == default(DateTime))
+                        {
+                            @:-/-
+                        }
+                        else
+                        {
+                            @user.LastLogIn
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</section>
+
+@section scripts {
+}

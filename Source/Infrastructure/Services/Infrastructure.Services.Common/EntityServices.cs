@@ -23,46 +23,52 @@ namespace Infrastructure.Services.Common
         // TODO: SAVE MEMO
         public Task<int> SaveAsync<TEntity, T>(TEntity entity) where TEntity : BaseTenantEntity<T>
         {
-            SaveInternal<TEntity, T>(entity, true);
+            var visited = new EntityVisitedTree();
+            visited.Add<TEntity, T>(entity);
+
+            SaveInternal<TEntity, T>(entity, true, visited);
 
             return _repository.SaveAsync();
         }
 
         public Task<int> DeleteAsync<TEntity, T>(TEntity entity) where TEntity : BaseTenantEntity<T>
         {
-            DeleteInternal<TEntity, T>(entity);
+            entity.IsDeleted = true;
+            entity.DeletedOn = DateTime.Now;
 
             return _repository.SaveAsync();
         }
 
-        private void DeleteInternal<TEntity, T>(TEntity entity) where TEntity : BaseTenantEntity<T>
+        private void SaveInternal<TEntity, T>(TEntity entity, bool modifyRepo, EntityVisitedTree visited) where TEntity : BaseTenantEntity<T>
         {
-            foreach (var collection in GetCollectionProperties<TEntity, T>(entity))
-            {
-                var method = typeof(EntityServices).GetMethod("DeleteInternal", BindingFlags.NonPublic | BindingFlags.Instance);
-                var generic = method.MakeGenericMethod(new Type[] { collection[0].GetType(), typeof(T) });
+            var method = typeof(EntityServices).GetMethod("SaveInternal", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                foreach (BaseTenantEntity<T> childValue in collection)
+            foreach (var property in GetProperties<TEntity, T>(entity))
+            {
+                var generic = method.MakeGenericMethod(new Type[] { property.GetType(), typeof(T) });
+                if (!property.IsSaved || (!visited.IsVisited<BaseTenantEntity<T>, T>(property)/* && _repository.HasEntityChanges<BaseTenantEntity<T>, T>(property)*/))
                 {
-                    generic.Invoke(this, new[] { childValue });
+                    visited.Add<BaseTenantEntity<T>, T>(property);
+                    generic.Invoke(this, new[] { property, (object)false, visited });
                 }
             }
 
-            entity.IsDeleted = true;
-            entity.DeletedOn = DateTime.Now;
-        }
-
-        private void SaveInternal<TEntity, T>(TEntity entity, bool modifyRepo) where TEntity : BaseTenantEntity<T>
-        {
             foreach (var collection in GetCollectionProperties<TEntity, T>(entity))
             {
-                var method = typeof(EntityServices).GetMethod("SaveInternal", BindingFlags.NonPublic | BindingFlags.Instance);
                 var generic = method.MakeGenericMethod(new Type[] { collection[0].GetType(), typeof(T) });
-
                 foreach (BaseTenantEntity<T> childValue in collection)
                 {
-                    generic.Invoke(this, new[] { childValue, (object)false });
+                    if (!childValue.IsSaved || (!visited.IsVisited<BaseTenantEntity<T>, T>(childValue) /*&& _repository.HasEntityChanges<BaseTenantEntity<T>, T>(childValue)*/))
+                    {
+                        visited.Add<BaseTenantEntity<T>, T>(childValue);
+                        generic.Invoke(this, new[] { childValue, (object)false, visited });
+                    }
                 }
+            }
+
+            if (entity.IsSaved && !_repository.HasEntityChanges<BaseTenantEntity<T>, T>(entity))
+            {
+                return;
             }
 
             entity.Version++;
@@ -86,6 +92,21 @@ namespace Infrastructure.Services.Common
             }
         }
 
+        private IEnumerable<BaseTenantEntity<T>> GetProperties<TEntity, T>(TEntity entity) where TEntity : BaseTenantEntity<T>
+        {
+            foreach (var propInfo in entity.GetType().GetProperties())
+            {
+                if (propInfo.PropertyType.IsClass
+                    && typeof(BaseTenantEntity<T>).IsAssignableFrom(propInfo.PropertyType))
+                {
+                    if (propInfo.GetValue(entity) is BaseTenantEntity<T> value)
+                    {
+                        yield return value;
+                    }
+                }
+            }
+        }
+
         private IEnumerable<System.Collections.IList> GetCollectionProperties<TEntity, T>(TEntity entity) where TEntity : BaseTenantEntity<T>
         {
             foreach (var propInfo in entity.GetType().GetProperties())
@@ -97,7 +118,7 @@ namespace Infrastructure.Services.Common
                     if (typeof(BaseTenantEntity<T>).IsAssignableFrom(firstChildType))
                     {
                         var childValues = propInfo.GetValue(entity) as System.Collections.IList;
-                        if (childValues.Count == 0)
+                        if (childValues == null || childValues.Count == 0)
                         {
                             continue;
                         }
@@ -105,6 +126,34 @@ namespace Infrastructure.Services.Common
                         yield return childValues;
                     }
                 }
+            }
+        }
+
+        private class EntityVisitedTree
+        {
+            private readonly HashSet<string> _visited;
+
+            public EntityVisitedTree() 
+            {
+                _visited = new HashSet<string>();
+            }
+
+            public void Add<TEntity, T>(TEntity entity) where TEntity : BaseTenantEntity<T>
+            {
+                var identifier = GetIdentifier<TEntity, T>(entity);
+                _visited.Add(identifier);
+            }
+
+            public bool IsVisited<TEntity, T>(TEntity entity) where TEntity : BaseTenantEntity<T>
+            {
+                var identifier = GetIdentifier<TEntity, T>(entity);
+                return _visited.Contains(identifier);
+            }
+
+            private string GetIdentifier<TEntity, T>(TEntity entity) where TEntity : BaseTenantEntity<T>
+            {
+                var type = entity.GetType();
+                return $"{type.Name} - {type.GUID} - {entity.Id}";
             }
         }
     }

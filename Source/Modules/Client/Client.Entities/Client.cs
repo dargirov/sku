@@ -21,7 +21,7 @@ namespace Client.Entities
 
         [Required]
         [NotMapped]
-        public ClientType Type { get; set; }
+        public ClientTypeEnum Type { get; set; }
 
         [Required]
         public int CityId { get; set; }

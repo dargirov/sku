@@ -6,7 +6,7 @@ namespace Client.Entities
     {
         public NaturalClient()
         {
-            Type = ClientType.Natural;
+            Type = ClientTypeEnum.Natural;
         }
 
         [MaxLength(100)]

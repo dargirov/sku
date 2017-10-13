@@ -1,5 +1,6 @@
 ﻿using Administration.Presenters;
 using Infrastructure.Services.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Supplier.Bll;
 using Supplier.Presenters.Dtos;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Supplier.Presenters
 {
+    [Authorize(Policy = "LoggedIn")]
     public class SupplierController : BaseController
     {
         private readonly ISupplierServices _supplierServices;

@@ -22,6 +22,8 @@
 
         public bool ShowReset { get; set; }
 
+        public bool ShowEdit { get; set; }
+
         public bool ShowDelete { get; set; }
     }
 }

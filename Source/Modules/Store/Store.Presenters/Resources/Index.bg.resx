@@ -110,4 +110,16 @@
   <data name="Description" xml:space="preserve">
     <value>Описание</value>
   </data>
+  <data name="Stores" xml:space="preserve">
+    <value>Складове</value>
+  </data>
+  <data name="Store Search" xml:space="preserve">
+    <value>Търсене на склад</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Изчисти</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Търси</value>
+  </data>
 </root>
