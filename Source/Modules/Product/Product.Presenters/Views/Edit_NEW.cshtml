@@ -1,0 +1,200 @@
+@model Product.Presenters.Dtos.EditViewModel
+@{
+    ViewData["Title"] = "Edit product";
+}
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Administration.Bll
+
+@inject IViewLocalizer Localizer
+@inject IAuthorizationServices AuthorizationServices
+
+@{
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+    var isReadOnly = !modulePrivileges.ProductWrite;
+    var readOnlyClass = modulePrivileges.ProductWrite ? string.Empty : "readonly";
+}
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Product", Id = Model.Id })*@
+
+    <ul class="tabs">
+        <li class="active"><a asp-action="edit" asp-route-id="@Model.Id">@Localizer["Info"]</a></li>
+        @if (Model.IsSaved)
+        {
+            <li><a asp-action="pictures" asp-route-id="@Model.Id">@Localizer["Pictures"] (@Model.Pictures.Count())</a></li>
+        }
+    </ul>
+
+    @Html.Partial("_StatusPartial")
+
+    <div class="content-box">
+        <form method="post" asp-controller="product" asp-action="edit" id="product-edit-form" class="main-form" enctype="multipart/form-data">
+            <h3>@Localizer["Product description"]</h3>
+            <div class="form-split">
+                <div class="padding-right">
+                    <label asp-for="Name">@Localizer["Name"]</label>
+                    <input asp-for="Name" class="form-control @readOnlyClass" readonly="@isReadOnly">
+
+                    <label asp-for="CategoryId">@Localizer["Category"]</label>
+                    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control @readOnlyClass"></select>
+
+                    <label asp-for="ManufacturerId">@Localizer["Manufacturer"]</label>
+                    <select asp-for="ManufacturerId" asp-items="Model.Manufacturers" class="form-control @readOnlyClass"></select>
+
+                    <label asp-for="SupplierId">@Localizer["Supplier"]</label>
+                    <select asp-for="SupplierId" asp-items="Model.Suppliers" class="form-control @readOnlyClass"></select>
+                </div>
+                <div>
+                    <label asp-for="Warranty">@Localizer["Warranty"]</label>
+                    <input asp-for="Warranty" class="form-control @readOnlyClass" readonly="@isReadOnly">
+
+                    <label for="file-select">@Localizer["Upload picture"]</label>
+                    <input type="file" name="FormFiles" class="form-control @readOnlyClass" id="file-select" readonly="@isReadOnly" multiple>
+
+                    <label asp-for="Description">@Localizer["Description"]</label>
+                    <textarea asp-for="Description" class="form-control @readOnlyClass"></textarea>
+
+                    <input asp-for="Id">
+                    <input type="submit" class="hidden">
+                </div>
+            </div>
+            <h3>@Localizer["Add product variant"]</h3>
+            @*<div class="product-variants-container">
+                    <div>
+                        <div>
+                            <label>Code</label>
+                            <input type="text" class="form-control @readOnlyClass" value="Code">
+                        </div>
+
+                        <div>
+                            <label>Add Code 1</label>
+                            <input type="text" class="form-control @readOnlyClass" value="AddCode1">
+                        </div>
+
+                        <div>
+                            <label>Add Code 2</label>
+                            <input type="text" class="form-control @readOnlyClass" value="AddCode2">
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <label>Price Net Type</label>
+                            <select>
+                                <option>BGN</option>
+                                <option>EUR</option>
+                                <option>USD</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>Price Net</label>
+                            <input type="text" class="form-control @readOnlyClass" value="Price Net">
+                        </div>
+
+                        <div>
+                            <label>Price Customer Type</label>
+                            <select>
+                                <option>BGN</option>
+                                <option>EUR</option>
+                                <option>USD</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>Price Customer</label>
+                            <input type="text" class="form-control @readOnlyClass" value="Price Customer">
+                        </div>
+
+                        <div>
+                            <label>Price Mrsp Type</label>
+                            <select>
+                                <option>BGN</option>
+                                <option>EUR</option>
+                                <option>USD</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>Price Mrsp</label>
+                            <input type="text" class="form-control @readOnlyClass" value="Price Mrsp">
+                        </div>
+                    </div>
+                </div>*@
+
+            <h3>@Localizer["Product Variants"]</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>AddCode1</th>
+                        <th>AddCode2</th>
+                        <th>BGN</th>
+                        <th>PriceNet</th>
+                        <th>BGN</th>
+                        <th>PriceCustomer</th>
+                        <th>BGN</th>
+                        <th>Mrsp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int variantCount = 0; }
+                    @foreach (var variant in Model.Variants)
+                    {
+                        var className = variantCount++ % 2 == 0 ? "even" : "odd";
+                        <tr class="variant-row-@className">
+                            <td><input type="text" value="@variant.Code" class="form-control @readOnlyClass"></td>
+                            <td><input type="text" value="AddCode1" class="form-control @readOnlyClass"></td>
+                            <td><input type="text" value="AddCode2" class="form-control @readOnlyClass"></td>
+                            <td><input type="text" value="BGN" class="form-control @readOnlyClass"></td>
+                            <td><input type="text" value="@variant.PriceNet" class="form-control @readOnlyClass"></td>
+                            <td><input type="text" value="BGN" class="form-control @readOnlyClass"></td>
+                            <td><input type="text" value="@variant.PriceCustomer" class="form-control @readOnlyClass"></td>
+                            <td><input type="text" value="BGN" class="form-control @readOnlyClass"></td>
+                            <td><input type="text" value="Price Mrsp" class="form-control @readOnlyClass"></td>
+                        </tr>
+                        <tr class="variant-row-@className">
+                            <td colspan="9">
+                                <table class="product-stock-container">
+                                    @foreach (var store in Model.Stores)
+                                    {
+                                        var stock = variant.Stocks.FirstOrDefault(x => x.Store == store);
+                                        var check = stock != null ? "checked=\"checked\"" : "";
+                                        var classHidden = stock != null ? "" : "hidden";
+                                        <tr>
+                                            <td><input type="checkbox" class="product-stock-checkbox" @Html.Raw(check)> @store.Name</td>
+                                            <td class="@classHidden product-stock-quantities">
+                                                <div>
+                                                    <select class="stock-quantity-measure-type form-control auto-width no-border-right">
+                                                        <option>Low Quantity</option>
+                                                    </select>
+                                                    <input type="text" class="stock-quantity form-control no-border-left" value="@(stock?.LowQuantity ?? 0)">
+                                                    <select class="stock-quantity-measure-type form-control auto-width no-border-right">
+                                                        <option>Quantity</option>
+                                                    </select>
+                                                    <input type="text" class="stock-quantity form-control no-border-left" value="@(stock?.Quantity ?? 0)">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+</section>
+
+@section footer {
+    @await Component.InvokeAsync("FooterActions", new { controller = "Product", id = Model.Id, showReset = false, showEdit = !isReadOnly, showDelete = modulePrivileges.ProductDelete })
+}
+
+@section scripts {
+    <script src="~/js/product.js" asp-append-version="true"></script>
+}

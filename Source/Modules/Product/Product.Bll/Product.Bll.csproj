@@ -6,10 +6,13 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+        <PackageReference Include="structuremap" Version="4.5.2" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Infrastructure\Database\Infrastructure.Database.Repository\Infrastructure.Database.Repository.csproj" />
+      <ProjectReference Include="..\..\Administration\Administration.Bll\Administration.Bll.csproj" />
+      <ProjectReference Include="..\..\Manufacturer\Manufacturer.Bll\Manufacturer.Bll.csproj" />
       <ProjectReference Include="..\..\Store\Store.Bll\Store.Bll.csproj" />
       <ProjectReference Include="..\..\Supplier\Supplier.Bll\Supplier.Bll.csproj" />
       <ProjectReference Include="..\..\Supplier\Supplier.Entities\Supplier.Entities.csproj" />

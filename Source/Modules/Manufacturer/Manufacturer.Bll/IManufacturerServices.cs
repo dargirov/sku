@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Infrastructure.Data.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Manufacturer.Bll
@@ -9,5 +10,6 @@ namespace Manufacturer.Bll
         Task<List<Entities.Manufacturer>> GetListAsync();
         Task<List<Entities.Manufacturer>> GetListAsync(string name, int? countryId, string email);
         Task<int> EditAsync(Entities.Manufacturer manufacturer);
+        Task<bool> DeleteAsync(Entities.Manufacturer manufacturer, Messages messages);
     }
 }

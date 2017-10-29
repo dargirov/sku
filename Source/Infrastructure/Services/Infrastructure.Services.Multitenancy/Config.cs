@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using StructureMap;
 
 namespace Infrastructure.Services.Multitenancy
 {
     public static class Config
     {
-        public static void Register(IServiceCollection services)
+        public static void Register(Container container)
         {
-            services.AddTransient<ITenantProvider, TenantProvider>();
+            container.Configure(x => x.For<ITenantProvider>().Use<TenantProvider>());
         }
     }
 }

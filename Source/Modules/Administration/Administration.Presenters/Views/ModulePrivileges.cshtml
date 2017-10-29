@@ -37,6 +37,7 @@
                         <th>@Localizer["Read"]</th>
                         <th>@Localizer["Write"]</th>
                         <th>@Localizer["Delete"]</th>
+                        <th>@Localizer["Special"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,6 +52,7 @@
                         <td>
                             <input asp-for="StoreDelete"><i class="fa @Html.Raw(Model.StoreDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
                         </td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td><i class="fa fa-gears" aria-hidden="true"></i> @Localizer["Manufacturers"]</td>
@@ -63,6 +65,7 @@
                         <td>
                             <input asp-for="ManufacturerDelete"><i class="fa @Html.Raw(Model.ManufacturerDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
                         </td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td><i class="fa fa fa-truck" aria-hidden="true"></i> @Localizer["Suppliers"]</td>
@@ -75,6 +78,7 @@
                         <td>
                             <input asp-for="SupplierDelete"><i class="fa @Html.Raw(Model.SupplierDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
                         </td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td><i class="fa fa-wrench" aria-hidden="true"></i> @Localizer["Products"]</td>
@@ -87,9 +91,10 @@
                         <td>
                             <input asp-for="ProductDelete"><i class="fa @Html.Raw(Model.ProductDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
                         </td>
+                        <td></td>
                     </tr>
                     <tr>
-                        <td class="sub">@Localizer["Categories"]</td>
+                        <td class="sub"><i class="fa fa-list-ul" aria-hidden="true"></i> @Localizer["Categories"]</td>
                         <td>
                             <input asp-for="CategoryRead"><i class="fa @Html.Raw(Model.CategoryRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
                         </td>
@@ -98,6 +103,16 @@
                         </td>
                         <td>
                             <input asp-for="CategoryDelete"><i class="fa @Html.Raw(Model.CategoryDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="sub"><i class="fa fa-folder-open" aria-hidden="true"></i> @Localizer["Import"]</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <input asp-for="ProductImport"><i class="fa @Html.Raw(Model.ProductImport ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
                         </td>
                     </tr>
                     <tr>
@@ -111,8 +126,9 @@
                         <td>
                             <input asp-for="ClientDelete"><i class="fa @Html.Raw(Model.ClientDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
                         </td>
+                        <td></td>
                     </tr>
-                    <tr>
+                    @*<tr>
                         <td><i class="fa fa-sign-in" aria-hidden="true"></i> @Localizer["Incoming"]</td>
                         <td>
                             <input asp-for="IncomeRead"><i class="fa @Html.Raw(Model.IncomeRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
@@ -123,6 +139,7 @@
                         <td>
                             <input asp-for="IncomeDelete"><i class="fa @Html.Raw(Model.IncomeDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
                         </td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td><i class="fa fa-eur" aria-hidden="true"></i> @Localizer["Sales"]</td>
@@ -135,9 +152,10 @@
                         <td>
                             <input asp-for="SaleDelete"><i class="fa @Html.Raw(Model.SaleDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
                         </td>
-                    </tr>
+                        <td></td>
+                    </tr>*@
                     <tr>
-                        <td><i class="fa fa-file-text" aria-hidden="true"></i> @Localizer["Invoices"]</td>
+                        <td><i class="fa fa-file-text" aria-hidden="true"></i> @Localizer["Documents"]</td>
                         <td>
                             <input asp-for="InvoiceRead"><i class="fa @Html.Raw(Model.InvoiceRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
                         </td>
@@ -147,6 +165,7 @@
                         <td>
                             <input asp-for="InvoiceDelete"><i class="fa @Html.Raw(Model.InvoiceDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
                         </td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>

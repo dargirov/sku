@@ -15,34 +15,38 @@ namespace Infrastructure.Services.ContentServer
         private IConfigurationRoot Configuration { get; }
         //private StorageType StorageType { get; set; }
         private ContentServerContext Context { get; }
-        //private int OrganizationId => cacheService.Get<int>("organization_id");
-        private int UserId => 1; // cacheService.Get<int>("user_id");
-        //private readonly ICacheService cacheService;
-        //private readonly IUsersService userService;
-        private readonly IFileServices filesService;
+        //private int OrganizationId => _cacheServices.Get<int>("organization_id");
+        //private int UserId => _cacheServices.Get<int>("user_id");
+        private readonly ICacheServices _cacheServices;
+        private readonly IFileServices _filesServices;
 
-        public ContentServer(IHostingEnvironment environment, IFileServices filesService)
+        public ContentServer(IHostingEnvironment environment, IFileServices filesServices, ICacheServices cacheServices)
         {
-            //this.cacheService = cacheService;
-            //this.userService = userService;
-            this.filesService = filesService;
+            _cacheServices = cacheServices;
+            _filesServices = filesServices;
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(environment.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false);
             Configuration = builder.Build();
 
-            var user = new User() { OrganizationId = 1 }; //userService.GetById(UserId);
+            var userId = _cacheServices.Get<int>("user_id");
+            var organizationId = _cacheServices.Get<int>("organization_id");
+
+            if (userId == default(int) || organizationId == default(int))
+            {
+                throw new Exception("Can not get user id or organization id");
+            }
 
             var storageType = GetAvailableStorageType();
 
             switch (storageType)
             {
                 case StorageTypeEnum.Azure:
-                    Context = new ContentServerContext(new AzureStorageClient(user, Configuration["ContentServer:AzureStorage:Credentials:AccountName"], Configuration["ContentServer:AzureStorage:Credentials:Key1"]));
+                    Context = new ContentServerContext(new AzureStorageClient(userId, organizationId, Configuration["ContentServer:AzureStorage:Credentials:AccountName"], Configuration["ContentServer:AzureStorage:Credentials:Key1"]));
                     break;
                 case StorageTypeEnum.Local:
-                    Context = new ContentServerContext(new LocalStorageClient(user, Configuration["ContentServer:LocalStorage:Folder"]));
+                    Context = new ContentServerContext(new LocalStorageClient(userId, organizationId, Configuration["ContentServer:LocalStorage:Folder"]));
                     break;
             }
         }
@@ -78,7 +82,7 @@ namespace Infrastructure.Services.ContentServer
         public async Task<File> SaveAsync(IFormFile formFile)
         {
             var file = await Context.SaveAsync(formFile);
-            await filesService.SaveAsync(file);
+            await _filesServices.SaveAsync(file);
             return file;
         }
 
@@ -100,7 +104,7 @@ namespace Infrastructure.Services.ContentServer
             }
 
             var file = await Context.ResizeAndSaveAsync(formFile, width.Value, height.Value);
-            await filesService.SaveAsync(file);
+            await _filesServices.SaveAsync(file);
             return file;
         }
 

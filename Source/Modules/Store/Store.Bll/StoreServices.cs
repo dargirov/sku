@@ -1,8 +1,10 @@
 ﻿using Administration.Bll;
+using Infrastructure.Data.Common;
 using Infrastructure.Database.Repository;
 using Infrastructure.Services.Common;
 using Microsoft.EntityFrameworkCore;
 using Store.Entities;
+using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +14,14 @@ namespace Store.Bll
 {
     public class StoreServices : IStoreServices
     {
+        private readonly IContainer _container;
         private readonly IRepository _repository;
         private readonly IEntityServices _entityServices;
         private readonly IAuthenticationServices _authenticationServices;
 
-        public StoreServices(IRepository repository, IEntityServices entityServices, IAuthenticationServices authenticationServices)
+        public StoreServices(IContainer container, IRepository repository, IEntityServices entityServices, IAuthenticationServices authenticationServices)
         {
+            _container = container;
             _repository = repository;
             _entityServices = entityServices;
             _authenticationServices = authenticationServices;
@@ -31,6 +35,11 @@ namespace Store.Bll
         public Task<List<Entities.Store>> GetListAsync()
         {
             return GetListAsync(null, null, null);
+        }
+
+        public Task<List<Entities.Store>> GetListWithoutPrivCheckAsync()
+        {
+            return _repository.GetListAsync<Entities.Store, int>();
         }
 
         public async Task<List<Entities.Store>> GetListAsync(string name, int? cityId, string address)
@@ -77,9 +86,25 @@ namespace Store.Bll
                 .ToListAsync();
         }
 
-        public Task<int> EditAsync(Entities.Store store)
+        public async Task<int> EditAsync(Entities.Store store)
         {
-            return _entityServices.SaveAsync<Entities.Store, int>(store);
+            var user = await _authenticationServices.GetCurrentUser();
+
+            if (!store.IsSaved)
+            {
+                var storePriv = new StorePrivilege()
+                {
+                    Read = true,
+                    Write = true,
+                    Delete = true,
+                    Store = store,
+                    User = user
+                };
+
+                await _entityServices.SaveAsync<StorePrivilege, int>(storePriv);
+            }
+
+            return await _entityServices.SaveAsync<Entities.Store, int>(store);
         }
 
         public Task<List<StorePrivilege>> GetPrivilegeForUserListAsync(int userId)
@@ -127,6 +152,21 @@ namespace Store.Bll
         public async Task<List<Entities.Store>> GetStoreListWithDeletePrivilegeAsync()
         {
             return await GetStoreListWithPrivilegeAsync(x => x.Delete);
+        }
+
+        public async Task<bool> DeleteAsync(Entities.Store store, Messages messages)
+        {
+            foreach (var plugin in _container.GetAllInstances<IStoreEntityPlugin>())
+            {
+                if (!await plugin.OnDelete(store, messages))
+                {
+                    return false;
+                }
+            }
+
+            var result = await _entityServices.DeleteAsync<Entities.Store, int>(store);
+
+            return result != 0;
         }
 
         private async Task<List<Entities.Store>> GetStoreListWithPrivilegeAsync(Func<StorePrivilege, bool> filter)

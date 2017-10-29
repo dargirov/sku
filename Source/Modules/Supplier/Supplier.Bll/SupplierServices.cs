@@ -1,6 +1,8 @@
-﻿using Infrastructure.Database.Repository;
+﻿using Infrastructure.Data.Common;
+using Infrastructure.Database.Repository;
 using Infrastructure.Services.Common;
 using Microsoft.EntityFrameworkCore;
+using StructureMap;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,11 +11,13 @@ namespace Supplier.Bll
 {
     public class SupplierServices : ISupplierServices
     {
+        private readonly IContainer _container;
         private readonly IRepository _repository;
         private readonly IEntityServices _entityServices;
 
-        public SupplierServices(IRepository repository, IEntityServices entityServices)
+        public SupplierServices(IContainer container, IRepository repository, IEntityServices entityServices)
         {
+            _container = container;
             _repository = repository;
             _entityServices = entityServices;
         }
@@ -73,6 +77,21 @@ namespace Supplier.Bll
         public Task<int> EditAsync(Entities.Supplier supplier)
         {
             return _entityServices.SaveAsync<Entities.Supplier, int>(supplier);
+        }
+
+        public async Task<bool> DeleteAsync(Entities.Supplier supplier, Messages messages)
+        {
+            foreach (var plugin in _container.GetAllInstances<ISupplierEntityPlugin>())
+            {
+                if (!await plugin.OnDelete(supplier, messages))
+                {
+                    return false;
+                }
+            }
+
+            var result = await _entityServices.DeleteAsync<Entities.Supplier, int>(supplier);
+
+            return result != 0;
         }
     }
 }

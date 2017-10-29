@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Data.Common;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,7 @@ namespace Infrastructure.Database.Repository
         Task<int> SaveAsync();
 
         bool HasEntityChanges<TEntity, T>(TEntity entity) where TEntity : BaseEntity<T>;
+
+        Task<IDbContextTransaction> BeginTransactionAsync();
     }
 }

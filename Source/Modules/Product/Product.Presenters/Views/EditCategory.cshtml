@@ -3,8 +3,16 @@
 @{
     ViewData["Title"] = "Edit category";
 }
+
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Administration.Bll
+
 @inject IViewLocalizer Localizer
+@inject IAuthorizationServices AuthorizationServices
+
+@{ 
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+}
 
 @Html.Partial("_MenuPartial")
 
@@ -29,5 +37,5 @@
 </section>
 
 @section footer {
-    @await Component.InvokeAsync("FooterActions", new { controller = "Product", action = "Categories", deleteAction = "DeleteCategory", id = Model.Id })
+    @await Component.InvokeAsync("FooterActions", new { controller = "Product", action = "Categories", deleteAction = "DeleteCategory", id = Model.Id, showDelete = modulePrivileges.CategoryDelete })
 }

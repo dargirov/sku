@@ -2,7 +2,7 @@
 {
     <div class="validation-summary-errors">
         <ul>
-            @foreach (var message in (string[])TempData["Errors"])
+            @foreach (var message in (IList<string>)TempData["Errors"])
             {
                 <li>@message</li>
             }
@@ -14,7 +14,7 @@
 {
     <div class="validation-summary-warnings">
         <ul>
-            @foreach (var message in (string[])TempData["Warnings"])
+            @foreach (var message in (IList<string>)TempData["Warnings"])
             {
                 <li>@message</li>
             }
@@ -26,7 +26,7 @@
 {
     <div class="validation-summary-successes">
         <ul>
-            @foreach (var message in (string[])TempData["Successes"])
+            @foreach (var message in (IList<string>)TempData["Successes"])
             {
                 <li>@message</li>
             }

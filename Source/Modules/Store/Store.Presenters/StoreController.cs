@@ -98,7 +98,7 @@ namespace Store.Presenters
 
             var viewModel = new PrivilegesViewModel()
             {
-                Stores = await _storeServices.GetListAsync(),
+                Stores = await _storeServices.GetListWithoutPrivCheckAsync(),
                 UserId = id,
                 StorePrivileges = await _storeServices.GetPrivilegeForUserListAsync(id)
             };
@@ -107,6 +107,7 @@ namespace Store.Presenters
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Privileges(PrivilegeRequestModel model)
         {
             var user = await _userServices.GetByIdAsync(model.UserId);
@@ -117,31 +118,20 @@ namespace Store.Presenters
 
             await _storeServices.EditPrivilegesAsync(user.Id, model.StorePrivileges);
 
-            //if (user.StorePrivileges.Count == 0)
-            //{
-            //    user.StorePrivileges = model.StorePrivileges.ToList();
-            //}
-            //else
-            //{
-            //    foreach (var priv in model.StorePrivileges)
-            //    {
-            //        var userPriv = user.StorePrivileges.FirstOrDefault(x => x.Id == priv.Id);
-            //        if (userPriv != null)
-            //        {
-            //            userPriv.Read = priv.Read;
-            //            userPriv.Write = priv.Write;
-            //            userPriv.Delete = priv.Delete;
-            //        }
-            //        else
-            //        {
-            //            user.StorePrivileges.Add(priv);
-            //        }
-            //    }
-            //}
-
-            //await this.usersService.SaveAsync(user);
-
             return RedirectToAction(nameof(Privileges), new { id = model.UserId });
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var store = await _storeServices.GetByIdAsync(id);
+            if (store == null)
+            {
+                return BadRequest();
+            }
+
+            await _storeServices.DeleteAsync(store, Messages);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

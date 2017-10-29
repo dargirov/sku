@@ -4,11 +4,14 @@ using Infrastructure.Services.ContentServer;
 using Manufacturer.Bll;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Product.Bll;
+using Product.Bll.Dtos.Import;
 using Product.Presenters.Dtos;
 using Store.Bll;
 using Supplier.Bll;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,7 +37,6 @@ namespace Product.Presenters
 
         public async Task<IActionResult> Index([FromQuery]IndexRequestModel model)
         {
-            //await _productServices.Test();
             if (IsAjax())
             {
                 var (products, count) = await _productServices.GetListAsync(
@@ -44,6 +46,7 @@ namespace Product.Presenters
                     model.Order[0]["dir"],
                     model.SearchCriteria?.Name,
                     model.SearchCriteria?.CategoryId,
+                    model.SearchCriteria?.ManufacturerId,
                     model.SearchCriteria?.SupplierId,
                     model.SearchCriteria?.Warranty,
                     model.SearchCriteria?.Description);
@@ -68,14 +71,16 @@ namespace Product.Presenters
 
             var categories = await _productServices.GetCategoryListAsync();
             var suppliers = await _supplierServices.GetListAsync();
+            var manufacturers = await _manufacturerServices.GetListAsync();
 
             var viewModel = new IndexViewModel()
             {
                 Products = new List<Entities.Product>(),
                 SearchCriteria = new IndexSearchCriteria()
                 {
-                    Categories = categories.ToSelectList(c => c.Id.ToString(), c => c.Name, string.Empty, true),
-                    Suppliers = suppliers.ToSelectList(s => s.Id.ToString(), s => s.Name, string.Empty, true)
+                    Categories = categories.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),
+                    Manufacturers = manufacturers.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),
+                    Suppliers = suppliers.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true)
                 }
             };
 
@@ -89,7 +94,6 @@ namespace Product.Presenters
             var categories = await _productServices.GetCategoryListAsync();
             var manufacturers = await _manufacturerServices.GetListAsync();
             var suppliers = await _supplierServices.GetListAsync();
-            //var user = await usersService.GetByIdAsync(cacheService.Get<int>("user_id"));
 
             if (id == 0)
             {
@@ -112,13 +116,9 @@ namespace Product.Presenters
             var viewModel = Mapper.Map<EditViewModel>(product);
 
             viewModel.Stores = stores;
-            //viewModel.CategoryId = product.CategoryId.ToString();
             viewModel.Categories = categories.ToSelectList(c => c.Id.ToString(), c => c.Name, viewModel.CategoryId, false);
-            //viewModel.ManufacturerId = product.ManufacturerId.ToString();
             viewModel.Manufacturers = manufacturers.ToSelectList(s => s.Id.ToString(), s => s.Name, viewModel.SupplierId, false);
-            //viewModel.SupplierId = product.SupplierId.ToString();
             viewModel.Suppliers = suppliers.ToSelectList(s => s.Id.ToString(), s => s.Name, viewModel.SupplierId, true);
-            //viewModel.StorePrivileges = user.StorePrivileges;
 
             return View(viewModel);
         }
@@ -217,6 +217,91 @@ namespace Product.Presenters
             }
 
             return RedirectToAction(nameof(EditCategory), new { id = category?.Id });
+        }
+
+        public async Task<IActionResult> Pictures(int id)
+        {
+            var product = await _productServices.GetByIdAsync(id);
+            if (product == null)
+            {
+                return BadRequest();
+            }
+
+            var viewModel = new PicturesViewModel()
+            {
+                Id = product.Id,
+                Pictures = product.Pictures
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> RemovePicture(int productId, int pictureId)
+        {
+            var product = await _productServices.GetByIdAsync(productId);
+            if (product == null || !IsAjax())
+            {
+                return BadRequest();
+            }
+
+            var picture = product.Pictures.FirstOrDefault(x => x.Id == pictureId);
+            if (picture == null)
+            {
+                return BadRequest();
+            }
+
+            await _productServices.DeletePictureAsync(picture);
+            return Ok();
+        }
+
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            var category = await _productServices.GetCategoryByIdAsync(id);
+            if (category == null)
+            {
+                return BadRequest();
+            }
+
+            if (!await _productServices.DeleteCategoryAsync(category, Messages))
+            {
+                return RedirectToAction(nameof(EditCategory), new { id = category.Id });
+            }
+
+            return RedirectToAction(nameof(Categories));
+        }
+
+        [HttpGet]
+        public IActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Import(ImportProductsRequestModel model)
+        {
+            if (!ModelState.IsValid || model.File == null || model.File.Length == 0)
+            {
+                return RedirectToAction(nameof(Import));
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                model.File.CopyTo(memoryStream);
+                memoryStream.Position = 0;
+                var productDtos = new List<ProductDto>();
+
+                using (var reader = new StreamReader(memoryStream))
+                {
+                    string json = reader.ReadToEnd();
+                    productDtos = JsonConvert.DeserializeObject<List<ProductDto>>(json);
+                }
+
+                await _productServices.ImportAsync(productDtos, Messages);
+            }
+
+            return RedirectToAction(nameof(Import));
         }
     }
 }

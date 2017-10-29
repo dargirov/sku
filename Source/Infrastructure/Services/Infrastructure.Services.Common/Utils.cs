@@ -6,35 +6,32 @@ namespace Infrastructure.Services.Common
     {
         public static int? TryParseInt(string str)
         {
-            int result;
-            if (!int.TryParse(str, out result))
+            if (int.TryParse(str, out int result))
             {
-                return null;
+                return result;
             }
 
-            return result;
+            return null;
         }
 
         public static bool? TryParseBool(string str)
         {
-            bool result;
-            if (!bool.TryParse(str, out result))
+            if (bool.TryParse(str, out bool result))
             {
-                return null;
+                return result;
             }
 
-            return result;
+            return null;
         }
 
         public static Guid? TryParseGuid(string str)
         {
-            Guid result;
-            if (!Guid.TryParse(str, out result))
+            if (Guid.TryParse(str, out Guid result))
             {
-                return null;
+                return result;
             }
 
-            return result;
+            return null;
         }
     }
 }

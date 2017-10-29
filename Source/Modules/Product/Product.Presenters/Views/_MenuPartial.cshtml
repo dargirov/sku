@@ -26,5 +26,10 @@
         {
             <li><a asp-controller="product" asp-action="editcategory">@Localizer["Add category"]</a></li>
         }
+
+        @if (modulePrivileges.ProductImport)
+        {
+            <li><a asp-controller="product" asp-action="import" asp-route-id="">@Localizer["Import products"]</a></li>
+        }
     </ul>
 </section>

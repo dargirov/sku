@@ -9,6 +9,10 @@ namespace Product.Presenters.Dtos
 
         public IEnumerable<SelectListItem> Categories { get; set; }
 
+        public int ManufacturerId { get; set; }
+
+        public IEnumerable<SelectListItem> Manufacturers { get; set; }
+
         public int CategoryId { get; set; }
 
         public IEnumerable<SelectListItem> Suppliers { get; set; }

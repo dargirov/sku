@@ -145,6 +145,7 @@ namespace Web.Pages
                 ProductRead = true,
                 ProductWrite = true,
                 ProductDelete = true,
+                ProductImport = true,
                 CategoryRead = true,
                 CategoryWrite = true,
                 CategoryDelete = true,

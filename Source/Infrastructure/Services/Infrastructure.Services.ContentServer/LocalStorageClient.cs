@@ -9,14 +9,14 @@ namespace Infrastructure.Services.ContentServer
     public class LocalStorageClient : StorageClient
     {
         private string ContentPath { get; set; }
-        private Administration.Entities.User User { get; set; }
         private string Subdirname { get; set; }
+        private int UserId { get; set; }
 
-        public LocalStorageClient(Administration.Entities.User user, string path)
+        public LocalStorageClient(int userId, int organizationId, string path)
         {
             ContentPath = path;
-            Subdirname = $"organization{user.OrganizationId}";
-            User = user;
+            Subdirname = $"organization{organizationId}";
+            UserId = userId;
         }
 
         public override async Task<Administration.Entities.File> SaveAsync(IFormFile formFile)
@@ -61,7 +61,7 @@ namespace Infrastructure.Services.ContentServer
             {
                 Guid = info.guid,
                 StorageType = Administration.Entities.StorageTypeEnum.Local,
-                User = User,
+                UserId = UserId,
                 Path = info.path,
                 ContentType = formFile.ContentType,
                 Name = formFile.FileName,

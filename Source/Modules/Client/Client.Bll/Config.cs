@@ -1,12 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Administration.Bll;
+using StructureMap;
 
 namespace Client.Bll
 {
     public static class Config
     {
-        public static void RegisterServices(IServiceCollection service)
+        public static void RegisterServices(Container container)
         {
-            service.AddTransient<IClientServices, ClientServices>();
+            container.Configure(x => x.For<IClientServices>().Use<ClientServices>());
+            container.Configure(x => x.For<IGlobalSearchResult>().Add<GlobalSearchResult>().Named("ClientGlobalSearchResult"));
         }
     }
 }

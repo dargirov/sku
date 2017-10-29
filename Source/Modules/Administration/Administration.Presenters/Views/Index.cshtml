@@ -12,18 +12,28 @@
 }
 
 <section id="home-page-section">
-    @*@if (Model.Products.Count() > 0)
+    
+    @if (Model.Notifications.Count() > 0)
     {
         <div class="low-quantity-products-alert">
             <h4>Low Quantity</h4>
             <ul>
-                @foreach (var product in Model.Products)
+                @foreach (var notification in Model.Notifications)
                 {
-                    <li><a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id">@product.Name</a></li>
+                    <li>
+                        @if (notification.HasUrl)
+                        {
+                            <a asp-controller="@notification.Controller" asp-action="@notification.Action" asp-route-id="@notification.Id">@notification.Text</a>
+                        }
+                        else
+                        {
+                            @notification.Text
+                        }
+                    </li>
                 }
             </ul>
         </div>
-    }*@
+    }
 
     <div>
         <ul id="module-select-menu">

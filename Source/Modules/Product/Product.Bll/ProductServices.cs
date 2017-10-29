@@ -1,12 +1,17 @@
-﻿using AutoMapper;
+﻿using Administration.Bll;
+using AutoMapper;
 using Infrastructure.Data.Common;
 using Infrastructure.Database.Repository;
 using Infrastructure.Services.Common;
 using Infrastructure.Services.Common.Mappings;
+using Manufacturer.Bll;
 using Microsoft.EntityFrameworkCore;
 using Product.Bll.Dtos;
 using Store.Bll;
+using StructureMap;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,16 +19,22 @@ namespace Product.Bll
 {
     public class ProductServices : IProductServices
     {
+        private readonly IContainer _container;
         private readonly IRepository _repository;
         private readonly IEntityServices _entityServices;
         private readonly IStoreServices _storeServices;
+        private readonly IManufacturerServices _manufacturerServices;
+        private readonly ICountryServices _countryServices;
         private IMapper Mapper => AutoMapperConfig.Mapper;
 
-        public ProductServices(IRepository repository, IEntityServices entityServices, IStoreServices storeServices)
+        public ProductServices(IContainer container, IRepository repository, IEntityServices entityServices, IStoreServices storeServices, IManufacturerServices manufacturerServices, ICountryServices countryServices)
         {
+            _container = container;
             _repository = repository;
             _entityServices = entityServices;
             _storeServices = storeServices;
+            _manufacturerServices = manufacturerServices;
+            _countryServices = countryServices;
         }
 
         public async Task<Entities.Product> GetByIdAsync(int id)
@@ -62,7 +73,7 @@ namespace Product.Bll
             return product;
         }
 
-        public async Task<(IEnumerable<Entities.Product> products, int count)> GetListAsync(int start, int limit, string column, string dir, string name, int? categoryId, int? supplierId, string warranty, string description)
+        public async Task<(IEnumerable<Entities.Product> products, int count)> GetListAsync(int start, int limit, string column, string dir, string name, int? categoryId, int? manufacturerId, int? supplierId, string warranty, string description)
         {
             var storeIds = (await _storeServices.GetListAsync()).Select(x => x.Id);
 
@@ -83,6 +94,11 @@ namespace Product.Bll
             if (categoryId.HasValue && categoryId.Value > 0)
             {
                 query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
+
+            if (manufacturerId.HasValue && manufacturerId.Value > 0)
+            {
+                query = query.Where(p => p.ManufacturerId == manufacturerId.Value);
             }
 
             if (supplierId.HasValue && supplierId.Value > 0)
@@ -216,7 +232,15 @@ namespace Product.Bll
                 }
                 else
                 {
-                    // TODO: check if has priv and delete variant
+                    // TODO: I should probably check product write priv?
+                    if (variant.Stocks.All(x => storeDeleteIds.Contains(x.StoreId)))
+                    {
+                        await _entityServices.DeleteAsync<Entities.ProductVariant, int>(variant);
+                    }
+                    else
+                    {
+                        messages.AddWarning($"Cant delete variant because it will delete stock in stores for which you dont have delete permission.");
+                    }
                 }
             }
 
@@ -251,10 +275,15 @@ namespace Product.Bll
                     }
                     else
                     {
-                        // TODO: show warning only if there are changes to the stock
-                        var storeName = stock?.Store?.Name
-                            ?? (await _repository.GetByIdAsync<Store.Entities.Store, int>(stockDto.StoreId)).Name;
-                        messages.AddWarning($"Cant make changes to store {storeName}. You dont have write permissions.");
+                        if (stockDto.LowQuantity != stock.LowQuantity
+                            || stockDto.Quantity != stock.Quantity
+                            || stockDto.LowQuantityMeasureType != stock.LowQuantityMeasureType
+                            || stockDto.QuantityMeasureType != stock.QuantityMeasureType)
+                        {
+                            var storeName = stock?.Store?.Name
+                                ?? (await _repository.GetByIdAsync<Store.Entities.Store, int>(stockDto.StoreId)).Name;
+                            messages.AddWarning($"Cant make changes to store {storeName}. You dont have write permissions.");
+                        }
                     }
                 }
             }
@@ -282,6 +311,133 @@ namespace Product.Bll
         public Task<int> DeleteAsync(Entities.Product product)
         {
             return _entityServices.DeleteAsync<Entities.Product, int>(product);
+        }
+
+        public Task<int> DeletePictureAsync(Entities.ProductPicture picture)
+        {
+            return _entityServices.DeleteAsync<Entities.ProductPicture, int>(picture);
+        }
+
+        public async Task<bool> DeleteCategoryAsync(Entities.ProductCategory productCategory, Messages messages)
+        {
+            foreach (var plugin in _container.GetAllInstances<IProductCategoryEntityPlugin>())
+            {
+                if (!await plugin.OnDelete(productCategory, messages))
+                {
+                    return false;
+                }
+            }
+
+            var result = await _entityServices.DeleteAsync<Entities.ProductCategory, int>(productCategory);
+
+            return result != 0;
+        }
+
+        public async Task<bool> ImportAsync(IList<Dtos.Import.ProductDto> productDtos, Messages messages)
+        {
+            var stores = await _storeServices.GetListAsync();
+            var countries = await _countryServices.GetListAsync();
+
+            using (var transaction = await _repository.BeginTransactionAsync())
+            {
+                if (!await SaveProductsAsync(productDtos, stores, countries, messages))
+                {
+                    return false;
+                }
+
+                transaction.Commit();
+            }
+
+            return true;
+        }
+
+        private async Task<bool> SaveProductsAsync(IList<Dtos.Import.ProductDto> productDtos, IList<Store.Entities.Store> stores, IList<Administration.Entities.Country> countries, Messages messages)
+        {
+            var categories = await GetCategoryListAsync();
+            var manufacturers = await _manufacturerServices.GetListAsync();
+
+            foreach (var productDto in productDtos)
+            {
+                if (string.IsNullOrEmpty(productDto.Name)
+                    || string.IsNullOrEmpty(productDto.Category)
+                    || string.IsNullOrEmpty(productDto.Description))
+                {
+                    messages.AddWarning("Invalid data for product");
+                    continue;
+                }
+
+                if (productDto.Manufacturer == null
+                    || string.IsNullOrEmpty(productDto.Manufacturer.Name)
+                    || string.IsNullOrEmpty(productDto.Manufacturer.Country))
+                {
+                    messages.AddWarning($"Invalid manufacturer data for product {productDto.Name}");
+                    continue;
+                }
+
+                if (!countries.Any(x => x.Name == productDto.Manufacturer.Country))
+                {
+                    messages.AddWarning($"Country with name {productDto.Manufacturer.Country} is not found");
+                    continue;
+                }
+
+                if (productDto.Variants == null
+                    || productDto.Variants.Count == 0)
+                {
+                    messages.AddWarning($"Product {productDto.Name} has no variants");
+                    continue;
+                }
+
+                var product = new Entities.Product()
+                {
+                    Name = LimitString(productDto.Name, 300),
+                    Description = LimitString(productDto.Description, 1000),
+                    Category = categories.FirstOrDefault(x => x.Name == productDto.Category)
+                        ?? new Entities.ProductCategory() { Name = LimitString(productDto.Category, 100) },
+                    Manufacturer = manufacturers.FirstOrDefault(x => x.Name == productDto.Manufacturer.Name)
+                        ?? new Manufacturer.Entities.Manufacturer() { Name = LimitString(productDto.Manufacturer.Name, 100), Country = countries.First(x => x.Name == productDto.Manufacturer.Country) },
+                    Variants = productDto.Variants.Select(x => new Entities.ProductVariant()
+                    {
+                        Code = LimitString(x.SupplierStock, 50),
+                        PriceCustomer = decimal.Parse(x.PriceCustomer),
+                        PriceCustomerType = Entities.CurrencyTypeEnum.BGN,
+                        PriceNet = decimal.Parse(x.PriceSupplierNet),
+                        PriceNetType = Entities.CurrencyTypeEnum.BGN,
+                        Stocks = new List<Entities.ProductStock>()
+                            {
+                                new Entities.ProductStock()
+                                {
+                                    Quantity = int.Parse(x.Quantity),
+                                    QuantityMeasureType = Entities.MeasureTypeEnum.Quantity,
+                                    LowQuantity = Math.Max(int.Parse(x.Quantity) / 2, 1),
+                                    LowQuantityMeasureType = Entities.MeasureTypeEnum.Quantity,
+                                    Store = stores.First()
+                                }
+                            }
+                    }).ToList()
+                };
+
+                try
+                {
+                    await _entityServices.SaveAsync<Entities.Product, int>(product);
+                }
+                catch (Exception ex)
+                {
+                    Debug.Fail(ex.Message);
+                    return false;
+                }
+            }
+
+            string LimitString(string text, int length)
+            {
+                if (text.Length > length)
+                {
+                    return text.Substring(0, length);
+                }
+
+                return text;
+            }
+
+            return true;
         }
     }
 }

@@ -12,17 +12,23 @@ namespace Administration.Presenters
     {
         private readonly IUserServices _userServices;
         private readonly ICacheServices _cacheServices;
+        private readonly INotificationServices _notificationServices;
 
-        public AdministrationController(IUserServices userServices, ICacheServices cacheServices)
+        public AdministrationController(IUserServices userServices, ICacheServices cacheServices, INotificationServices notificationServices)
         {
             _userServices = userServices;
             _cacheServices = cacheServices;
+            _notificationServices = notificationServices;
         }
 
         public async Task<IActionResult> Index()
         {
-            var user = await _userServices.GetByIdAsync(1);
-            return View();
+            var viewModel = new IndexViewModel()
+            {
+                Notifications = await _notificationServices.GetNotificationsAsync()
+            };
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Users()
@@ -136,6 +142,7 @@ namespace Administration.Presenters
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ModulePrivileges(ModulePrivilegesRequestModel model)
         {
             if (!ModelState.IsValid)

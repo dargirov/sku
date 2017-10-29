@@ -290,6 +290,7 @@ body > footer span {
 .content-box label {
     color: #79797b;
     font-weight: normal;
+    text-align: left;
     font-size: 14px;
     display: inline-block;
     width: 100%;
@@ -366,6 +367,10 @@ body > footer span {
     color: #495057;
 }
 
+textarea.form-control {
+    height: 101px;
+}
+
 form select {
     height: 27px;
     border-style: none;
@@ -423,13 +428,17 @@ form select {
     list-style-type: none;
 }
 
-.status-success {
+.validation-summary-successes {
     background-color: #dff0d8;
     border: 1px solid #d6e9c6;
     color: #3c763d;
     padding: 15px;
     font-size: 13px;
     margin-bottom: 20px;
+}
+
+.validation-summary-successes ul {
+    list-style-type: none;
 }
 
 .table th .fa-sort-desc {
@@ -702,11 +711,8 @@ form select {
     border-bottom: 0;
 }
 
-.privilages-container .sub::before {
-    content: "\f141 ";
-    font-family: FontAwesome;
-    margin-right: 5px;
-    margin-left: 22px;
+.privilages-container .sub {
+    padding-left: 33px;
 }
 
 .privilages-container  .fa {
@@ -1092,15 +1098,36 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     margin-right: 10px;
 }
 
-.search-results-variants-container {
-    padding: 0;
-    margin-top: 10px;
-}
-
-.search-results-variants-container li {
-    padding: 0 !important;
+#search-results div > span {
     font-size: 13px;
     color: #333;
+    display: block;
+}
+
+#product-edit-form table, #product-edit-form table tbody {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#product-edit-form td, #product-edit-form th {
+    border: 1px solid #ddd;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    color: #333;
+    padding: 5px;
+    text-align: left;
+}
+
+.variant-row-even {
+    background-color: white;
+}
+
+.product-stock-container td {
+    border: 0 !important;
+}
+
+.product-stock-container td div {
+    display: flex;
 }
 
 @media all and (max-width: 516px) {

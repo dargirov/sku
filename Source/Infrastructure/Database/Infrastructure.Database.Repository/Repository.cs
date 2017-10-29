@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Data.Common;
 using Infrastructure.Database.DbConfig;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,11 @@ namespace Infrastructure.Database.Repository
         public bool HasEntityChanges<TEntity, T>(TEntity entity) where TEntity : BaseEntity<T>
         {
             return _dbContext.Entry(entity).State != EntityState.Unchanged;
+        }
+
+        public Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return _dbContext.Database.BeginTransactionAsync();
         }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -25,7 +26,7 @@ namespace Web
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var mvcBuilder = services.AddMemoryCache().AddMvc();
 
@@ -51,12 +52,24 @@ namespace Web
 
             Infrastructure.Database.DbConfig.Config.Register(services, Configuration.GetConnectionString("DefaultConnection"));
 
-            services.AddTransient<IRepository, Repository>();
-            services.AddTransient<IContentServer, ContentServer>();
-            services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
+            //services.AddTransient<IRepository, Repository>();
+            //services.AddTransient<IContentServer, ContentServer>();
+            //services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
-            Infrastructure.Services.Common.Config.Register(services);
-            ModulesCommon.Config.SetupModules(services, mvcBuilder);
+            var container = new Container();
+            container.Configure(x =>
+            {
+                x.For<IRepository>().Use<Repository>();
+                x.For<IContentServer>().Use<ContentServer>();
+                x.For<ITempDataProvider>().Use<CookieTempDataProvider>();
+                x.Populate(services);
+            });
+            //services.AddSingleton<StructureMap.IContainer, StructureMap.Container>(x => container);
+
+            Infrastructure.Services.Common.Config.Register(container);
+            ModulesCommon.Config.SetupModules(container, mvcBuilder);
+
+            return container.GetInstance<IServiceProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

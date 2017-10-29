@@ -1,0 +1,69 @@
+@model Product.Presenters.Dtos.PicturesViewModel
+@{
+    ViewData["Title"] = "Edit product pictures";
+}
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Product", subaction = "Pictures", Id = Model.Id })*@
+
+    <ul class="tabs">
+        <li><a asp-action="edit" asp-route-id="@Model.Id">@Localizer["Info"]</a></li>
+        <li class="active"><a asp-action="pictures" asp-route-id="@Model.Id">@Localizer["Pictures"] (@Model.Pictures.Count())</a></li>
+    </ul>
+
+    @Html.Partial("_StatusPartial")
+
+    <div class="content-box">
+        <table id="search-result-table" class="condensed" data-order-column="3" data-order-dir="desc" data-product-id="@Model.Id" data-remove-picture-url="@Url.Action("removepicture")">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th>@Localizer["Name"]</th>
+                    <th></th>
+                    <th>@Localizer["Created On"]</th>
+                    <th>@Localizer["Extension"]</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var picture in Model.Pictures)
+                {
+                    <tr>
+                        <td><input type="checkbox" data-store-id="@picture.Id"></td>
+                        <td>@picture.Thumb.Name</td>
+                        <td><a href="@Url.Action("index", "contentserver", new { id = picture.FullSize.Guid, area = string.Empty })" target="_blank"><img src="@Url.Action("index", "contentserver", new { id = picture.Thumb.Guid, area = string.Empty })"></a></td>
+                        <td>@picture.CreatedOn</td>
+                        <td>@picture.Thumb.Extension</td>
+                        <td><a class="remove-icon-link remove-picture" data-picture-id="@picture.Id"><i class="fa fa-times" aria-hidden="true"></i></a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</section>
+@section scripts {
+    <script>
+        $(function () {
+            $('.remove-picture').on('click', removePictureIconClick);
+            function removePictureIconClick(e) {
+                e.preventDefault();
+                var url = $('#search-result-table').data('remove-picture-url');
+                var productId = $('#search-result-table').data('product-id');
+                var pictureId = $(this).data('picture-id');
+                var $a = $(this);
+
+                $.ajax({ method: 'DELETE', url: url, data: { productId: productId, pictureId: pictureId } })
+                    .done(function (response) {
+                        $a.parent().parent().remove();
+                    });
+            }
+         });
+    </script>
+}

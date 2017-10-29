@@ -187,6 +187,7 @@
         searching: false,
         processing: false,
         serverSide: true,
+        iDisplayLength: 25,
         ajax: { 
             url: ajaxUrl,
             data: function (params) {
@@ -292,5 +293,30 @@
         var data = table.row(this).data();
         window.location.href = productUrl + '/' + data.id;
     });
+
+    //$('.product-stock-checkbox').on('change', onProductStockCheckboxChange);
+    //function onProductStockCheckboxChange(e) {
+    //    var checked = $(this).prop('checked');
+    //    var $quantities = $(this).parent().parent().find('.product-stock-quantities');
+
+    //    if (checked) {
+    //        $quantities.removeClass('hidden');
+    //    } else {
+    //        $quantities.addClass('hidden');
+    //    }
+    //}
+
+    $('input[type=checkbox].readonly').on('change', onReadonlyChange);
+    function onReadonlyChange(e) {
+        e.stopPropagation();
+        $(this).prop('checked', true);
+    }
+
+    $('select.readonly').on('mousedown', onReadonlyChange);
+    function onReadonlyChange(e) {
+        e.preventDefault();
+        this.blur();
+        window.focus();
+    }
 
 });

@@ -41,7 +41,7 @@
                     @{ var i = 0; }
                     @foreach (var store in Model.Stores)
                     {
-                        var privilege = Model.StorePrivileges.Where(s => s.Store.Id == store.Id).FirstOrDefault();
+                        var privilege = Model.StorePrivileges.FirstOrDefault(s => s.Store == store);
                         <tr>
                             <td>
                                 <input type="hidden" name="StorePrivileges[@i].StoreId" value="@store.Id">

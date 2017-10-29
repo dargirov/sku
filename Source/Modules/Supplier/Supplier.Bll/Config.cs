@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using StructureMap;
 
 namespace Supplier.Bll
 {
     public static class Config
     {
-        public static void RegisterServices(IServiceCollection service)
+        public static void RegisterServices(Container container)
         {
-            service.AddTransient<ISupplierServices, SupplierServices>();
+            container.Configure(x => x.For<ISupplierServices>().Use<SupplierServices>());
         }
     }
 }

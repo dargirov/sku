@@ -8,7 +8,7 @@ namespace Product.Entities
     {
         [Required]
         [MinLength(3)]
-        [MaxLength(100)]
+        [MaxLength(300)]
         public string Name { get; set; }
 
         [Required]

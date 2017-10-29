@@ -1,12 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Administration.Bll;
+using StructureMap;
 
 namespace Manufacturer.Bll
 {
     public static class Config
     {
-        public static void RegisterServices(IServiceCollection service)
+        public static void RegisterServices(Container container)
         {
-            service.AddTransient<IManufacturerServices, ManufacturerServices>();
+            container.Configure(x => x.For<IManufacturerServices>().Use<ManufacturerServices>());
+            container.Configure(x => x.For<IGlobalSearchResult>().Add<GlobalSearchResult>().Named("ManufacturerGlobalSearchResult"));
         }
     }
 }

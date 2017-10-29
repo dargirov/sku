@@ -27,6 +27,10 @@
                     <select asp-for="SearchCriteria.CategoryId" asp-items="Model.SearchCriteria.Categories"></select>
                 </div>
                 <div>
+                    <label asp-for="SearchCriteria.ManufacturerId">@Localizer["Manufacturer"]</label>
+                    <select asp-for="SearchCriteria.ManufacturerId" asp-items="Model.SearchCriteria.Manufacturers"></select>
+                </div>
+                <div>
                     <label asp-for="SearchCriteria.SupplierId">@Localizer["Supplier"]</label>
                     <select asp-for="SearchCriteria.SupplierId" asp-items="Model.SearchCriteria.Suppliers"></select>
                 </div>

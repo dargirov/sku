@@ -14,13 +14,13 @@ namespace Infrastructure.Services.ContentServer
     {
         private CloudStorageAccount StorageAccount { get; set; }
         private string ContainerName { get; set; }
-        private User User { get; set; }
+        private int UserId { get; set; }
 
-        public AzureStorageClient(User user, string accountName, string accessKey)
+        public AzureStorageClient(int userId, int organizationId, string accountName, string accessKey)
         {
-            User = user;
             StorageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(accountName, accessKey), true);
-            ContainerName = $"organization{user.OrganizationId}";
+            ContainerName = $"organization{organizationId}";
+            UserId = userId;
         }
 
         public override async Task<Administration.Entities.File> SaveAsync(IFormFile formFile)
@@ -133,7 +133,7 @@ namespace Infrastructure.Services.ContentServer
             {
                 Guid = fileInfo.guid,
                 StorageType = StorageTypeEnum.Azure,
-                User = User,
+                UserId = UserId,
                 Path = $"{ContainerName}{Path.DirectorySeparatorChar}{fileInfo.name}",
                 ContentType = formFile.ContentType,
                 Name = formFile.FileName,

@@ -5,7 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="structuremap" Version="4.5.2" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\..\..\Infrastructure\Services\Infrastructure.Services.Common\Infrastructure.Services.Common.csproj" />
+        <ProjectReference Include="..\..\Administration\Administration.Bll\Administration.Bll.csproj" />
         <ProjectReference Include="..\Manufacturer.Entities\Manufacturer.Entities.csproj" />
     </ItemGroup>
 

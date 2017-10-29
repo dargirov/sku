@@ -22,7 +22,7 @@ namespace Product.Presenters.Dtos
         [Required]
         public int ManufacturerId { get; set; }
 
-        public int SupplierId { get; set; }
+        public int? SupplierId { get; set; }
 
         [MaxLength(20)]
         public string Warranty { get; set; }

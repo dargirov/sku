@@ -85,5 +85,18 @@ namespace Manufacturer.Presenters
 
             return RedirectToAction(nameof(Edit), new { id = manufacturer?.Id });
         }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var manufacturer = await _manufacturerServices.GetByIdAsync(id);
+            if (manufacturer == null)
+            {
+                return BadRequest();
+            }
+
+            await _manufacturerServices.DeleteAsync(manufacturer, Messages);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

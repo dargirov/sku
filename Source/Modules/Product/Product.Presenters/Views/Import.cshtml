@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Products import";
+}
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Product" })*@
+
+    @Html.Partial("_StatusPartial")
+
+    <div class="content-box">
+        <form method="post" enctype="multipart/form-data" asp-controller="product" asp-action="import" class="main-form">
+            <input type="file" name="file">
+            <input type="submit" class="hidden">
+            <input type="reset" class="hidden">
+        </form>
+    </div>
+
+</section>
+
+@section footer {
+    @await Component.InvokeAsync("FooterActions", new { controller = "Product", action = "Import" })
+}

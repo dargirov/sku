@@ -1,20 +1,23 @@
-﻿using Infrastructure.Database.Repository;
+﻿using Infrastructure.Data.Common;
+using Infrastructure.Database.Repository;
 using Infrastructure.Services.Common;
 using Microsoft.EntityFrameworkCore;
+using StructureMap;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Manufacturer.Entities;
 
 namespace Manufacturer.Bll
 {
     public class ManufacturerServices : IManufacturerServices
     {
+        private readonly IContainer _container;
         private readonly IRepository _repository;
         private readonly IEntityServices _entityServices;
 
-        public ManufacturerServices(IRepository repository, IEntityServices entityServices)
+        public ManufacturerServices(IContainer container, IRepository repository, IEntityServices entityServices)
         {
+            _container = container;
             _repository = repository;
             _entityServices = entityServices;
         }
@@ -54,6 +57,21 @@ namespace Manufacturer.Bll
         public Task<int> EditAsync(Entities.Manufacturer manufacturer)
         {
             return _entityServices.SaveAsync<Entities.Manufacturer, int>(manufacturer);
+        }
+
+        public async Task<bool> DeleteAsync(Entities.Manufacturer manufacturer, Messages messages)
+        {
+            foreach (var plugin in _container.GetAllInstances<IManufacturerEntityPlugin>())
+            {
+                if (!await plugin.OnDelete(manufacturer, messages))
+                {
+                    return false;
+                }
+            }
+
+            var result = await _entityServices.DeleteAsync<Entities.Manufacturer, int>(manufacturer);
+
+            return result != 0;
         }
     }
 }

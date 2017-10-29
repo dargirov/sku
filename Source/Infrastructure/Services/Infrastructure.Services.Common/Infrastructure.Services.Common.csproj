@@ -8,6 +8,7 @@
         <PackageReference Include="AutoMapper" Version="6.1.1" />
         <PackageReference Include="CryptoHelper" Version="2.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+        <PackageReference Include="structuremap" Version="4.5.2" />
     </ItemGroup>
 
     <ItemGroup>

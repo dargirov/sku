@@ -36,6 +36,8 @@ namespace Administration.Presenters.Dtos
         public bool ProductWrite { get; set; }
         [Required]
         public bool ProductDelete { get; set; }
+        [Required]
+        public bool ProductImport { get; set; }
 
         [Required]
         public bool CategoryRead { get; set; }

@@ -21,6 +21,7 @@ namespace Infrastructure.Services.Common
         }
 
         // TODO: SAVE MEMO
+        // TODO: return bool and catch exceptions
         public Task<int> SaveAsync<TEntity, T>(TEntity entity) where TEntity : BaseTenantEntity<T>
         {
             var visited = new EntityVisitedTree();
@@ -46,7 +47,7 @@ namespace Infrastructure.Services.Common
             foreach (var property in GetProperties<TEntity, T>(entity))
             {
                 var generic = method.MakeGenericMethod(new Type[] { property.GetType(), typeof(T) });
-                if (!property.IsSaved || (!visited.IsVisited<BaseTenantEntity<T>, T>(property)/* && _repository.HasEntityChanges<BaseTenantEntity<T>, T>(property)*/))
+                if (/*!property.IsSaved || */(!visited.IsVisited<BaseTenantEntity<T>, T>(property)))
                 {
                     visited.Add<BaseTenantEntity<T>, T>(property);
                     generic.Invoke(this, new[] { property, (object)false, visited });
@@ -58,7 +59,7 @@ namespace Infrastructure.Services.Common
                 var generic = method.MakeGenericMethod(new Type[] { collection[0].GetType(), typeof(T) });
                 foreach (BaseTenantEntity<T> childValue in collection)
                 {
-                    if (!childValue.IsSaved || (!visited.IsVisited<BaseTenantEntity<T>, T>(childValue) /*&& _repository.HasEntityChanges<BaseTenantEntity<T>, T>(childValue)*/))
+                    if (!childValue.IsSaved || (!visited.IsVisited<BaseTenantEntity<T>, T>(childValue)))
                     {
                         visited.Add<BaseTenantEntity<T>, T>(childValue);
                         generic.Invoke(this, new[] { childValue, (object)false, visited });

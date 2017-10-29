@@ -1,4 +1,5 @@
-﻿using Store.Entities;
+﻿using Infrastructure.Data.Common;
+using Store.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace Store.Bll
     {
         Task<Entities.Store> GetByIdAsync(int id);
         Task<List<Entities.Store>> GetListAsync();
+        Task<List<Entities.Store>> GetListWithoutPrivCheckAsync();
         Task<List<Entities.Store>> GetListAsync(string name, int? cityId, string address);
         Task<List<Administration.Entities.City>> GetCityListAsync();
         Task<int> EditAsync(Entities.Store store);
@@ -16,5 +18,6 @@ namespace Store.Bll
         Task<List<Entities.Store>> GetStoreListWithReadPrivilegeAsync();
         Task<List<Entities.Store>> GetStoreListWithWritePrivilegeAsync();
         Task<List<Entities.Store>> GetStoreListWithDeletePrivilegeAsync();
+        Task<bool> DeleteAsync(Entities.Store store, Messages messages);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Services.Common.Mappings;
 using Microsoft.Extensions.DependencyInjection;
+using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace ModulesCommon
 {
     public static class Config
     {
-        public static void SetupModules(IServiceCollection services, IMvcBuilder builder)
+        public static void SetupModules(Container container, IMvcBuilder builder)
         {
             RegisterParts(builder);
-            RegisterServices(services);
+            RegisterServices(container);
             RegisterMappings();
             //RegisterViewLocations(services);
         }
@@ -46,14 +47,14 @@ namespace ModulesCommon
         //    });
         //}
 
-        private static void RegisterServices(IServiceCollection service)
+        private static void RegisterServices(Container container)
         {
-            Administration.Bll.Config.RegisterServices(service);
-            Store.Bll.Config.RegisterServices(service);
-            Supplier.Bll.Config.RegisterServices(service);
-            Manufacturer.Bll.Config.RegisterServices(service);
-            Client.Bll.Config.RegisterServices(service);
-            Product.Bll.Config.RegisterServices(service);
+            Administration.Bll.Config.RegisterServices(container);
+            Store.Bll.Config.RegisterServices(container);
+            Supplier.Bll.Config.RegisterServices(container);
+            Manufacturer.Bll.Config.RegisterServices(container);
+            Client.Bll.Config.RegisterServices(container);
+            Product.Bll.Config.RegisterServices(container);
         }
 
         private static void RegisterParts(IMvcBuilder builder)

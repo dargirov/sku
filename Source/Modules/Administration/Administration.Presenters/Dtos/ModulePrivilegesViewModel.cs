@@ -26,6 +26,7 @@ namespace Administration.Presenters.Dtos
         public bool ProductRead { get; set; }
         public bool ProductWrite { get; set; }
         public bool ProductDelete { get; set; }
+        public bool ProductImport { get; set; }
 
         public bool CategoryRead { get; set; }
         public bool CategoryWrite { get; set; }
