@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Infrastructure.Services.Common;
+using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services.Common.Authorization

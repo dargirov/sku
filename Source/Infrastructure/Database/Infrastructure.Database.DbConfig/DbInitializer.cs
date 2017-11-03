@@ -12,6 +12,7 @@ namespace Infrastructure.Database.DbConfig
             context.Database.EnsureCreated();
 
             AddCountries(context);
+            AddCities(context);
         }
 
         private static void AddCountries(ApplicationDbContext context)
@@ -22,6 +23,17 @@ namespace Infrastructure.Database.DbConfig
             }
 
             context.Countries.AddRange(GetCoutryList());
+            context.SaveChanges();
+        }
+
+        private static void AddCities(ApplicationDbContext context)
+        {
+            if (context.Cities.Count() > 1)
+            {
+                return;
+            }
+
+            context.Cities.AddRange(GetCityList());
             context.SaveChanges();
         }
 
@@ -277,6 +289,16 @@ namespace Infrastructure.Database.DbConfig
             result.Add(new Country() { Name = "Южна Корея", NameEn = "South Korea", Code = "KR", Version = 1, CreatedOn = DateTime.Now });
             result.Add(new Country() { Name = "Ямайка", NameEn = "Jamaica", Code = "JM", Version = 1, CreatedOn = DateTime.Now });
             result.Add(new Country() { Name = "Япония", NameEn = "Japan", Code = "JP", Version = 1, CreatedOn = DateTime.Now });
+
+            return result;
+        }
+
+        private static IEnumerable<City> GetCityList()
+        {
+            var result = new List<City>();
+            result.Add(new City() { Name = "Асеновград", Highlight = true, PostCode = 4230, Type = CityTypeEnum.City, Version = 1, CreatedOn = DateTime.Now });
+            result.Add(new City() { Name = "Пловдив", Highlight = true, PostCode = 4000, Type = CityTypeEnum.City, Version = 1, CreatedOn = DateTime.Now });
+            result.Add(new City() { Name = "София", Highlight = true, PostCode = 1000, Type = CityTypeEnum.City, Version = 1, CreatedOn = DateTime.Now });
 
             return result;
         }

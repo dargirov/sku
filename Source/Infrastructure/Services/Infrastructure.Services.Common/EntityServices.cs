@@ -12,12 +12,12 @@ namespace Infrastructure.Services.Common
     public class EntityServices : IEntityServices
     {
         private readonly IRepository _repository;
-        private readonly Guid _tenantId;
+        private readonly ITenantProvider _tenantProvider;
 
         public EntityServices(IRepository repository, ITenantProvider tenantProvider)
         {
             _repository = repository;
-            _tenantId = tenantProvider.GetTenantId();
+            _tenantProvider = tenantProvider;
         }
 
         // TODO: SAVE MEMO
@@ -73,7 +73,7 @@ namespace Infrastructure.Services.Common
             }
 
             entity.Version++;
-            entity.TenantId = _tenantId;
+            entity.TenantId = _tenantProvider.GetTenantId();
 
             if (entity.IsSaved)
             {

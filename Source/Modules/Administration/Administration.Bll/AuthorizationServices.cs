@@ -17,7 +17,7 @@ namespace Administration.Bll
 
         public async Task<ModulePrivilege> GetModulePrivileges()
         {
-            return (await _authenticationServices.GetCurrentUser()).ModulePrivilege;
+            return (await _authenticationServices.GetCurrentUserAsync()).ModulePrivilege;
         }
     }
 }

@@ -4,15 +4,13 @@ using Infrastructure.Services.Common.Authorization;
 using Infrastructure.Services.ContentServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StructureMap;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 
 namespace Web
 {
@@ -59,6 +57,7 @@ namespace Web
             var container = new Container();
             container.Configure(x =>
             {
+                x.For<IHttpContextAccessor>().Use<HttpContextAccessor>();
                 x.For<IRepository>().Use<Repository>();
                 x.For<IContentServer>().Use<ContentServer>();
                 x.For<ITempDataProvider>().Use<CookieTempDataProvider>();

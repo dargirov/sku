@@ -16,7 +16,7 @@ namespace Administration.Bll
 
         public Task<Entities.Organization> GetByNameAsync(string name)
         {
-            return _repository.GetQueryable<Entities.Organization, int>()
+            return _repository.GetQueryable<Entities.Organization, int>(ignoreQueryFilters: true)
                 .Where(x => x.Name == name.Trim())
                 .FirstOrDefaultAsync();
         }

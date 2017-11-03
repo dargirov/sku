@@ -12,15 +12,20 @@ namespace Infrastructure.Database.Repository
 {
     public class Repository : IRepository
     {
-        private readonly DbContext _dbContext;
+        private readonly ApplicationDbContext _dbContext;
 
         public Repository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public IQueryable<TEntity> GetQueryable<TEntity, T>() where TEntity : BaseEntity<T>
+        public IQueryable<TEntity> GetQueryable<TEntity, T>(bool ignoreQueryFilters = false) where TEntity : BaseEntity<T>
         {
+            if (ignoreQueryFilters)
+            {
+                return _dbContext.Set<TEntity>().IgnoreQueryFilters();
+            }
+
             return _dbContext.Set<TEntity>();
         }
 
@@ -65,6 +70,7 @@ namespace Infrastructure.Database.Repository
             return _dbContext.Entry(entity).State != EntityState.Unchanged;
         }
 
+        // TODO: expose commint transaction in method?
         public Task<IDbContextTransaction> BeginTransactionAsync()
         {
             return _dbContext.Database.BeginTransactionAsync();

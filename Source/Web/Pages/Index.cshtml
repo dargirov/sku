@@ -22,24 +22,24 @@
             </div>
         }
         <div>
-            <label asp-for="Email">Email</label>
+            <label asp-for="Email">Email адрес</label>
             <input asp-for="Email">
             <i class="fa fa-at" aria-hidden="true"></i>
             <span asp-validation-for="Email"></span>
         </div>
         <div>
-            <label asp-for="Password">Password</label>
+            <label asp-for="Password">Парола</label>
             <input asp-for="Password">
             <i class="fa fa-lock" aria-hidden="true"></i>
             <span asp-validation-for="Password"></span>
         </div>
         <div>
-            <a href="#disabled" id="login" class="go">Login</a>
-            <a asp-page="register" id="register">Register</a>
+            <a href="#disabled" id="login" class="go">Вход</a>
+            <a asp-page="register" id="register">Регистрация</a>
             <input type="submit">
         </div>
         <div>
-            <a href="#disabled" id="forgotten-password">Forgotten password? </a>
+            <a href="#disabled" id="forgotten-password">Забравена парола? </a>
         </div>
     </form>
 

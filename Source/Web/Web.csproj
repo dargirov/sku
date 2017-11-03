@@ -52,17 +52,47 @@
         <ProductResourcesSource Include="..\Modules\Product\Product.Presenters\Resources\*.resx" />
         <Compile Remove="Resources\Pages\**" />
         
-        <Compile Remove="Views\**" />
-        
         <Content Remove="Resources\Pages\**" />
-        <Content Remove="Views\**" />
         <EmbeddedResource Remove="Resources\Pages\**" />
-        <EmbeddedResource Remove="Views\**" />
         <None Remove="Resources\Pages\**" />
-        <None Remove="Views\**" />
         <Compile Include="$(Views)">
             <Visible>false</Visible>
         </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Views\Administration\Index.cshtml" />
+      <None Include="Views\Administration\ModulePrivileges.cshtml" />
+      <None Include="Views\Administration\UserEdit.cshtml" />
+      <None Include="Views\Administration\Users.cshtml" />
+      <None Include="Views\Administration\_MenuPartial.cshtml" />
+      <None Include="Views\Client\EditLegal.cshtml" />
+      <None Include="Views\Client\EditNatural.cshtml" />
+      <None Include="Views\Client\Index.cshtml" />
+      <None Include="Views\Client\_MenuPartial.cshtml" />
+      <None Include="Views\Manufacturer\Edit.cshtml" />
+      <None Include="Views\Manufacturer\Index.cshtml" />
+      <None Include="Views\Manufacturer\_MenuPartial.cshtml" />
+      <None Include="Views\Product\Categories.cshtml" />
+      <None Include="Views\Product\Edit.cshtml" />
+      <None Include="Views\Product\EditCategory.cshtml" />
+      <None Include="Views\Product\Edit_NEW.cshtml" />
+      <None Include="Views\Product\Import.cshtml" />
+      <None Include="Views\Product\Index.cshtml" />
+      <None Include="Views\Product\Pictures.cshtml" />
+      <None Include="Views\Product\_MenuPartial.cshtml" />
+      <None Include="Views\Shared\Components\FooterActions\Default.cshtml" />
+      <None Include="Views\Shared\_Layout.cshtml" />
+      <None Include="Views\Shared\_StatusPartial.cshtml" />
+      <None Include="Views\Store\Edit.cshtml" />
+      <None Include="Views\Store\Index.cshtml" />
+      <None Include="Views\Store\Privileges.cshtml" />
+      <None Include="Views\Store\_MenuPartial.cshtml" />
+      <None Include="Views\Supplier\Edit.cshtml" />
+      <None Include="Views\Supplier\Index.cshtml" />
+      <None Include="Views\Supplier\_MenuPartial.cshtml" />
+      <None Include="Views\_ViewImports.cshtml" />
+      <None Include="Views\_ViewStart.cshtml" />
     </ItemGroup>
     
     <!-- Main targets start -->

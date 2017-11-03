@@ -30,7 +30,7 @@ namespace Administration.Bll
 
         public Task<User> GetByEmailAsync(string email)
         {
-            return _repository.GetQueryable<User, int>()
+            return _repository.GetQueryable<User, int>(ignoreQueryFilters: true)
                 .Include(x => x.ModulePrivilege)
                 .Include(x => x.Organization)
                 .Where(x => x.Email == email)

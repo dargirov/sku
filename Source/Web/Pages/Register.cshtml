@@ -21,58 +21,52 @@
                 </ul>
             </div>
         }
-        <div><strong>Localizer["Firm information"]</strong></div>
+        <div><strong>Информация за фирма</strong></div>
         <div>
-            <label asp-for="OrganizationName">Localizer["Organization name"]</label>
+            <label asp-for="OrganizationName">Име</label>
             <input asp-for="OrganizationName">
             <i class="fa fa-bank" aria-hidden="true"></i>
             <span asp-validation-for="OrganizationName"></span>
         </div>
         <div>
-            <label asp-for="Eik">Localizer["Eik"]</label>
-            <input asp-for="Eik">
-            <i class="fa fa-bolt" aria-hidden="true"></i>
-            <span asp-validation-for="Eik"></span>
-        </div>
-        <div>
-            <label asp-for="Mol">Localizer["Mol"]</label>
+            <label asp-for="Mol">МОЛ</label>
             <input asp-for="Mol">
             <i class="fa fa-user" aria-hidden="true"></i>
             <span asp-validation-for="Mol"></span>
         </div>
-        <div><strong>Localizer["User information"]</strong></div>
+        <div><strong>Информация за потребител</strong></div>
         <div>
-            <label asp-for="Email">Localizer["Email"]</label>
+            <label asp-for="Email">Email адрес</label>
             <input asp-for="Email">
             <i class="fa fa-at" aria-hidden="true"></i>
             <span asp-validation-for="Email"></span>
         </div>
         <div>
-            <label asp-for="Password">Localizer["Password"]</label>
+            <label asp-for="Password">Парола</label>
             <input asp-for="Password">
             <i class="fa fa-lock" aria-hidden="true"></i>
             <span asp-validation-for="Password"></span>
         </div>
         <div>
-            <label asp-for="ConfirmPassword">Localizer["Confirm password"]</label>
+            <label asp-for="ConfirmPassword">Повторете паролата</label>
             <input asp-for="ConfirmPassword">
             <i class="fa fa-lock" aria-hidden="true"></i>
             <span asp-validation-for="ConfirmPassword"></span>
         </div>
         <div>
-            <label asp-for="FirstName">Localizer["First name"]</label>
+            <label asp-for="FirstName">Име</label>
             <input asp-for="FirstName">
             <i class="fa fa-user" aria-hidden="true"></i>
             <span asp-validation-for="FirstName"></span>
         </div>
         <div>
-            <label asp-for="LastName">Localizer["Last name"]</label>
+            <label asp-for="LastName">Фамилия</label>
             <input asp-for="LastName">
             <i class="fa fa-user" aria-hidden="true"></i>
             <span asp-validation-for="LastName"></span>
         </div>
         <div>
-            <a href="#disableld" id="register" class="go">Localizer["Register"]</a>
+            <a href="#disableld" id="register" class="go">Регистрация</a>
             <input type="submit">
         </div>
     </form>

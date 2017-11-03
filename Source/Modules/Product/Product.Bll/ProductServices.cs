@@ -416,6 +416,16 @@ namespace Product.Bll
                     }).ToList()
                 };
 
+                if (!categories.Any(x => x.Name == product.Category.Name))
+                {
+                    categories.Add(product.Category);
+                }
+
+                if (!manufacturers.Any(x => x.Name == product.Manufacturer.Name))
+                {
+                    manufacturers.Add(product.Manufacturer);
+                }
+
                 try
                 {
                     await _entityServices.SaveAsync<Entities.Product, int>(product);

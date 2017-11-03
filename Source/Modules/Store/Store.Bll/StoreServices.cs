@@ -44,7 +44,7 @@ namespace Store.Bll
 
         public async Task<List<Entities.Store>> GetListAsync(string name, int? cityId, string address)
         {
-            var user = await _authenticationServices.GetCurrentUser();
+            var user = await _authenticationServices.GetCurrentUserAsync();
 
             var query = _repository.GetQueryable<Entities.Store, int>();
 
@@ -88,7 +88,7 @@ namespace Store.Bll
 
         public async Task<int> EditAsync(Entities.Store store)
         {
-            var user = await _authenticationServices.GetCurrentUser();
+            var user = await _authenticationServices.GetCurrentUserAsync();
 
             if (!store.IsSaved)
             {
@@ -171,7 +171,7 @@ namespace Store.Bll
 
         private async Task<List<Entities.Store>> GetStoreListWithPrivilegeAsync(Func<StorePrivilege, bool> filter)
         {
-            var user = await _authenticationServices.GetCurrentUser();
+            var user = await _authenticationServices.GetCurrentUserAsync();
 
             if (user.IsAdmin)
             {

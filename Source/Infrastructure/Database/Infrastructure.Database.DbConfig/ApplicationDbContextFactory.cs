@@ -1,6 +1,9 @@
 ﻿using Infrastructure.Services.Multitenancy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
+using System.IO;
 
 namespace Infrastructure.Database.DbConfig
 {
@@ -8,10 +11,18 @@ namespace Infrastructure.Database.DbConfig
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseSqlServer("Server=SHINOBI-PC;Database=sku3;Integrated Security=True;Trusted_Connection=True;MultipleActiveResultSets=true");
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
 
-            return new ApplicationDbContext(optionsBuilder.Options, new TenantProvider());
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            Debug.Print("Connection string: " + connectionString);
+
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            optionsBuilder.UseSqlServer(connectionString);
+
+            return new ApplicationDbContext(optionsBuilder.Options, new TenantProvider(null));
         }
     }
 }

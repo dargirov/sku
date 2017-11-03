@@ -22,7 +22,7 @@ namespace Client.Bll
         public async Task<IList<GlobalSearchResultDto>> GetResults(string search)
         {
             var result = new List<GlobalSearchResultDto>();
-            var user = await _authenticationServices.GetCurrentUser();
+            var user = await _authenticationServices.GetCurrentUserAsync();
 
             if (!user.IsAdmin && !user.ModulePrivilege.ClientRead)
             {

@@ -16,28 +16,28 @@ namespace Infrastructure.Database.DbConfig
             _tenantId = tenantProvider.GetTenantId();
         }
 
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Organization> Organizations { get; set; }
-        public virtual DbSet<City> Cities { get; set; }
-        public virtual DbSet<Country> Countries { get; set; }
-        public virtual DbSet<File> Files { get; set; }
-        public virtual DbSet<ModulePrivilege> ModulePrivileges { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<File> Files { get; set; }
+        public DbSet<ModulePrivilege> ModulePrivileges { get; set; }
 
-        public virtual DbSet<Store.Entities.Store> Stores { get; set; }
-        public virtual DbSet<Store.Entities.StorePrivilege> StorePrivileges { get; set; }
+        public DbSet<Store.Entities.Store> Stores { get; set; }
+        public DbSet<Store.Entities.StorePrivilege> StorePrivileges { get; set; }
 
-        public virtual DbSet<Supplier.Entities.Supplier> Suppliers { get; set; }
+        public DbSet<Supplier.Entities.Supplier> Suppliers { get; set; }
 
-        public virtual DbSet<Manufacturer.Entities.Manufacturer> Manufacturers { get; set; }
+        public DbSet<Manufacturer.Entities.Manufacturer> Manufacturers { get; set; }
 
-        public virtual DbSet<NaturalClient> NaturalClients { get; set; }
-        public virtual DbSet<LegalClient> LegalClients { get; set; }
+        public DbSet<NaturalClient> NaturalClients { get; set; }
+        public DbSet<LegalClient> LegalClients { get; set; }
 
-        public virtual DbSet<Product.Entities.Product> Products { get; set; }
-        public virtual DbSet<Product.Entities.ProductCategory> ProductCategories { get; set; }
-        public virtual DbSet<Product.Entities.ProductPicture> ProductPictures { get; set; }
-        public virtual DbSet<Product.Entities.ProductStock> ProductStocks { get; set; }
-        public virtual DbSet<Product.Entities.ProductVariant> ProductVariants { get; set; }
+        public DbSet<Product.Entities.Product> Products { get; set; }
+        public DbSet<Product.Entities.ProductCategory> ProductCategories { get; set; }
+        public DbSet<Product.Entities.ProductPicture> ProductPictures { get; set; }
+        public DbSet<Product.Entities.ProductStock> ProductStocks { get; set; }
+        public DbSet<Product.Entities.ProductVariant> ProductVariants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

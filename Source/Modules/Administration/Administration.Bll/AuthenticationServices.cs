@@ -17,7 +17,7 @@ namespace Administration.Bll
             _cacheServices = cacheServices;
         }
 
-        public async Task<bool> Login(string email, string password, Messages messages)
+        public async Task<bool> LoginAsync(string email, string password, Messages messages)
         {
             if (!ValidateInputFormat(email, password, messages))
             {
@@ -37,7 +37,12 @@ namespace Administration.Bll
             return true;
         }
 
-        public Task<User> GetCurrentUser()
+        public void Logout()
+        {
+            CleanupCacheData();
+        }
+
+        public Task<User> GetCurrentUserAsync()
         {
             var userId = _cacheServices.Get<int>("user_id");
             return _userServices.GetByIdAsync(userId);
@@ -72,6 +77,19 @@ namespace Administration.Bll
             _cacheServices.Set<string>("user_name", $"{user.FirstName} {user.LastName}");
             _cacheServices.Set<bool>("is_admin", user.IsAdmin);
             _cacheServices.Set<string>("organization_name", user.Organization.Name);
+            _cacheServices.Set<string>("tenant_id", user.TenantId.ToString());
+        }
+
+        private void CleanupCacheData()
+        {
+            _cacheServices.Remove("logged_in");
+            _cacheServices.Remove("email");
+            _cacheServices.Remove("loggin_date");
+            _cacheServices.Remove("organization_id");
+            _cacheServices.Remove("user_id");
+            _cacheServices.Remove("user_name");
+            _cacheServices.Remove("is_admin");
+            _cacheServices.Remove("organization_name");
         }
 
         private Task<int> UpdateActivity(User user)

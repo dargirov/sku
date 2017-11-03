@@ -10,7 +10,7 @@ namespace Infrastructure.Database.Repository
 {
     public interface IRepository
     {
-        IQueryable<TEntity> GetQueryable<TEntity, T>() where TEntity : BaseEntity<T>;
+        IQueryable<TEntity> GetQueryable<TEntity, T>(bool ignoreQueryFilters = false) where TEntity : BaseEntity<T>;
 
         Task<TEntity> GetByIdAsync<TEntity, T>(T id) where TEntity : BaseEntity<T>;
 

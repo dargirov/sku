@@ -1,9 +1,12 @@
 ﻿using Administration.Bll;
 using Administration.Entities;
+using Infrastructure.Services.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Web.Pages
@@ -61,13 +64,15 @@ namespace Web.Pages
         [MaxLength(100)]
         public string LastName { get; set; }
 
-        private IUserServices _userServices;
-        private IOrganizationServices _organizationServices;
+        private readonly IUserServices _userServices;
+        private readonly IOrganizationServices _organizationServices;
+        private readonly ICacheServices _cacheServices;
 
-        public RegisterModel(IUserServices userServices, IOrganizationServices organizationServices)
+        public RegisterModel(IUserServices userServices, IOrganizationServices organizationServices, ICacheServices cacheServices)
         {
             _userServices = userServices;
             _organizationServices = organizationServices;
+            _cacheServices = cacheServices;
         }
 
         public void OnGet()
@@ -117,12 +122,11 @@ namespace Web.Pages
                 Organization = new Organization()
                 {
                     Name = OrganizationName,
-                    Eik = Eik,
                     Mol = Mol
                 }
             };
 
-            //newUser.ModulePrivilege = this.GetAdminModulePrivilege();
+            _cacheServices.Set<string>("tenant_id", Guid.NewGuid().ToString());
 
             await _userServices.EditAsync(newUser);
 
@@ -131,37 +135,20 @@ namespace Web.Pages
 
         private ModulePrivilege GetAdminModulePrivilege()
         {
-            return new ModulePrivilege()
+            var privileges = new ModulePrivilege();
+
+            foreach (var prop in privileges.GetType().GetProperties().Where(x => x.PropertyType == typeof(bool) && !x.Name.StartsWith("Is")))
             {
-                StoreRead = true,
-                StoreWrite = true,
-                StoreDelete = true,
-                ManufacturerRead = true,
-                ManufacturerWrite = true,
-                ManufacturerDelete = true,
-                SupplierRead = true,
-                SupplierWrite = true,
-                SupplierDelete = true,
-                ProductRead = true,
-                ProductWrite = true,
-                ProductDelete = true,
-                ProductImport = true,
-                CategoryRead = true,
-                CategoryWrite = true,
-                CategoryDelete = true,
-                ClientRead = true,
-                ClientWrite = true,
-                ClientDelete = true,
-                IncomeRead = true,
-                IncomeWrite = true,
-                IncomeDelete = true,
-                InvoiceRead = true,
-                InvoiceWrite = true,
-                InvoiceDelete = true,
-                SaleRead = true,
-                SaleWrite = true,
-                SaleDelete = true,
-            };
+                var setter = prop.GetSetMethod();
+                if (setter == null)
+                {
+                    continue;
+                }
+
+                prop.SetValue(privileges, true);
+            }
+
+            return privileges;
         }
     }
 }

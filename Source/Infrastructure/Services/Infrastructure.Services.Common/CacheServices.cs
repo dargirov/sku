@@ -23,5 +23,10 @@ namespace Infrastructure.Services.Common
             var value = _session.GetString(key);
             return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
         }
+
+        public void Remove(string key)
+        {
+            _session.Remove(key);
+        }
     }
 }

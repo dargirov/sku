@@ -48,14 +48,14 @@
                     </div>
                     <div>
                         <ul id="header-user-container">
-                            <li><a href="">@(CacheServices.Get<string>("user_name"))</a></li>
+                            <li><a asp-controller="administration" asp-action="useredit" asp-route-id="@(CacheServices.Get<string>("user_id"))">@(CacheServices.Get<string>("user_name"))</a></li>
                             <li id="notifications-container">
                                 <a href="" data-open="false">(0)</a>
                                 <div id="notifications-menu">
                                     <ul><li class="info"><i class="fa fa-info" aria-hidden="true"></i> No notifications</li></ul>
                                 </div>
                             </li>
-                            <li><a href="">@Localizer["Logout"]</a></li>
+                            <li><a href="/logout">@Localizer["Logout"]</a></li>
                         </ul>
                     </div>
                 </div>

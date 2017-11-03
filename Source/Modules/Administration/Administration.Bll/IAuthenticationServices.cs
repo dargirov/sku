@@ -6,7 +6,8 @@ namespace Administration.Bll
 {
     public interface IAuthenticationServices
     {
-        Task<bool> Login(string email, string password, Messages messages);
-        Task<User> GetCurrentUser();
+        Task<bool> LoginAsync(string email, string password, Messages messages);
+        void Logout();
+        Task<User> GetCurrentUserAsync();
     }
 }
