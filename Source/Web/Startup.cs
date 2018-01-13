@@ -48,6 +48,11 @@ namespace Web
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", builder => builder.AllowAnyOrigin());
+            });
+
             Infrastructure.Database.DbConfig.Config.Register(services, Configuration.GetConnectionString("DefaultConnection"));
 
             //services.AddTransient<IRepository, Repository>();

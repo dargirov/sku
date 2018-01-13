@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Views\ConfigApi.cshtml" />
+    <EmbeddedResource Include="Views\ConfigIndex.cshtml" />
     <EmbeddedResource Include="Views\Users.cshtml" />
     <EmbeddedResource Include="Views\Index.cshtml" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using Administration.Entities;
 using Infrastructure.Data.Common;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Store.Entities
@@ -10,6 +11,10 @@ namespace Store.Entities
         [MinLength(3)]
         [MaxLength(100)]
         public string Name { get; set; }
+
+        [Required]
+        [MaxLength(20)]
+        public string HashId { get; set; } 
 
         [Required]
         public int CityId { get; set; }

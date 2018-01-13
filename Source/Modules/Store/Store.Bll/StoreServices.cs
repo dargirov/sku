@@ -18,13 +18,15 @@ namespace Store.Bll
         private readonly IRepository _repository;
         private readonly IEntityServices _entityServices;
         private readonly IAuthenticationServices _authenticationServices;
+        private readonly IHashServices _hashServices;
 
-        public StoreServices(IContainer container, IRepository repository, IEntityServices entityServices, IAuthenticationServices authenticationServices)
+        public StoreServices(IContainer container, IRepository repository, IEntityServices entityServices, IAuthenticationServices authenticationServices, IHashServices hashServices)
         {
             _container = container;
             _repository = repository;
             _entityServices = entityServices;
             _authenticationServices = authenticationServices;
+            _hashServices = hashServices;
         }
 
         public Task<Entities.Store> GetByIdAsync(int id)
@@ -89,9 +91,12 @@ namespace Store.Bll
         public async Task<int> EditAsync(Entities.Store store)
         {
             var user = await _authenticationServices.GetCurrentUserAsync();
+            var generateHashId = false;
 
             if (!store.IsSaved)
             {
+                generateHashId = true;
+                store.HashId = string.Empty;
                 var storePriv = new StorePrivilege()
                 {
                     Read = true,
@@ -104,7 +109,15 @@ namespace Store.Bll
                 await _entityServices.SaveAsync<StorePrivilege, int>(storePriv);
             }
 
-            return await _entityServices.SaveAsync<Entities.Store, int>(store);
+            var result = await _entityServices.SaveAsync<Entities.Store, int>(store);
+
+            if (generateHashId)
+            {
+                store.HashId = _hashServices.Base36Encode(100000 + store.Id);
+                await _entityServices.SaveAsync<Entities.Store, int>(store);
+            }
+
+            return result;
         }
 
         public Task<List<StorePrivilege>> GetPrivilegeForUserListAsync(int userId)

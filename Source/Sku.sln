@@ -77,6 +77,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Presenters", "Modul
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Services.ContentServer", "Infrastructure\Services\Infrastructure.Services.ContentServer\Infrastructure.Services.ContentServer.csproj", "{8EFFF3E3-7EF5-45E2-B39E-4A87F889D750}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Utils", "Infrastructure\Infrastructure.Utils\Infrastructure.Utils.csproj", "{B52C8909-0886-4A0D-8DB2-324D3AFC3C83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -187,6 +189,10 @@ Global
 		{8EFFF3E3-7EF5-45E2-B39E-4A87F889D750}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EFFF3E3-7EF5-45E2-B39E-4A87F889D750}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EFFF3E3-7EF5-45E2-B39E-4A87F889D750}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B52C8909-0886-4A0D-8DB2-324D3AFC3C83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B52C8909-0886-4A0D-8DB2-324D3AFC3C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B52C8909-0886-4A0D-8DB2-324D3AFC3C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B52C8909-0886-4A0D-8DB2-324D3AFC3C83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -226,6 +232,7 @@ Global
 		{BD251F86-2DF4-4BD7-85ED-E272200979BE} = {5B6F8697-FDC2-4905-B948-EA291BD50BD2}
 		{BED0AC92-1198-4507-9FB6-7F964CA3B5A0} = {5B6F8697-FDC2-4905-B948-EA291BD50BD2}
 		{8EFFF3E3-7EF5-45E2-B39E-4A87F889D750} = {434D1488-DC5B-4D16-AE82-F70B1DFD1A5F}
+		{B52C8909-0886-4A0D-8DB2-324D3AFC3C83} = {DAF868DA-A95A-4B09-AACB-F840D27CF5CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC65E10D-A9A7-41F3-BF46-12B8AA7E51DD}

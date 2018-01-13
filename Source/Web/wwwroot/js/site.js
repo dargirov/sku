@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
 
     $.notify.addStyle('error', {
         html: '<div><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <span data-notify-html/></div>',
@@ -67,7 +68,7 @@
         }
     }
 
-    $('form').on('submit', formSubmit);
+    $('form.validate').on('submit', formSubmit);
     function formSubmit(e) {
         var notifications = [];
 

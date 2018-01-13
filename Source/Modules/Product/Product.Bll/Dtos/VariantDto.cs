@@ -12,7 +12,7 @@ namespace Product.Bll.Dtos
         public int Id { get; set; }
 
         [Required]
-        [MinLength(3)]
+        [MinLength(2)]
         [MaxLength(50)]
         public string Code { get; set; }
 

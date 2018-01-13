@@ -32,7 +32,7 @@
     @Html.Partial("_StatusPartial")
 
     <div class="content-box">
-        <form method="post" asp-controller="product" asp-action="edit" id="product-edit-form" class="main-form" enctype="multipart/form-data">
+        <form method="post" asp-controller="product" asp-action="edit" id="product-edit-form" class="main-form validate" enctype="multipart/form-data">
             <div class="form-split">
                 <div class="padding-right">
                     <h3>@Localizer["Product description"]</h3>
@@ -90,7 +90,7 @@
                                     <label for="variant-code-@i">@Localizer["Variant code"] <a class="variant-remove @readOnlyHiddenClass"><i class="fa fa-minus-square-o" aria-hidden="true"></i></a></label>
                                     <input type="text" name="Variants[0].Code" id="variant-code-@i" placeholder="Code" class="variant-code form-control @readOnlyClass" value="@variant.Code" data-val-required="@Localizer["Code is required"]" readonly="@isReadOnly">
                                     <div class="form-split">
-                                        <div class="form-split-49">
+                                        <div class="form-split-32">
                                             <label for="variant-price-net-@i">@Localizer["Price Net"]</label>
                                             <div class="form-split">
                                                 <select name="Variants[0].PriceNetType" class="variant-price-net-type form-control auto-width no-border-right @readOnlyClass" data-val-required="@Localizer["Price net currency is required"]">
@@ -101,7 +101,18 @@
                                                 <input type="text" name="Variants[0].PriceNet" id="variant-price-net-0" class="variant-price-net form-control no-border-left @readOnlyClass" value="@variant.PriceNet" data-val-required="@Localizer["Price net is required"]" readonly="@isReadOnly">
                                             </div>
                                         </div>
-                                        <div class="form-split-49">
+                                        <div class="form-split-32">
+                                            <label for="variant-price-net-vat-@i">@Localizer["Price Net with VAT"]</label>
+                                            <div class="form-split">
+                                                <select name="Variants[0].PriceNetVatType" class="variant-price-net-vat-type form-control auto-width no-border-right readonly">
+                                                    @(variant.PriceNetType == Product.Entities.CurrencyTypeEnum.BGN ? Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.BGN}\" selected=\"selected\">BGN</option>") : Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.BGN}\">BGN</option>"))
+                                                    @(variant.PriceNetType == Product.Entities.CurrencyTypeEnum.EUR ? Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.EUR}\" selected=\"selected\">EUR</option>") : Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.EUR}\">EUR</option>"))
+                                                    @(variant.PriceNetType == Product.Entities.CurrencyTypeEnum.USD ? Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.USD}\" selected=\"selected\">USD</option>") : Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.USD}\">USD</option>"))
+                                                </select>
+                                                <input type="text" id="variant-price-net-vat-0" class="form-control no-border-left readonly" value="@variant.PriceNetVat" readonly="readonly">
+                                            </div>
+                                        </div>
+                                        <div class="form-split-32">
                                             <label for="variant-price-customer-@i">@Localizer["Price Customer"]</label>
                                             <div class="form-split">
                                                 <select name="Variants[0].PriceCustomerType" class="variant-price-customer-type form-control auto-width no-border-right @readOnlyClass" data-val-required="@Localizer["Price net currency is required"]">
@@ -167,7 +178,7 @@
                                 <input type="text" name="Variants[0].Code" id="variant-code-0" class="variant-code form-control" data-val-required="@Localizer["Code is required"]">
 
                                 <div class="form-split">
-                                    <div class="form-split-49">
+                                    <div class="form-split-32">
                                         <label for="variant-price-net-0">@Localizer["Price Net"]</label>
                                         <div class="form-split">
                                             <select name="Variants[0].PriceNetType" class="variant-price-net-type form-control auto-width no-border-right" data-val-required="@Localizer["Price net currency is required"]">
@@ -178,7 +189,18 @@
                                             <input type="text" name="Variants[0].PriceNet" id="variant-price-net-0" class="variant-price-net form-control no-border-left" data-val-required="@Localizer["Price net is required"]">
                                         </div>
                                     </div>
-                                    <div class="form-split-49">
+                                    <div class="form-split-32">
+                                        <label for="variant-price-net-vat-0">@Localizer["Price Net with VAT"]</label>
+                                        <div class="form-split">
+                                            <select name="Variants[0].PriceNetVatType" class="variant-price-net-vat-type form-control auto-width no-border-right readonly">
+                                                <option value="@((int)Product.Entities.CurrencyTypeEnum.BGN)">BGN</option>
+                                                <option value="@((int)Product.Entities.CurrencyTypeEnum.EUR)">EUR</option>
+                                                <option value="@((int)Product.Entities.CurrencyTypeEnum.USD)">USD</option>
+                                            </select>
+                                            <input type="text" id="variant-price-net-vat-0" class="form-control no-border-left readonly" readonly="readonly">
+                                        </div>
+                                    </div>
+                                    <div class="form-split-32">
                                         <label for="variant-price-customer-0">@Localizer["Price Customer"]</label>
                                         <div class="form-split">
                                             <select name="Variants[0].PriceCustomerType" class="variant-price-customer-type form-control auto-width no-border-right" data-val-required="@Localizer["Price net currency is required"]">

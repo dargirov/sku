@@ -22,6 +22,7 @@ namespace Infrastructure.Database.DbConfig
         public DbSet<Country> Countries { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<ModulePrivilege> ModulePrivileges { get; set; }
+        public DbSet<ConfigOption> ConfigOptions { get; set; }
 
         public DbSet<Store.Entities.Store> Stores { get; set; }
         public DbSet<Store.Entities.StorePrivilege> StorePrivileges { get; set; }
@@ -50,6 +51,7 @@ namespace Infrastructure.Database.DbConfig
             modelBuilder.Entity<Country>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<File>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<ModulePrivilege>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
+            modelBuilder.Entity<ConfigOption>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
 
             // Store
             modelBuilder.Entity<Store.Entities.Store>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);

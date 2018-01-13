@@ -12,6 +12,7 @@ namespace Infrastructure.Services.Common
             container.Configure(x => x.For<IAuthorizationHandler>().Use<LoggedInHandler>());
             container.Configure(x => x.For<IEntityServices>().Use<EntityServices>());
             container.Configure(x => x.For<ICacheServices>().Use<CacheServices>());
+            container.Configure(x => x.For<IHashServices>().Use<HashServices>());
         }
     }
 }

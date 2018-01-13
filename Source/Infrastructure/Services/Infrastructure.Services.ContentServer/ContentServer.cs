@@ -1,6 +1,7 @@
 ﻿using Administration.Bll;
 using Administration.Entities;
 using Infrastructure.Services.Common;
+using Infrastructure.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -53,8 +54,8 @@ namespace Infrastructure.Services.ContentServer
 
         private StorageTypeEnum GetAvailableStorageType()
         {
-            var isLocal = Utils.TryParseBool(Configuration["ContentServer:StorageType:Local"]);
-            var isAzure = Utils.TryParseBool(Configuration["ContentServer:StorageType:Azure"]);
+            var isLocal = Parse.TryParseBool(Configuration["ContentServer:StorageType:Local"]);
+            var isAzure = Parse.TryParseBool(Configuration["ContentServer:StorageType:Azure"]);
 
             if (!isLocal.HasValue || !isAzure.HasValue)
             {
@@ -95,8 +96,8 @@ namespace Infrastructure.Services.ContentServer
                 throw new FormatException("Unsupported content type");
             }
 
-            var width = Utils.TryParseInt(Configuration["ContentServer:ImageThumbWidth"]);
-            var height = Utils.TryParseInt(Configuration["ContentServer:ImageThumbHeight"]);
+            var width = Parse.TryParseInt(Configuration["ContentServer:ImageThumbWidth"]);
+            var height = Parse.TryParseInt(Configuration["ContentServer:ImageThumbHeight"]);
 
             if (!width.HasValue || !height.HasValue)
             {

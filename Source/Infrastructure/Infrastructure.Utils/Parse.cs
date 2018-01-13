@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Infrastructure.Services.Common
+namespace Infrastructure.Utils
 {
-    public static class Utils
+    public static class Parse
     {
         public static int? TryParseInt(string str)
         {

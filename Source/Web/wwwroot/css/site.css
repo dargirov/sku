@@ -772,6 +772,10 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     width: 49% !important;
 }
 
+.form-split-32 {
+    width: 32% !important;
+}
+
 #search-result-table.condensed {
     background-color: white;
 }
@@ -1130,8 +1134,38 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     display: flex;
 }
 
+#todo-list {
+    margin: 50px;
+    list-style-position: inside;
+    font-family: Arial;
+    font-size: 12px;
+    color: #2d2d2d;
+}
+
+#todo-list > li {
+    border-bottom: 1px solid rgb(204, 204, 204);
+    padding: 8px;
+}
+
+#todo-list ul {
+    margin: 10px 20px;
+    list-style-position: inside;
+}
+
+#todo-list ul li {
+    padding: 8px;
+}
+
+#todo-list .priority {
+    background-color: #fbe185;
+}
+
+#todo-list .done {
+    background-color: #dff0d8;
+}
+    
 @media all and (max-width: 516px) {
-    body > header > div {
+        body > header > div {
         padding: 0 20px;
     }
 
@@ -1255,5 +1289,9 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
 
     #header-top-container form .fa-search {
         padding: 6px 8px 8px 8px;
+    }
+
+    #todo-list {
+        margin: 20px 0 0 0;
     }
 }

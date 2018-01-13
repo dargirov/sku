@@ -8,6 +8,7 @@ namespace Product.Bll
     public interface IProductServices
     {
         Task<Entities.Product> GetByIdAsync(int id);
+        Task<IEnumerable<Dtos.Api.ProductDto>> GetByOrganizationAndVariantCodeAsync(string organizationHash, string code);
         Task<(IEnumerable<Entities.Product> products, int count)> GetListAsync(int start, int limit, string column, string dir, string name, int? categoryId, int? manufacturerId, int? supplierId, string warranty, string description);
         Task<List<Entities.ProductCategory>> GetCategoryListAsync();
         Task<int> EditAsync(Entities.Product product, IEnumerable<VariantDto> variants, Messages messages);

@@ -23,7 +23,7 @@
     @Html.Partial("_StatusPartial")
 
     <div class="content-box">
-        <form method="post" asp-controller="Product" asp-action="EditCategory" class="main-form">
+        <form method="post" asp-controller="Product" asp-action="EditCategory" class="main-form validate">
             <div>
                 <label>@Localizer["Name"]</label>
                 <input asp-for="Name" class="form-control">

@@ -117,7 +117,7 @@ namespace Administration.Presenters
             }
 
             await _userServices.EditAsync(user, hashPassword: model.ChangePassword);
-            Messages.AddSuccess("Store Edited");
+            Messages.AddSuccess("User Edited");
 
             return RedirectToAction(nameof(UserEdit), new { id = user.Id });
         }

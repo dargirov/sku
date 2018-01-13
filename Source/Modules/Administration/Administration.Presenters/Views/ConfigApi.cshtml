@@ -1,0 +1,63 @@
+﻿@model Administration.Presenters.Dtos.ConfigApiViewModel
+
+@{
+    ViewData["Title"] = "Config Api";
+}
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@Html.Partial("~/Views/Administration/_MenuConfigPartial.cshtml")
+
+<section id="module-content">
+
+    <div class="content-box">
+        <h3>@Localizer["Api config"]</h3>
+        <form method="post" asp-controller="config" asp-action="api" class="main-form">
+            <div class="form-split">
+                <div class="padding-right">
+                    @{ int i = 0; }
+                    @foreach (var option in Model.ConfigOptions.Where(x => x.Type == Administration.Entities.ConfigOptionTypeEnum.Bool))
+                    {
+                        var optionChecked = option.Value == "True" ? " checked=\"checked\"" : string.Empty;
+                        <label>
+                            <input type="checkbox" name="ConfigOptions[@i].Value" value="True" @optionChecked>
+                            @option.DisplayValue
+                        </label>
+                        <input type="hidden" name="ConfigOptions[@i].Id" value="@option.Id">
+                        <input type="hidden" name="ConfigOptions[@i].Value" value="False">
+                        <input type="hidden" name="ConfigOptions[@i].EntityId" value="@option.EntityId">
+                        <input type="hidden" name="ConfigOptions[@i].Entity" value="@option.Entity">
+                        <input type="hidden" name="ConfigOptions[@i].Type" value="@option.Type">
+                        <input type="hidden" name="ConfigOptions[@i].Category" value="@((int)option.Category)">
+                        i++;
+                    }
+                </div>
+                <div>
+                    @foreach (var option in Model.ConfigOptions.Where(x => x.Type == Administration.Entities.ConfigOptionTypeEnum.String))
+                    {
+                        <label for="option@i">@option.DisplayValue</label>
+                        <input type="text" id="option@i" name="ConfigOptions[@i].Value" class="form-control" value="@option.Value">
+                        <input type="hidden" name="ConfigOptions[@i].Id" value="@option.Id">
+                        <input type="hidden" name="ConfigOptions[@i].EntityId" value="@option.EntityId">
+                        <input type="hidden" name="ConfigOptions[@i].Entity" value="@option.Entity">
+                        <input type="hidden" name="ConfigOptions[@i].Type" value="@option.Type">
+                        <input type="hidden" name="ConfigOptions[@i].Category" value="@((int)option.Category)">
+                        i++;
+                    }
+
+                    <label asp-for="OrganizationHash">@Localizer["Organization Id"]</label>
+                    <input asp-for="OrganizationHash" class="form-control readonly" readonly="readonly">
+                </div>
+            </div>
+
+            <input type="submit" class="hidden">
+            <input type="reset" class="hidden">
+        </form>
+    </div>
+
+</section>
+
+@section footer {
+    @await Component.InvokeAsync("FooterActions", new { controller = "Config", action = "ConfigApi" })
+}

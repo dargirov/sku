@@ -138,6 +138,9 @@
   <data name="Price Net" xml:space="preserve">
     <value>Доставна цена</value>
   </data>
+  <data name="Price Net with VAT" xml:space="preserve">
+    <value>Доставна цена с ДДС</value>
+  </data>
   <data name="Provider" xml:space="preserve">
     <value>Доставчик</value>
   </data>

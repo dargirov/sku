@@ -52,6 +52,41 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.ToTable("Cities");
                 });
 
+            modelBuilder.Entity("Administration.Entities.ConfigOption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Category");
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<string>("Entity")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<int>("EntityId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<Guid>("TenantId");
+
+                    b.Property<int>("Type");
+
+                    b.Property<string>("Value")
+                        .IsRequired();
+
+                    b.Property<int>("Version");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConfigOptions");
+                });
+
             modelBuilder.Entity("Administration.Entities.Country", b =>
                 {
                     b.Property<int>("Id")
@@ -217,6 +252,10 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.Property<DateTime>("CreatedOn");
 
                     b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<string>("HashId")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.Property<bool>("IsDeleted");
 
@@ -645,6 +684,10 @@ namespace Infrastructure.Database.DbConfig.Migrations
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000);
+
+                    b.Property<string>("HashId")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.Property<string>("Iban")
                         .HasMaxLength(30);

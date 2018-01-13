@@ -67,12 +67,14 @@ namespace Web.Pages
         private readonly IUserServices _userServices;
         private readonly IOrganizationServices _organizationServices;
         private readonly ICacheServices _cacheServices;
+        private readonly IHashServices _hashServices;
 
-        public RegisterModel(IUserServices userServices, IOrganizationServices organizationServices, ICacheServices cacheServices)
+        public RegisterModel(IUserServices userServices, IOrganizationServices organizationServices, ICacheServices cacheServices, IHashServices hashServices)
         {
             _userServices = userServices;
             _organizationServices = organizationServices;
             _cacheServices = cacheServices;
+            _hashServices = hashServices;
         }
 
         public void OnGet()
@@ -82,6 +84,9 @@ namespace Web.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
+            Random random = new Random();
+            //var p = _hashServices.Base36Encode(100000 + random.Next());
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -122,6 +127,7 @@ namespace Web.Pages
                 Organization = new Organization()
                 {
                     Name = OrganizationName,
+                    HashId = _hashServices.Base36Encode(100000 + random.Next()),
                     Mol = Mol
                 }
             };

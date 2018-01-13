@@ -15,6 +15,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Infrastructure\Database\Infrastructure.Database.DbConfig\Infrastructure.Database.DbConfig.csproj" />
         <ProjectReference Include="..\Infrastructure\Database\Infrastructure.Database.Repository\Infrastructure.Database.Repository.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.Utils\Infrastructure.Utils.csproj" />
         <ProjectReference Include="..\Infrastructure\Services\Infrastructure.Services.Common\Infrastructure.Services.Common.csproj" />
         <ProjectReference Include="..\Infrastructure\Services\Infrastructure.Services.ContentServer\Infrastructure.Services.ContentServer.csproj" />
         <ProjectReference Include="..\Modules\Administration\Administration.Bll\Administration.Bll.csproj" />

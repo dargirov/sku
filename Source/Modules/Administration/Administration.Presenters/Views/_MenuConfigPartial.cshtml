@@ -1,0 +1,11 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+<section id="module-menu">
+    <strong>@Localizer["Actions"]</strong>
+    <ul>
+        <li><a asp-controller="config" asp-action="index">@Localizer["Index"]</a></li>
+        <li><a asp-controller="config" asp-action="api">@Localizer["Api"]</a></li>
+    </ul>
+</section>

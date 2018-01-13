@@ -1,6 +1,6 @@
 ﻿using Administration.Bll;
-using Infrastructure.Services.Common;
 using Infrastructure.Services.ContentServer;
+using Infrastructure.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -19,7 +19,7 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Index(string id)
         {
-            var guid = Utils.TryParseGuid(id);
+            var guid = Parse.TryParseGuid(id);
             if (!guid.HasValue)
             {
                 return BadRequest();

@@ -25,9 +25,10 @@ namespace Product.Bll
         private readonly IStoreServices _storeServices;
         private readonly IManufacturerServices _manufacturerServices;
         private readonly ICountryServices _countryServices;
+        private readonly IConfigServices _configServices;
         private IMapper Mapper => AutoMapperConfig.Mapper;
 
-        public ProductServices(IContainer container, IRepository repository, IEntityServices entityServices, IStoreServices storeServices, IManufacturerServices manufacturerServices, ICountryServices countryServices)
+        public ProductServices(IContainer container, IRepository repository, IEntityServices entityServices, IStoreServices storeServices, IManufacturerServices manufacturerServices, ICountryServices countryServices, IConfigServices configServices)
         {
             _container = container;
             _repository = repository;
@@ -35,6 +36,7 @@ namespace Product.Bll
             _storeServices = storeServices;
             _manufacturerServices = manufacturerServices;
             _countryServices = countryServices;
+            _configServices = configServices;
         }
 
         public async Task<Entities.Product> GetByIdAsync(int id)
@@ -448,6 +450,65 @@ namespace Product.Bll
             }
 
             return true;
+        }
+
+        public async Task<IEnumerable<Dtos.Api.ProductDto>> GetByOrganizationAndVariantCodeAsync(string organizationHash, string code)
+        {
+            var result = new List<Dtos.Api.ProductDto>();
+
+            var tenantId = await _repository.GetQueryable<Administration.Entities.Organization, int>(ignoreQueryFilters: true)
+                .Where(x => x.HashId == organizationHash)
+                .Select(x => x.TenantId)
+                .FirstOrDefaultAsync();
+
+            if (tenantId == default(Guid))
+            {
+                return result;
+            }
+
+            var storeIds = await _repository.GetQueryable<Administration.Entities.ConfigOption, int>(ignoreQueryFilters: true)
+                .Where(x => x.TenantId == tenantId
+                    && x.Category == Administration.Entities.ConfigOptionCategoryEnum.Api
+                    && x.Value == "True" 
+                    && x.Entity == nameof(Store.Entities.Store) && x.Type == Administration.Entities.ConfigOptionTypeEnum.Bool)
+                .Select(x => x.EntityId)
+                .ToListAsync();
+
+            var products = await _repository.GetQueryable<Entities.Product, int>(ignoreQueryFilters: true)
+                .Include(x => x.Variants)
+                .ThenInclude(x => x.Stocks)
+                .ThenInclude(x => x.Store)
+                .Where(x => x.TenantId == tenantId && x.Variants.Any(v => v.Code == code) && x.Variants.Any(v => v.Stocks.Any(s => storeIds.Contains(s.StoreId))))
+                .ToListAsync();
+
+            foreach (var product in products)
+            {
+                foreach (var variant in product.Variants)
+                {
+                    if (code != variant.Code)
+                    {
+                        continue;
+                    }
+
+                    foreach (var stock in variant.Stocks)
+                    {
+                        var productDto = new Dtos.Api.ProductDto
+                        {
+                            Name = product.Name,
+                            Store = stock.Store.Name,
+                            Quantity = stock.Quantity,
+                            Code = variant.Code,
+                            PriceNet = variant.PriceNet,
+                            PriceCustomer = variant.PriceCustomer,
+                            StoreId = stock.Store.HashId
+                        };
+
+                        result.Add(productDto);
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

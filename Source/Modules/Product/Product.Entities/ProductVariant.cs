@@ -1,13 +1,15 @@
 ﻿using Infrastructure.Data.Common;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Infrastructure.Utils;
 
 namespace Product.Entities
 {
     public class ProductVariant : BaseTenantEntity<int>
     {
         [Required]
-        [MinLength(3)]
+        [MinLength(2)]
         [MaxLength(50)]
         public string Code { get; set; }
 
@@ -16,6 +18,9 @@ namespace Product.Entities
 
         [Required]
         public CurrencyTypeEnum PriceNetType { get; set; }
+
+        [NotMapped]
+        public decimal PriceNetVat => (PriceNet * 1.2m).RoundFinance(2);
 
         [Required]
         public decimal PriceCustomer { get; set; }

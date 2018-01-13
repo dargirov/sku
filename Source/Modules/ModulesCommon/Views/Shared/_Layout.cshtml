@@ -149,7 +149,7 @@
         <ul id="main-menu-container">
             <li><a asp-controller="administration" asp-action="index">@Localizer["Home"]</a></li>
             <li><a asp-controller="administration" asp-action="users">@Localizer["Users"]</a></li>
-            <li><a href="#">@Localizer["Options"]</a></li>
+            <li><a asp-controller="config" asp-action="index">@Localizer["Options"]</a></li>
         </ul>
     </nav>
 
