@@ -5,6 +5,7 @@
 
 @inject IViewLocalizer Localizer
 @inject IAuthorizationServices AuthorizationServices
+@inject IWidgetProvider WidgetProvider
 
 @{
     ViewData["Title"] = "Administration index";
@@ -131,24 +132,10 @@
         </ul>
     </div>
 
-    <div>
-        <ol id="todo-list">
-            <li class="priority">Продуктите да имате цена с ДДС</li>
-            <li>В търсене на продукти да се добави търсене по склад</li>
-            <li>В продуктите да има задаване на приоритет</li>
-            <li>Нов модул - ръчна заявка, бутон за заявка със свободен текст
-                <ul>
-                    <li class="priority">Възможност за ръчна заявка на продукти</li>
-                    <li>При заявка ако се поръчат 10 а има само 5 останалите 5 да се вижда че все още се искат</li>
-                    <li>При заявка на приоритетен продукт да се праща мейл - ioana.lambreva@gmail.com</li>
-                </ul>
-            </li>
-            <li>МК Груп ЕООД -> МК-ГРУП БЪЛГАРИЯ ООД</li>
-            <li>В модул документи да има създаване на стокова разписка и фактура и да се избират продукти и да се вадят автоматично количества</li>
-            <li class="priority">Синхронизация с svetlini.bg</li>
-            <li>На началната страница да излизат последните 10 продукти</li>
-            <li class="done">Кода на продукт с минимална дължина от 2 символа</li>
-            <li class="done">Да няма задължителни полета при търсене на продукт</li>
-        </ol>
+    <div id="home-widgets">
+        @await WidgetProvider.Get("LowQuantityProducts", Component, new { page = Context.Request.Query["lowquantitypage"].FirstOrDefault(), limit = 10 })
+        @await WidgetProvider.Get("LatestProducts", Component, new { page = Context.Request.Query["latestpage"].FirstOrDefault(), limit = 10 })
+        @await WidgetProvider.Get("Todos", Component)
     </div>
+
 </section>

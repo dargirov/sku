@@ -1,0 +1,73 @@
+@model Product.Presenters.Dtos.PriorityViewModel
+@{
+    ViewData["Title"] = "Edit product priority";
+}
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Administration.Bll
+
+@inject IViewLocalizer Localizer
+@inject IAuthorizationServices AuthorizationServices
+
+@{
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+    var isReadOnly = !modulePrivileges.ProductWrite;
+    var readOnlyClass = isReadOnly ? "readonly" : string.Empty;
+}
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Product", subaction = "Pictures", Id = Model.Id })*@
+
+    <ul class="tabs">
+        <li><a asp-action="edit" asp-route-id="@Model.Id">@Localizer["Info"]</a></li>
+        <li><a asp-action="pictures" asp-route-id="@Model.Id">@Localizer["Pictures"] (@Model.PicturesCount)</a></li>
+        <li class="active"><a asp-action="priority" asp-route-id="@Model.Id">@Localizer["Priority"]</a></li>
+    </ul>
+
+    @Html.Partial("_StatusPartial")
+
+    <div class="content-box">
+        <form method="post" asp-controller="product" asp-action="priority" class="main-form validate">
+            <div class="form-split">
+                <div class="padding-right">
+                    <label asp-for="Priority">@Localizer["Priority"]</label>
+                    <select class="form-control @readOnlyClass" asp-for="Priority" asp-items="@Model.PriorityItems"></select>
+                </div>
+                <div>
+                    <table class="grid label-spacing">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["User"]</th>
+                                <th>@Localizer["Priority"]</th>
+                                @*<th></th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var priority in Model.Priorities)
+                            {
+                                <tr>
+                                    <td>@priority.User.Name</td>
+                                    <td>@Localizer[priority.Priority.ToString()]</td>
+                                    @*<td><a class="remove-icon-link" data-priority-id="@priority.Id"><i class="fa fa-times" aria-hidden="true"></i></a></td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <input asp-for="Id">
+            <input type="submit" class="hidden">
+        </form>
+    </div>
+
+</section>
+
+@section footer {
+    @await Component.InvokeAsync("FooterActions", new { controller = "Product", id = Model.Id, showReset = false, showEdit = !isReadOnly, showDelete = modulePrivileges.ProductDelete })
+}
+
+@section scripts {
+}

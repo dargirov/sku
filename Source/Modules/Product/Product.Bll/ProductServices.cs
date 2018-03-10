@@ -75,7 +75,12 @@ namespace Product.Bll
             return product;
         }
 
-        public async Task<(IEnumerable<Entities.Product> products, int count)> GetListAsync(int start, int limit, string column, string dir, string name, int? categoryId, int? manufacturerId, int? supplierId, string warranty, string description)
+        public async Task<(IEnumerable<Entities.Product> products, int count)> GetListAsync(int start, int limit, string dir)
+        {
+            return await GetListAsync(start, limit, "5", dir, null, null, null, null, null, null);
+        }
+
+        public async Task<(IEnumerable<Entities.Product> products, int count)> GetListAsync(int start, int limit, string column, string dir, string name, int? storeId, int? categoryId, int? manufacturerId, int? supplierId, string description)
         {
             var storeIds = (await _storeServices.GetListAsync()).Select(x => x.Id);
 
@@ -93,6 +98,11 @@ namespace Product.Bll
                 query = query.Where(p => p.Name.Contains(name));
             }
 
+            if (storeId.HasValue && storeId.Value > 0)
+            {
+                query = query.Where(p => p.Variants.Any(v => v.Stocks.Any(s => s.StoreId == storeId.Value)));
+            }
+
             if (categoryId.HasValue && categoryId.Value > 0)
             {
                 query = query.Where(p => p.CategoryId == categoryId.Value);
@@ -106,11 +116,6 @@ namespace Product.Bll
             if (supplierId.HasValue && supplierId.Value > 0)
             {
                 query = query.Where(p => p.SupplierId == supplierId.Value);
-            }
-
-            if (!string.IsNullOrWhiteSpace(warranty))
-            {
-                query = query.Where(p => p.Warranty.Contains(warranty));
             }
 
             if (!string.IsNullOrWhiteSpace(description))
@@ -469,7 +474,7 @@ namespace Product.Bll
             var storeIds = await _repository.GetQueryable<Administration.Entities.ConfigOption, int>(ignoreQueryFilters: true)
                 .Where(x => x.TenantId == tenantId
                     && x.Category == Administration.Entities.ConfigOptionCategoryEnum.Api
-                    && x.Value == "True" 
+                    && x.Value == "True"
                     && x.Entity == nameof(Store.Entities.Store) && x.Type == Administration.Entities.ConfigOptionTypeEnum.Bool)
                 .Select(x => x.EntityId)
                 .ToListAsync();

@@ -1,4 +1,5 @@
-﻿using Administration.Presenters;
+﻿using Administration.Bll;
+using Administration.Presenters;
 using Infrastructure.Services.Common;
 using Infrastructure.Services.ContentServer;
 using Manufacturer.Bll;
@@ -7,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Product.Bll;
 using Product.Bll.Dtos.Import;
+using Product.Entities;
 using Product.Presenters.Dtos;
 using Store.Bll;
 using Supplier.Bll;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,14 +28,18 @@ namespace Product.Presenters
         private readonly IContentServer _contentServer;
         private readonly IManufacturerServices _manufacturerServices;
         private readonly IStoreServices _storeServices;
+        private readonly IPriorityServices _priorityServices;
+        private readonly IAuthenticationServices _authenticationServices;
 
-        public ProductController(IProductServices productServices, ISupplierServices supplierServices, IContentServer contentServer, IManufacturerServices manufacturerServices, IStoreServices storeServices)
+        public ProductController(IProductServices productServices, ISupplierServices supplierServices, IContentServer contentServer, IManufacturerServices manufacturerServices, IStoreServices storeServices, IPriorityServices priorityServices, IAuthenticationServices authenticationServices)
         {
             _productServices = productServices;
             _supplierServices = supplierServices;
             _contentServer = contentServer;
             _manufacturerServices = manufacturerServices;
             _storeServices = storeServices;
+            _priorityServices = priorityServices;
+            _authenticationServices = authenticationServices;
         }
 
         public async Task<IActionResult> Index([FromQuery]IndexRequestModel model)
@@ -45,30 +52,31 @@ namespace Product.Presenters
                     model.Order[0]["column"],
                     model.Order[0]["dir"],
                     model.SearchCriteria?.Name,
+                    model.SearchCriteria?.StoreId,
                     model.SearchCriteria?.CategoryId,
                     model.SearchCriteria?.ManufacturerId,
                     model.SearchCriteria?.SupplierId,
-                    model.SearchCriteria?.Warranty,
                     model.SearchCriteria?.Description);
 
-                var result = new List<Dictionary<string, string>>();
+                var result = new List<Dictionary<string, object>>();
                 foreach (var product in products)
                 {
-                    result.Add(new Dictionary<string, string>()
+                    result.Add(new Dictionary<string, object>()
                     {
                         { "id", product.Id.ToString() },
                         { "picture", product.Pictures.Any() ? Url.Action("index", "contentserver", new { id = product.Pictures.FirstOrDefault()?.Thumb.Guid, area = string.Empty }) : null },
                         { "productName", product.Name },
                         { "categoryName", product.Category.Name },
                         { "manufacturerName", product.Manufacturer.Name },
-                        { "createdOn", product.CreatedOn.ToString("dd.MM.yyyy") },
-                        { "variants", string.Join(", ", product.Variants.Select(x => $"{x.Code} - {x.PriceCustomer}")) }
+                        { "modifiedOn", (product.ModifiedOn ?? product.CreatedOn).ToString("dd.MM.yyyy") },
+                        { "quantity", product.Variants.SelectMany(x => x.Stocks).Select(x => new IndexQuantityDto() { Variant = x.Variant.Code, Store = x.Store.Name, Quantity = x.Quantity, LowQuantity = x.LowQuantity }).ToArray() }
                     });
                 }
 
                 return Json(new { data = result, recordsTotal = count, recordsFiltered = count });
             }
 
+            var stores = await _storeServices.GetListAsync();
             var categories = await _productServices.GetCategoryListAsync();
             var suppliers = await _supplierServices.GetListAsync();
             var manufacturers = await _manufacturerServices.GetListAsync();
@@ -78,6 +86,7 @@ namespace Product.Presenters
                 Products = new List<Entities.Product>(),
                 SearchCriteria = new IndexSearchCriteria()
                 {
+                    Stores = stores.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),
                     Categories = categories.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),
                     Manufacturers = manufacturers.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),
                     Suppliers = suppliers.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true)
@@ -301,7 +310,73 @@ namespace Product.Presenters
                 await _productServices.ImportAsync(productDtos, Messages);
             }
 
+            //return ViewComponent()
             return RedirectToAction(nameof(Import));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Priority(int id)
+        {
+            var product = await _productServices.GetByIdAsync(id);
+            if (product == null)
+            {
+                return BadRequest();
+            }
+
+            var priorities = await _priorityServices.GetListAsync(id);
+            var user = await _authenticationServices.GetCurrentUserAsync();
+            var priority = priorities.FirstOrDefault(x => x.User == user);
+
+            var viewModel = new PriorityViewModel()
+            {
+                Id = product.Id,
+                PicturesCount = product.Pictures.Count,
+                Priority = priority,
+                Priorities = priorities,
+                PriorityItems = Enum.GetValues(typeof(ProductPriorityEnum)).Cast<ProductPriorityEnum>().ToSelectList(x => ((int)x).ToString(), x => x.ToString(), priority?.Id.ToString() ?? ((int)ProductPriorityEnum.Normal).ToString(), false)
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Priority(PriorityRequestModel model)
+        {
+            var product = await _productServices.GetByIdAsync(model.Id);
+            var user = await _authenticationServices.GetCurrentUserAsync();
+
+            if (product == null || user == null)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.GetErrors().ForEach(x => Messages.AddWarning(x));
+            }
+            else
+            {
+                var priority = (await _priorityServices.GetListAsync(model.Id, x => x.User == user)).FirstOrDefault();
+                if (priority != null)
+                {
+                    priority.Priority = (ProductPriorityEnum)model.Priority;
+                }
+                else
+                {
+                    priority = new ProductPriority()
+                    {
+                        Priority = (ProductPriorityEnum)model.Priority,
+                        User = user,
+                        Product = product
+                    };
+                }
+
+                await _priorityServices.EditAsync(priority);
+                Messages.AddSuccess("Priority Edited");
+            }
+
+            return RedirectToAction(nameof(Priority), new { id = product?.Id });
         }
     }
 }

@@ -104,4 +104,7 @@
   <data name="Pictures" xml:space="preserve">
     <value>Снимки</value>
   </data>
+  <data name="Priority" xml:space="preserve">
+    <value>Приоритет</value>
+  </data>
 </root>

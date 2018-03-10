@@ -198,7 +198,7 @@
         columnDefs: [
             { width: '100px', targets: [5] },
             { className: 'left', targets: [2] },
-            { orderable: false, targets: [0, 1] }
+            { orderable: false, targets: [0, 1, 6] }
         ],
         columns: [
             //{
@@ -237,7 +237,18 @@
             },
             { data: 'categoryName' },
             { data: 'manufacturerName' },
-            { data: 'createdOn' }
+            { data: 'modifiedOn' },
+            {
+                data: 'quantity',
+                render: function (data) {
+                    var list = '<ul class="product-table-quantity">';
+                    for (var i = 0; i < data.length; i++) {
+                        list += '<li>' + data[i].store + ' <span class="product-quantity-label">' + data[i].quantity + '/' + data[i].lowQuantity + '</span></li>';
+                    }
+
+                    return list + '</ul>';
+                }
+            }
         ],
         language: {
             paginate: {
@@ -306,17 +317,20 @@
     //    }
     //}
 
-    $('input[type=checkbox].readonly').on('change', onReadonlyChange);
-    function onReadonlyChange(e) {
-        e.stopPropagation();
-        $(this).prop('checked', true);
+    $('.variant-price-net').on('change', variantPriceNetChange);
+    function variantPriceNetChange(e) {
+        var newPriceGross = (parseFloat($(this).val()) * 1.2).toFixed(2);
+
+        $variantData = $(this).parent().parent().parent().parent();
+        $variantData.find('.variant-price-gross').val(newPriceGross);
     }
 
-    $('select.readonly').on('mousedown', onReadonlyChange);
-    function onReadonlyChange(e) {
-        e.preventDefault();
-        this.blur();
-        window.focus();
+    $('.variant-price-net-type').on('change', variantPriceNetTypeChange);
+    function variantPriceNetTypeChange(e) {
+        var newPriceType = $(this).val();
+
+        $variantData = $(this).parent().parent().parent().parent();
+        $variantData.find('.variant-price-gross-type').val(newPriceType);
     }
 
 });

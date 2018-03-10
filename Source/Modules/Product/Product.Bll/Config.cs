@@ -21,6 +21,7 @@ namespace Product.Bll
             // services
             container.Configure(x => x.For<IProductServices>().Use<ProductServices>());
             container.Configure(x => x.For<IGlobalSearchResult>().Add<GlobalSearchResult>().Named("ProductGlobalSearchResult"));
+            container.Configure(x => x.For<IPriorityServices>().Use<PriorityServices>());
         }
     }
 }

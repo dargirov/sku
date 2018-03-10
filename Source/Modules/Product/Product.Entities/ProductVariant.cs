@@ -20,7 +20,7 @@ namespace Product.Entities
         public CurrencyTypeEnum PriceNetType { get; set; }
 
         [NotMapped]
-        public decimal PriceNetVat => (PriceNet * 1.2m).RoundFinance(2);
+        public decimal PriceGross => (PriceNet * 1.2m).RoundFinance(2);
 
         [Required]
         public decimal PriceCustomer { get; set; }

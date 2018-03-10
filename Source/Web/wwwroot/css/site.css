@@ -1134,8 +1134,47 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     display: flex;
 }
 
+.div-split {
+    display: flex;
+    justify-content: space-between;
+}
+
+.div-split > div {
+    width: 50%;
+}
+
+#home-widgets {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.widget {
+    width: 50%;
+    padding: 20px 10px;
+    box-sizing: border-box;
+}
+
+.widget > strong {
+    font-family: Tahoma;
+    font-size: 18px;
+    font-weight: normal;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.widget > div {
+    max-height: 450px;
+    overflow-y: auto;
+    overflow-x: initial;
+}
+
+.widget a {
+    text-decoration: none;
+    color: #333;
+}
+
 #todo-list {
-    margin: 50px;
     list-style-position: inside;
     font-family: Arial;
     font-size: 12px;
@@ -1163,9 +1202,89 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
 #todo-list .done {
     background-color: #dff0d8;
 }
-    
+
+.grid {
+    width: 100%;
+    font-family: Arial;
+    font-size: 14px;
+    border-collapse: collapse;
+    border: 1px solid #cccccc;
+    color: #333;
+    font-family: Arial;
+    font-size: 14px;
+    text-align: center;
+    background-color: white;
+}
+
+.grid th {
+    background-color: #eee;
+    font-weight: normal;
+    color: #79797b;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 5px 8px;
+}
+
+.grid td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.grid tbody tr:hover {
+    background-color: #e8e8e8 !important;
+}
+
+.grid tfoot {
+    background-color: #fafafa;
+}
+
+.grid tfoot ul {
+    list-style-type: none;
+    display: flex;
+}
+
+.grid tfoot li {
+    padding: 5px 8px;
+}
+
+.grid tfoot a {
+    color: #79797b;
+}
+
+.grid tfoot .active a {
+    color: black;
+}
+
+.label-spacing {
+    margin-top: 33px;
+}
+
+.text-alert {
+    color: #a94442;
+}
+
+.product-table-quantity {
+    list-style-type: none;
+}
+
+.product-table-quantity li {
+    margin-bottom: 3px;
+}
+
+.product-table-quantity li:last-of-type {
+    margin-bottom: 0;
+}
+
+.product-quantity-label {
+    display: inline-block;
+    padding: 0 3px;
+    background-color: #f1f1f1;
+    border: 1px solid #f1f1f1;
+    border-radius: 5px;
+}
+
 @media all and (max-width: 516px) {
-        body > header > div {
+    body > header > div {
         padding: 0 20px;
     }
 
@@ -1291,7 +1410,25 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
         padding: 6px 8px 8px 8px;
     }
 
-    #todo-list {
-        margin: 20px 0 0 0;
+    .div-split {
+        flex-direction: column;
+    }
+
+    .div-split > div {
+        width: 100%;
+    }
+
+    .hidden-mobile {
+        display: none;
+    }
+
+    #home-widgets {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .widget {
+        width: 100%;
+        padding: 20px 0;
     }
 }

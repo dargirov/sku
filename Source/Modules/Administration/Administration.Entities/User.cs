@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Data.Common;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Administration.Entities
 {
@@ -52,5 +53,8 @@ namespace Administration.Entities
 
         [Required]
         public virtual ModulePrivilege ModulePrivilege { get; set; }
+
+        [NotMapped]
+        public string Name => $"{FirstName} {LastName}";
     }
 }

@@ -150,7 +150,16 @@
   <data name="Picture" xml:space="preserve">
     <value>Снимка</value>
   </data>
-  <data name="Created on" xml:space="preserve">
-    <value>Добавен на</value>
+  <data name="Modified on" xml:space="preserve">
+    <value>Променен на</value>
+  </data>
+  <data name="Store" xml:space="preserve">
+    <value>Склад</value>
+  </data>
+  <data name="Manufacturer" xml:space="preserve">
+    <value>Производител</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Количество</value>
   </data>
 </root>

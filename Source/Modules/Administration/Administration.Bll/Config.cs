@@ -16,6 +16,7 @@ namespace Administration.Bll
             container.Configure(x => x.For<IGlobalSearchServices>().Use<GlobalSearchServices>());
             container.Configure(x => x.For<INotificationServices>().Use<NotificationServices>());
             container.Configure(x => x.For<IConfigServices>().Use<ConfigServices>());
+            container.Configure(x => x.For<IWidgetProvider>().Use<WidgetProvider>());
         }
     }
 }

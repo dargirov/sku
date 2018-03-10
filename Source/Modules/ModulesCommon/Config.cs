@@ -14,6 +14,7 @@ namespace ModulesCommon
         {
             RegisterParts(builder);
             RegisterServices(container);
+            RegisterWidgets(container);
             RegisterMappings();
             //RegisterViewLocations(services);
         }
@@ -65,6 +66,12 @@ namespace ModulesCommon
             Manufacturer.Presenters.Config.RegisterPart(builder);
             Client.Presenters.Config.RegisterPart(builder);
             Product.Presenters.Config.RegisterPart(builder);
+        }
+
+        private static void RegisterWidgets(Container container)
+        {
+            Administration.Presenters.Config.RegisterWidgets(container);
+            Product.Presenters.Config.RegisterWidgets(container);
         }
     }
 }

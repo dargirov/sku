@@ -588,6 +588,38 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.ToTable("ProductPictures");
                 });
 
+            modelBuilder.Entity("Product.Entities.ProductPriority", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<int>("Priority");
+
+                    b.Property<int>("ProductId");
+
+                    b.Property<Guid>("TenantId");
+
+                    b.Property<int>("UserId");
+
+                    b.Property<int>("Version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProductPriorities");
+                });
+
             modelBuilder.Entity("Product.Entities.ProductStock", b =>
                 {
                     b.Property<int>("Id")
@@ -878,6 +910,19 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.HasOne("Administration.Entities.File", "Thumb")
                         .WithMany()
                         .HasForeignKey("ThumbId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Product.Entities.ProductPriority", b =>
+                {
+                    b.HasOne("Product.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Administration.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

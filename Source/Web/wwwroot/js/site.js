@@ -75,6 +75,7 @@ $(document).ready(function () {
         $('input[data-val-required], select[data-val-required]').each(function (index, element) {
             var name = $(element).attr('name');
             var skip = $(element).data('notify-skip');
+            var allowZero = $(element).hasClass('allow-zero-value');
 
             if (name === 'Id' || skip) {
                 return;
@@ -82,7 +83,7 @@ $(document).ready(function () {
 
             var value = $(element).val();
 
-            if (value === '' || value === '0') {
+            if (value === '' || (value === '0' && !allowZero)) {
                 e.preventDefault();
                 var message = $(element).attr('data-val-required');
                 notifications.push(message);
@@ -204,6 +205,19 @@ $(document).ready(function () {
         }
 
         $(this).data('open', !open);
+    }
+
+    $('input[type=checkbox].readonly').on('change', onInputReadonlyChange);
+    function onInputReadonlyChange(e) {
+        e.stopPropagation();
+        $(this).prop('checked', true);
+    }
+
+    $('select.readonly').on('mousedown', onSelectReadonlyChange);
+    function onSelectReadonlyChange(e) {
+        e.preventDefault();
+        this.blur();
+        window.focus();
     }
 
 });

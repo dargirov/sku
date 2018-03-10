@@ -39,6 +39,7 @@ namespace Infrastructure.Database.DbConfig
         public DbSet<Product.Entities.ProductPicture> ProductPictures { get; set; }
         public DbSet<Product.Entities.ProductStock> ProductStocks { get; set; }
         public DbSet<Product.Entities.ProductVariant> ProductVariants { get; set; }
+        public DbSet<Product.Entities.ProductPriority> ProductPriorities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -73,6 +74,7 @@ namespace Infrastructure.Database.DbConfig
             modelBuilder.Entity<Product.Entities.ProductPicture>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId).HasOne(x => x.FullSize).WithOne().OnDelete(DeleteBehavior.Restrict); // delete restrict only on one relational property
             modelBuilder.Entity<Product.Entities.ProductStock>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
             modelBuilder.Entity<Product.Entities.ProductVariant>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
+            modelBuilder.Entity<Product.Entities.ProductPriority>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
         }
     }
 }

@@ -1,0 +1,48 @@
+﻿@model Product.Presenters.Widgets.LatestProducts.ViewModel
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="widget">
+    <strong>@Localizer["Latest Products"]</strong>
+    <div>
+        <table id="latest-products-list" class="grid">
+            <thead>
+                <tr>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["CreatedOn"]</th>
+                    <th class="hidden-mobile">@Localizer["Category"]</th>
+                    @*<th class="hidden-mobile">@Localizer["Manufacturer"]</th>*@
+                    <th>@Localizer["VariantCount"]</th>
+                    <th>@Localizer["TotalStockCount"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model.Products)
+                {
+                    <tr>
+                        <td><a asp-controller="product" asp-action="edit" asp-route-id="@product.Id">@product.Name</a></td>
+                        <td>@product.CreatedOn.ToShortDateString()</td>
+                        <td class="hidden-mobile">@product.Category</td>
+                        @*<td class="hidden-mobile">@product.Manufacturer</td>*@
+                        <td>@product.VariantCount</td>
+                        <td>@product.TotalStockCount</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">
+                        <ul>
+                            @for (int i = 1; i <= Model.PageSortData.TotalPages; i++)
+                            {
+                                var active = i == Model.PageSortData.Page ? "active" : string.Empty;
+                                <li class="@active"><a href="?latestpage=@i">@i</a></li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

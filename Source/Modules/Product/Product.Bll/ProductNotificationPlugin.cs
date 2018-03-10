@@ -22,21 +22,22 @@ namespace Product.Bll
 
         public async Task<IList<NotificationDto>> GetNotificationsAsync()
         {
-            var storeIds = (await _storeServices.GetStoreListWithReadPrivilegeAsync()).Select(x => x.Id);
+            //var storeIds = (await _storeServices.GetStoreListWithReadPrivilegeAsync()).Select(x => x.Id);
 
-            var notifications = (await _repository.GetQueryable<Entities.Product, int>()
-                .Include(x => x.Variants)
-                .ThenInclude(x => x.Stocks)
-                .Where(x => x.Variants.Any(v => v.Stocks.Any(s => storeIds.Contains(s.StoreId) && s.Quantity < s.LowQuantity)))
-                .ToListAsync())
-                .Select(x => new NotificationDto()
-                {
-                    Text = $"Low quantity for product {x.Name}",
-                    Controller = "product",
-                    Action = "edit",
-                    Id = x.Id
-                })
-                .ToList();
+            //var notifications = (await _repository.GetQueryable<Entities.Product, int>()
+            //    .Include(x => x.Variants)
+            //    .ThenInclude(x => x.Stocks)
+            //    .Where(x => x.Variants.Any(v => v.Stocks.Any(s => storeIds.Contains(s.StoreId) && s.Quantity < s.LowQuantity)))
+            //    .ToListAsync())
+            //    .Select(x => new NotificationDto()
+            //    {
+            //        Text = $"Low quantity for product {x.Name}",
+            //        Controller = "product",
+            //        Action = "edit",
+            //        Id = x.Id
+            //    })
+            //    .ToList();
+            var notifications = new NotificationDto[0];
 
             return notifications;
         }

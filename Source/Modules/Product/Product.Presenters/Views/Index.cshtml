@@ -23,6 +23,10 @@
                     <input asp-for="SearchCriteria.Name">
                 </div>
                 <div>
+                    <label asp-for="SearchCriteria.StoreId">@Localizer["Store"]</label>
+                    <select asp-for="SearchCriteria.StoreId" asp-items="Model.SearchCriteria.Stores"></select>
+                </div>
+                <div>
                     <label asp-for="SearchCriteria.CategoryId">@Localizer["Category"]</label>
                     <select asp-for="SearchCriteria.CategoryId" asp-items="Model.SearchCriteria.Categories"></select>
                 </div>
@@ -33,10 +37,6 @@
                 <div>
                     <label asp-for="SearchCriteria.SupplierId">@Localizer["Supplier"]</label>
                     <select asp-for="SearchCriteria.SupplierId" asp-items="Model.SearchCriteria.Suppliers"></select>
-                </div>
-                <div>
-                    <label asp-for="SearchCriteria.Warranty">@Localizer["Warranty"]</label>
-                    <input asp-for="SearchCriteria.Warranty">
                 </div>
                 <div>
                     <label asp-for="SearchCriteria.Description">@Localizer["Description"]</label>
@@ -64,7 +64,8 @@
                     <th>@Localizer["Name"]</th>
                     <th>@Localizer["Category"]</th>
                     <th>@Localizer["Supplier"]</th>
-                    <th>@Localizer["Created on"]</th>
+                    <th>@Localizer["Modified on"]</th>
+                    <th>@Localizer["Quantity"]</th>
                 </tr>
             </thead>
             <tbody>
