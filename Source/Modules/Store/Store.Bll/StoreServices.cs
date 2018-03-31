@@ -34,9 +34,21 @@ namespace Store.Bll
             return _repository.GetByIdAsync<Entities.Store, int>(id);
         }
 
-        public Task<List<Entities.Store>> GetListAsync()
+        public async Task<List<Entities.Store>> GetListAsync()
         {
-            return GetListAsync(null, null, null);
+            var user = await _authenticationServices.GetCurrentUserAsync();
+            var query = _repository.GetQueryable<Entities.Store, int>();
+
+            if (!user.IsAdmin)
+            {
+                var storeIds = _repository.GetQueryable<StorePrivilege, int>()
+                    .Where(x => x.User == user && x.Read)
+                    .Select(x => x.StoreId);
+
+                query = query.Where(x => storeIds.Contains(x.Id));
+            }
+
+            return await query.ToListAsync();
         }
 
         public Task<List<Entities.Store>> GetListWithoutPrivCheckAsync()
@@ -44,10 +56,9 @@ namespace Store.Bll
             return _repository.GetListAsync<Entities.Store, int>();
         }
 
-        public async Task<List<Entities.Store>> GetListAsync(string name, int? cityId, string address)
+        public async Task<(IEnumerable<Entities.Store> stores, PageData pageData)> GetListAsync(int page, int pageSize, int column, SortDirectionEnum dir, string name, int? cityId, string address)
         {
             var user = await _authenticationServices.GetCurrentUserAsync();
-
             var query = _repository.GetQueryable<Entities.Store, int>();
 
             if (!user.IsAdmin)
@@ -74,7 +85,7 @@ namespace Store.Bll
                 query = query.Where(s => s.Address.Contains(address));
             }
 
-            return await query.ToListAsync();
+            return await query.ToListWithPageData(page, pageSize);
         }
 
         public Task<List<Administration.Entities.City>> GetCityListAsync()

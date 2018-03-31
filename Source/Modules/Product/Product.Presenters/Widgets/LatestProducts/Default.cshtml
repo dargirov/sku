@@ -32,11 +32,15 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="6">
+                    <td colspan="5">
                         <ul>
-                            @for (int i = 1; i <= Model.PageSortData.TotalPages; i++)
+                            @{
+                                int pageStart = Model.PageData.Page - 3 > 1 ? Model.PageData.Page - 3 : 1;
+                                int pageEnd = Model.PageData.Page + 3 < Model.PageData.TotalPages ? Model.PageData.Page + 3 : Model.PageData.TotalPages;
+                            }
+                            @for (int i = pageStart; i <= pageEnd; i++)
                             {
-                                var active = i == Model.PageSortData.Page ? "active" : string.Empty;
+                                var active = i == Model.PageData.Page ? "active" : string.Empty;
                                 <li class="@active"><a href="?latestpage=@i">@i</a></li>
                             }
                         </ul>

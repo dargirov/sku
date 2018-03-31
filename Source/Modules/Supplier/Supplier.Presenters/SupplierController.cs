@@ -20,7 +20,11 @@ namespace Supplier.Presenters
 
         public async Task<IActionResult> Index(IndexRequestModel model)
         {
-            var suppliers = await _supplierServices.GetListAsync(
+            var suppliersAndPageData = await _supplierServices.GetListAsync(
+                model.Page,
+                model.PageSize,
+                model.SortColumn,
+                model.SortDirection,
                 model.SearchCriteria?.Name,
                 model.SearchCriteria?.Mol,
                 model.SearchCriteria?.Phone,
@@ -30,7 +34,7 @@ namespace Supplier.Presenters
 
             var viewModel = new IndexViewModel()
             {
-                Suppliers = suppliers,
+                Suppliers = suppliersAndPageData,
                 SearchCriteria = new IndexSearchCriteria()
             };
 

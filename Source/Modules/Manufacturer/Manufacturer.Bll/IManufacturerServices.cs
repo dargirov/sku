@@ -8,7 +8,7 @@ namespace Manufacturer.Bll
     {
         Task<Entities.Manufacturer> GetByIdAsync(int id);
         Task<List<Entities.Manufacturer>> GetListAsync();
-        Task<List<Entities.Manufacturer>> GetListAsync(string name, int? countryId, string email);
+        Task<(IEnumerable<Entities.Manufacturer> manufacturers, PageData pageData)> GetListAsync(int page, int pageSize, int column, SortDirectionEnum dir, string name, int? countryId, string email);
         Task<int> EditAsync(Entities.Manufacturer manufacturer);
         Task<bool> DeleteAsync(Entities.Manufacturer manufacturer, Messages messages);
     }

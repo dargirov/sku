@@ -10,7 +10,7 @@ namespace Store.Bll
         Task<Entities.Store> GetByIdAsync(int id);
         Task<List<Entities.Store>> GetListAsync();
         Task<List<Entities.Store>> GetListWithoutPrivCheckAsync();
-        Task<List<Entities.Store>> GetListAsync(string name, int? cityId, string address);
+        Task<(IEnumerable<Entities.Store> stores, PageData pageData)> GetListAsync(int page, int pageSize, int column, SortDirectionEnum dir, string name, int? cityId, string address);
         Task<List<Administration.Entities.City>> GetCityListAsync();
         Task<int> EditAsync(Entities.Store store);
         Task<List<StorePrivilege>> GetPrivilegeForUserListAsync(int userId);

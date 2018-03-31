@@ -30,9 +30,9 @@
                 <tr>
                     <td colspan="4">
                         <ul>
-                            @for (int i = 1; i <= Model.PageSortData.TotalPages; i++)
+                            @for (int i = 1; i <= Model.PageData.TotalPages; i++)
                             {
-                                var active = i == Model.PageSortData.Page ? "active" : string.Empty;
+                                var active = i == Model.PageData.Page ? "active" : string.Empty;
                                 <li class="@active"><a href="?lowquantitypage=@i">@i</a></li>
                             }
                         </ul>

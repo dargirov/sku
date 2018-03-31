@@ -31,7 +31,7 @@ $(document).ready(function () {
         theme: 'tooltipster-borderless'
     });
 
-    if (!$.fn.DataTable.isDataTable('#search-result-table')) {
+    /*if (!$.fn.DataTable.isDataTable('#search-result-table')) {
 
         var $table = $('#search-result-table');
         var orderColumn = $table.data('order-column') || 1;
@@ -55,17 +55,18 @@ $(document).ready(function () {
             columnDefs: [{ 'orderable': false, 'targets': 0 }]
         });
 
-        $('#search-result-table tbody').on('dblclick', 'tr', function () {
-            var data = table.row(this).data();
-            var $a = $(data[1]);
-            window.location.href = $a.attr('href');
-        });
+    }*/
 
-        $('#search-criteria-actions').find('.action-submit').on('click', searchCriteriaFormActionSubmitClick);
-        function searchCriteriaFormActionSubmitClick(e) {
-            e.preventDefault();
-            $('#search-criteria').find('form').submit();
-        }
+    $('#search-result-table:not(.no-dbclick) tbody').on('dblclick', 'tr', function () {
+        var data = table.row(this).data();
+        var $a = $(data[1]);
+        window.location.href = $a.attr('href');
+    });
+
+    $('#search-criteria-actions').find('.action-submit').on('click', searchCriteriaFormActionSubmitClick);
+    function searchCriteriaFormActionSubmitClick(e) {
+        e.preventDefault();
+        $('#search-criteria').find('form').submit();
     }
 
     $('form.validate').on('submit', formSubmit);

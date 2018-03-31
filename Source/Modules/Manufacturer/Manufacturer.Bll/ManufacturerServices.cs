@@ -1,7 +1,6 @@
 ﻿using Infrastructure.Data.Common;
 using Infrastructure.Database.Repository;
 using Infrastructure.Services.Common;
-using Microsoft.EntityFrameworkCore;
 using StructureMap;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,11 +28,13 @@ namespace Manufacturer.Bll
 
         public Task<List<Entities.Manufacturer>> GetListAsync()
         {
-            return GetListAsync(null, null, null);
+            // TODO: shouldn't I check privileges?
+            return _repository.GetListAsync<Entities.Manufacturer, int>();
         }
 
-        public Task<List<Entities.Manufacturer>> GetListAsync(string name, int? countryId, string email)
+        public Task<(IEnumerable<Entities.Manufacturer> manufacturers, PageData pageData)> GetListAsync(int page, int pageSize, int column, SortDirectionEnum dir, string name, int? countryId, string email)
         {
+            // TODO: shouldn't I check privileges?
             var query = _repository.GetQueryable<Entities.Manufacturer, int>();
 
             if (!string.IsNullOrWhiteSpace(name))
@@ -51,7 +52,7 @@ namespace Manufacturer.Bll
                 query = query.Where(x => x.Email.Contains(email));
             }
 
-            return query.ToListAsync();
+            return query.ToListWithPageData(page, pageSize);
         }
 
         public Task<int> EditAsync(Entities.Manufacturer manufacturer)

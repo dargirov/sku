@@ -49,15 +49,15 @@
                                 @store.Name
                             </td>
                             <td>
-                                <input name="StorePrivileges[@i].Read" value="true" type="checkbox" @Html.Raw(privilege != null && privilege.Read ? " checked=\"checked\"" : "")><i class="fa @Html.Raw(privilege != null && privilege.Read ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                                <input name="StorePrivileges[@i].Read" value="true" type="checkbox" @Html.Raw(privilege != null && privilege.Read ? " checked=\"checked\"" : "")><i class="far @Html.Raw(privilege != null && privilege.Read ? "fa-check-square" : "fa-square")"></i>
                                 <input name="StorePrivileges[@i].Read" type="hidden" value="false">
                             </td>
                             <td>
-                                <input name="StorePrivileges[@i].Write" value="true" type="checkbox" @Html.Raw(privilege != null && privilege.Write ? " checked=\"checked\"" : "")><i class="fa @Html.Raw(privilege != null && privilege.Write ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                                <input name="StorePrivileges[@i].Write" value="true" type="checkbox" @Html.Raw(privilege != null && privilege.Write ? " checked=\"checked\"" : "")><i class="far @Html.Raw(privilege != null && privilege.Write ? "fa-check-square" : "fa-square")"></i>
                                 <input name="StorePrivileges[@i].Write" type="hidden" value="false">
                             </td>
                             <td>
-                                <input name="StorePrivileges[@i].Delete" value="true" type="checkbox" @Html.Raw(privilege != null && privilege.Delete ? " checked=\"checked\"" : "")><i class="fa @Html.Raw(privilege != null && privilege.Delete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                                <input name="StorePrivileges[@i].Delete" value="true" type="checkbox" @Html.Raw(privilege != null && privilege.Delete ? " checked=\"checked\"" : "")><i class="far @Html.Raw(privilege != null && privilege.Delete ? "fa-check-square" : "fa-square")"></i>
                                 <input name="StorePrivileges[@i].Delete" type="hidden" value="false">
                             </td>
                         </tr>

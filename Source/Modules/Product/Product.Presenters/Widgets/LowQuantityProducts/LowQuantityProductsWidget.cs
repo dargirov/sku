@@ -46,7 +46,7 @@ namespace Product.Presenters.Widgets.LowQuantityProducts
                 .Take(limit)
                 .ToListAsync();
 
-            var pageCount = (int)Math.Ceiling((decimal)productIds.Count / limit);
+            //var pageCount = (int)Math.Ceiling((decimal)productIds.Count / limit);
 
             var productDtos = new List<ProductDto>();
 
@@ -68,12 +68,7 @@ namespace Product.Presenters.Widgets.LowQuantityProducts
             var viewModel = new ViewModel()
             {
                 Products = productDtos,
-                PageSortData = new PageSortData()
-                {
-                    Page = currentPage,
-                    TotalPages = pageCount > 10 ? 10 : pageCount,
-                    PageSize = limit
-                }
+                PageData = new PageData(productIds.Count, currentPage, limit)
             };
 
             return View(viewModel);

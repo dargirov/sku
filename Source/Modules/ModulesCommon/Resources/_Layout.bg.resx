@@ -119,6 +119,9 @@
   <data name="Producuts" xml:space="preserve">
     <value>Продукти</value>
   </data>
+  <data name="Requests" xml:space="preserve">
+    <value>Заявки</value>
+  </data>
   <data name="Clients" xml:space="preserve">
     <value>Клиенти</value>
   </data>

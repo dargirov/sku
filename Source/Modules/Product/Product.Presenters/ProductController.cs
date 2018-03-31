@@ -1,5 +1,6 @@
 ﻿using Administration.Bll;
 using Administration.Presenters;
+using Infrastructure.Data.Common;
 using Infrastructure.Services.Common;
 using Infrastructure.Services.ContentServer;
 using Manufacturer.Bll;
@@ -42,39 +43,34 @@ namespace Product.Presenters
             _authenticationServices = authenticationServices;
         }
 
-        public async Task<IActionResult> Index([FromQuery]IndexRequestModel model)
+        public async Task<IActionResult> Index(IndexRequestModel model)
         {
-            if (IsAjax())
-            {
-                var (products, count) = await _productServices.GetListAsync(
-                    model.Start,
-                    model.Length,
-                    model.Order[0]["column"],
-                    model.Order[0]["dir"],
-                    model.SearchCriteria?.Name,
-                    model.SearchCriteria?.StoreId,
-                    model.SearchCriteria?.CategoryId,
-                    model.SearchCriteria?.ManufacturerId,
-                    model.SearchCriteria?.SupplierId,
-                    model.SearchCriteria?.Description);
+            var (products, pageData) = await _productServices.GetListAsync(
+                model.Page,
+                model.PageSize,
+                model.SortColumn,
+                model.SortDirection,
+                model.SearchCriteria?.Name,
+                model.SearchCriteria?.StoreId,
+                model.SearchCriteria?.CategoryId,
+                model.SearchCriteria?.ManufacturerId,
+                model.SearchCriteria?.SupplierId,
+                model.SearchCriteria?.Description);
 
-                var result = new List<Dictionary<string, object>>();
-                foreach (var product in products)
-                {
-                    result.Add(new Dictionary<string, object>()
-                    {
-                        { "id", product.Id.ToString() },
-                        { "picture", product.Pictures.Any() ? Url.Action("index", "contentserver", new { id = product.Pictures.FirstOrDefault()?.Thumb.Guid, area = string.Empty }) : null },
-                        { "productName", product.Name },
-                        { "categoryName", product.Category.Name },
-                        { "manufacturerName", product.Manufacturer.Name },
-                        { "modifiedOn", (product.ModifiedOn ?? product.CreatedOn).ToString("dd.MM.yyyy") },
-                        { "quantity", product.Variants.SelectMany(x => x.Stocks).Select(x => new IndexQuantityDto() { Variant = x.Variant.Code, Store = x.Store.Name, Quantity = x.Quantity, LowQuantity = x.LowQuantity }).ToArray() }
-                    });
-                }
-
-                return Json(new { data = result, recordsTotal = count, recordsFiltered = count });
-            }
+            //var result = new List<Dictionary<string, object>>();
+            //foreach (var product in products)
+            //{
+            //    result.Add(new Dictionary<string, object>()
+            //        {
+            //            { "id", product.Id.ToString() },
+            //            { "picture", product.Pictures.Any() ? Url.Action("index", "contentserver", new { id = product.Pictures.FirstOrDefault()?.Thumb.Guid, area = string.Empty }) : null },
+            //            { "productName", product.Name },
+            //            { "categoryName", product.Category.Name },
+            //            { "manufacturerName", product.Manufacturer.Name },
+            //            { "modifiedOn", (product.ModifiedOn ?? product.CreatedOn).ToString("dd.MM.yyyy") },
+            //            { "quantity", product.Variants.SelectMany(x => x.Stocks).Select(x => new IndexQuantityDto() { Variant = x.Variant.Code, Store = x.Store.Name, Quantity = x.Quantity, LowQuantity = x.LowQuantity }).ToArray() }
+            //        });
+            //}
 
             var stores = await _storeServices.GetListAsync();
             var categories = await _productServices.GetCategoryListAsync();
@@ -83,7 +79,7 @@ namespace Product.Presenters
 
             var viewModel = new IndexViewModel()
             {
-                Products = new List<Entities.Product>(),
+                Products = (products, pageData),
                 SearchCriteria = new IndexSearchCriteria()
                 {
                     Stores = stores.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),

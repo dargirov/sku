@@ -42,8 +42,8 @@
             {
                 <li>
                     <a asp-controller="store" asp-action="index">
-                        <i class="fa fa-home" aria-hidden="true"></i>
-                        Складове
+                        <span><i class="fas fa-home fa-3x"></i></span>
+                        <span>Складове</span>
                     </a>
                 </li>
             }
@@ -52,8 +52,8 @@
             {
                 <li>
                     <a asp-controller="manufacturer" asp-action="index">
-                        <i class="fa fa-gears" aria-hidden="true"></i>
-                        Производители
+                        <span><i class="fas fa-cogs fa-3x"></i></span>
+                        <span>Производители</span>
                     </a>
                 </li>
             }
@@ -62,8 +62,8 @@
             {
                 <li>
                     <a asp-controller="supplier" asp-action="index">
-                        <i class="fa fa-truck" aria-hidden="true"></i>
-                        Доставчици
+                        <span><i class="fas fa-truck fa-3x"></i></span>
+                        <span>Доставчици</span>
                     </a>
                 </li>
             }
@@ -72,24 +72,24 @@
             {
                 <li>
                     <a asp-controller="product" asp-action="index">
-                        <i class="fa fa-wrench" aria-hidden="true"></i>
-                        Продукти
+                        <span><i class="fas fa-wrench fa-3x"></i></span>
+                        <span>Продукти</span>
                     </a>
                 </li>
             }
             @*<li>
-                    <a href="#">
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                        Оператори
-                    </a>
-                </li>*@
+                <a href="#">
+                    <i class="fas fa-users fa-3x"></i>
+                    Оператори
+                </a>
+            </li>*@
 
             @if (modulePrivileges.ClientRead)
             {
                 <li>
                     <a asp-controller="client" asp-action="index">
-                        <i class="fa fa-user-plus" aria-hidden="true"></i>
-                        Клиенти
+                        <span><i class="fas fa-user-plus fa-3x"></i></span>
+                        <span>Клиенти</span>
                     </a>
                 </li>
             }
@@ -98,8 +98,8 @@
             {
                 <li>
                     <a href="#">
-                        <i class="fa fa-sign-in" aria-hidden="true"></i>
-                        Приемане
+                        <span><i class="fas fa-sign-in-alt fa-3x"></i></span>
+                        <span>Приемане</span>
                     </a>
                 </li>
             }
@@ -108,8 +108,8 @@
             {
                 <li>
                     <a href="#">
-                        <i class="fa fa-eur" aria-hidden="true"></i>
-                        Продажби
+                        <span><i class="fas fa-euro-sign fa-3x"></i></span>
+                        <span>Продажби</span>
                     </a>
                 </li>
             }
@@ -120,12 +120,22 @@
                     </a>
                 </li>*@
 
+            @if (modulePrivileges.RequestRead)
+            {
+                <li>
+                    <a asp-controller="request" asp-action="index">
+                        <span><i class="fas fa-shipping-fast fa-3x"></i></span>
+                        <span>Заявки</span>
+                    </a>
+                </li>
+            }
+
             @if (modulePrivileges.InvoiceRead)
             {
                 <li>
                     <a asp-controller="document" asp-action="index">
-                        <i class="fa fa-file-text" aria-hidden="true"></i>
-                        Документи
+                        <span><i class="fas fa-file-alt fa-3x"></i></span>
+                        <span>Документи</span>
                     </a>
                 </li>
             }

@@ -38,6 +38,7 @@
         <AdministrationViewComponentFooterActionsSource Include="..\Modules\Administration\Administration.Presenters\Views\Components\FooterActions\*.cshtml" />
         <AdministrationViewComponentTodosSource Include="..\Modules\Administration\Administration.Presenters\Widgets\Todos\*.cshtml" />
         <AdministrationViewComponentTodosResourcesSource Include="..\Modules\Administration\Administration.Presenters\Widgets\Todos\*.resx" />
+		<AdministrationViewComponentPagerSource Include="..\Modules\Administration\Administration.Presenters\Views\Components\Pager\*.cshtml" />
         <!-- Store -->
         <StoreViewsSource Include="..\Modules\Store\Store.Presenters\Views\*.cshtml" />
         <StoreResourcesSource Include="..\Modules\Store\Store.Presenters\Resources\*.resx" />
@@ -57,6 +58,9 @@
         <ProductViewComponentLatestProductsResourcesSource Include="..\Modules\Product\Product.Presenters\Widgets\LatestProducts\*.resx" />
         <ProductViewComponentLowQuantityProductsSource Include="..\Modules\Product\Product.Presenters\Widgets\LowQuantityProducts\*.cshtml" />
         <ProductViewComponentLowQuantityProductsResourcesSource Include="..\Modules\Product\Product.Presenters\Widgets\LowQuantityProducts\*.resx" />
+		<!-- Request -->
+		<RequestViewsSource Include="..\Modules\Request\Request.Presenters\Views\*.cshtml" />
+		<RequestResourcesSource Include="..\Modules\Request\Request.Presenters\Resources\*.resx" />
         <Compile Remove="Resources\Pages\**" />
         
         <Content Remove="Resources\Pages\**" />
@@ -121,6 +125,7 @@
         <Copy SourceFiles="@(AdministrationViewsSource)" DestinationFolder="$(ViewsWebDir)\Administration" />
         <Copy SourceFiles="@(AdministrationViewComponentFooterActionsSource)" DestinationFolder="$(ViewsWebDir)\Shared\Components\FooterActions" />
         <Copy SourceFiles="@(AdministrationViewComponentTodosSource)" DestinationFolder="$(ViewsWebDir)\Shared\Components\TodosWidget" />
+		<Copy SourceFiles="@(AdministrationViewComponentPagerSource)" DestinationFolder="$(ViewsWebDir)\Shared\Components\Pager" />
         <Copy SourceFiles="@(StoreViewsSource)" DestinationFolder="$(ViewsWebDir)\Store" />
         <Copy SourceFiles="@(SupplierViewsSource)" DestinationFolder="$(ViewsWebDir)\Supplier" />
         <Copy SourceFiles="@(ManufacturerViewsSource)" DestinationFolder="$(ViewsWebDir)\Manufacturer" />
@@ -128,6 +133,7 @@
         <Copy SourceFiles="@(ProductViewsSource)" DestinationFolder="$(ViewsWebDir)\Product" />
         <Copy SourceFiles="@(ProductViewComponentLatestProductsSource)" DestinationFolder="$(ViewsWebDir)\Shared\Components\LatestProductsWidget" />
         <Copy SourceFiles="@(ProductViewComponentLowQuantityProductsSource)" DestinationFolder="$(ViewsWebDir)\Shared\Components\LowQuantityProductsWidget" />
+		<Copy SourceFiles="@(RequestViewsSource)" DestinationFolder="$(ViewsWebDir)\Request" />
     </Target>
 
     <Target Name="CopyResourcesToWeb">
@@ -140,6 +146,7 @@
         <Copy SourceFiles="@(AdministrationViewComponentTodosResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Shared\Components\TodosWidget" />
         <Copy SourceFiles="@(ProductViewComponentLatestProductsResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Shared\Components\LatestProductsWidget" />
         <Copy SourceFiles="@(ProductViewComponentLowQuantityProductsResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Shared\Components\LowQuantityProductsWidget" />
+		<Copy SourceFiles="@(RequestResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Request" />
     </Target>
 
 </Project>

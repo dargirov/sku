@@ -1,4 +1,4 @@
-@model Product.Presenters.Dtos.IndexViewModel
+﻿@model Product.Presenters.Dtos.IndexViewModel
 
 @{
     ViewData["Title"] = "Products list";
@@ -47,8 +47,8 @@
             </form>
         </div>
         <div id="search-criteria-actions">
-            <a asp-controller="product" asp-action="index"><i class="fa fa-close" aria-hidden="true"></i> @Localizer["Clear"]</a>
-            <a href="#disabled" class="action-primary action-submit"><i class="fa fa-search" aria-hidden="true"></i> @Localizer["Search"]</a>
+            <a asp-controller="product" asp-action="index"><i class="fas fa-times"></i> @Localizer["Clear"]</a>
+            <a href="#disabled" class="action-primary action-submit"><i class="fas fa-search"></i> @Localizer["Search"]</a>
         </div>
     </div>
 
@@ -63,29 +63,53 @@
                     <th>@Localizer["Picture"]</th>
                     <th>@Localizer["Name"]</th>
                     <th>@Localizer["Category"]</th>
-                    <th>@Localizer["Supplier"]</th>
+                    <th>@Localizer["Manufacturer"]</th>
                     <th>@Localizer["Modified on"]</th>
                     <th>@Localizer["Quantity"]</th>
                 </tr>
             </thead>
             <tbody>
-                @*@foreach (var product in Model.Products)
+                @foreach (var product in Model.Products.products)
                 {
                     <tr>
                         <td><input type="checkbox" data-product-id="@product.Id" class="row-checkbox"></td>
                         <td>
                             @if (product.Pictures != null && product.Pictures.Any())
                             {
-                                <img src="@Url.Action("Index", "ContentServer", new { productId = product.Id, path = product.Pictures.FirstOrDefault().PathThumb, area = string.Empty })">
+                                <img src="@Url.Action("Index", "ContentServer", new { id = product.Pictures.FirstOrDefault()?.Thumb.Guid, area = string.Empty })">
                             }
                         </td>
-                        <td><a asp-area="Sku" asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id">@product.Name</a></td>
+                        <td><a asp-area="sku" asp-controller="product" asp-action="edit" asp-route-id="@product.Id">@product.Name</a></td>
                         <td>@product.Category.Name</td>
-                        <td>@product.Supplier.Name</td>
-                        <td data-order="@product.Id">@product.CreatedOn.ToString("dd.MM.yyyy")</td>
+                        <td>@product.Manufacturer.Name</td>
+                        <td>@((product.ModifiedOn ?? product.CreatedOn).ToString("dd.MM.yyyy"))</td>
+                        <td>
+                            <ul class="product-table-quantity">
+                                @foreach (var stock in product.Variants.SelectMany(x => x.Stocks))
+                                {
+                                    <li>
+                                        @stock.Store.Name
+                                        <span class="product-quantity-label">@stock.Quantity / @stock.LowQuantity</span>
+                                    </li>
+                                }
+
+                            </ul>
+                        </td>
                     </tr>
-                }*@
+                }
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7">
+                        <div class="table-footer-wrapper">
+                            <div>Показани @Model.Products.pageData.ResultsFrom до @Model.Products.pageData.ResultsTo от @Model.Products.pageData.TotalResults разултата</div>
+                            <div>
+                                @await Component.InvokeAsync("Pager", new { action = "index", pageData = Model.Products.pageData })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 
@@ -96,5 +120,5 @@
 </section>
 
 @section scripts {
-    <script src="~/js/product.js"></script>
+    <script src="~/js/product.js" asp-append-version="true"></script>
 }

@@ -217,6 +217,12 @@ namespace Infrastructure.Database.DbConfig.Migrations
 
                     b.Property<bool>("ProductWrite");
 
+                    b.Property<bool>("RequestDelete");
+
+                    b.Property<bool>("RequestRead");
+
+                    b.Property<bool>("RequestWrite");
+
                     b.Property<bool>("SaleDelete");
 
                     b.Property<bool>("SaleRead");

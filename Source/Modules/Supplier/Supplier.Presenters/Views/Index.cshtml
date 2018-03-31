@@ -1,4 +1,4 @@
-@model Supplier.Presenters.Dtos.IndexViewModel
+﻿@model Supplier.Presenters.Dtos.IndexViewModel
 
 @{
     ViewData["Title"] = "Suppliers";
@@ -47,8 +47,8 @@
             </form>
         </div>
         <div id="search-criteria-actions">
-            <a asp-controller="supplier" asp-action="index"><i class="fa fa-close" aria-hidden="true"></i> Clear</a>
-            <a class="action-primary action-submit"><i class="fa fa-search" aria-hidden="true"></i> Search</a>
+            <a asp-controller="supplier" asp-action="index"><i class="fas fa-times"></i> Clear</a>
+            <a class="action-primary action-submit"><i class="fas fa-search"></i> Search</a>
         </div>
     </div>
 
@@ -67,7 +67,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var supplier in Model.Suppliers)
+                @foreach (var supplier in Model.Suppliers.suppliers)
                 {
                     <tr>
                         <td><input type="checkbox" data-store-id="@supplier.Id"></td>
@@ -78,6 +78,18 @@
                     </tr>
                 }
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <div class="table-footer-wrapper">
+                            <div>Показани @Model.Suppliers.pageData.ResultsFrom до @Model.Suppliers.pageData.ResultsTo от @Model.Suppliers.pageData.TotalResults разултата</div>
+                            <div>
+                                @await Component.InvokeAsync("Pager", new { action = "index", pageData = Model.Suppliers.pageData })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 

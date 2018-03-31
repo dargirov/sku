@@ -12,14 +12,14 @@ table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section, summary,
 time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	outline: 0;
-	font-size: 100%;
-	vertical-align: baseline;
-	background: transparent;
-	font-style: normal;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    font-style: normal;
 }
 
 body {
@@ -88,6 +88,10 @@ body > main {
     text-align: center;
 }
 
+#module-select-menu a span {
+    display: block;
+}
+    
 #header-module-select-menu a {
     font-size: 12px;
     text-transform: uppercase;
@@ -108,11 +112,6 @@ body > main {
 
 #header-module-select-menu li:last-of-type {
     margin-right: 0;
-}
-
-#module-select-menu li i {
-    display: block;
-    font-size: 56px;
 }
 
 #module-actions ul {
@@ -529,7 +528,7 @@ form select {
     font-size: 13px;
 }
 
-#search-criteria input, #search-criteria select {
+#search-criteria input, #search-criteria select, #search-result-table select, #search-result-table input[type=number] {
     width: 170px;
     height: 28px;
     font-size: 14px;
@@ -611,15 +610,14 @@ form select {
     font-family: FontAwesome;
 }
 
-#search-result-table .odd th, #search-result-table .odd td,
-#search-result-table .even th, #search-result-table .even td {
+#search-result-table tbody td {
     border-bottom: 1px solid #ddd;
     border-top: 1px solid #ddd;
     vertical-align: middle;
     padding: 10px;
 }
 
-#search-result-table .odd:hover, #search-result-table .even:hover {
+#search-result-table tbody tr:hover {
     background-color: #e8e8e8 !important;
 }
 
@@ -647,27 +645,33 @@ form select {
 .table-footer-wrapper {
     display: flex;
     justify-content: space-between;
-    border: 1px solid #ddd;
+    align-items: center;
+    border-top: 1px solid #ddd;
     font-weight: normal;
     color: #79797b;
     font-size: 14px;
     font-family: Arial;
-    padding: 10px;
+    padding: 0 10px;
     background-color: #eee;
 }
 
-#search-result-table_paginate a {
+.table-footer-wrapper a {
     padding: 0 3px;
-    margin: 0 5px;
+    padding: 10px 8px;
+    display: block;
     cursor: pointer;
 }
 
-#search-result-table_paginate .current {
-    color: #000;
+.table-footer-wrapper a.current {
+    color: #08da94;
+    font-weight: bold;
+    padding-top: 8px;
+    border-top: 2px solid #08da94;
 }
 
-#search-result-table_paginate {
-    text-align: right;
+.table-footer-wrapper ul {
+    list-style-type: none;
+    display: flex;
 }
 
 .privilages-container {

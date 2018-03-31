@@ -1,0 +1,25 @@
+﻿@model Administration.Presenters.Dtos.PagerViewModel
+
+<ul>
+    @if (Model.PageData.Page > 1)
+    {
+        <li><a asp-action="@Model.Action" asp-route-page="1"><i class="fas fa-angle-double-left"></i></a></li>
+        <li><a asp-action="index" asp-route-page="@(Model.PageData.Page - 1)"><i class="fas fa-angle-left"></i></a></li>
+    }
+
+    @{
+        int pageStart = Model.PageData.Page - 3 > 1 ? Model.PageData.Page - 3 : 1;
+        int pageEnd = Model.PageData.Page + 3 < Model.PageData.TotalPages ? Model.PageData.Page + 3 : Model.PageData.TotalPages;
+    }
+    @for (int i = pageStart; i <= pageEnd; i++)
+    {
+        var currentClass = i == Model.PageData.Page ? "current" : string.Empty;
+        <li><a class="@currentClass" asp-action="index" asp-route-grid="products" asp-route-page="@i">@i</a></li>
+    }
+
+    @if (Model.PageData.Page < Model.PageData.TotalPages)
+    {
+        <li><a asp-action="index" asp-route-page="@(Model.PageData.Page + 1)"><i class="fas fa-angle-right"></i></a></li>
+        <li><a asp-action="index" asp-route-page="@Model.PageData.TotalPages"><i class="fas fa-angle-double-right"></i></a></li>
+    }
+</ul>

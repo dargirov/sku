@@ -23,14 +23,18 @@ namespace Manufacturer.Presenters
 
         public async Task<IActionResult> Index(IndexRequestModel model)
         {
-            var manufactirers = await _manufacturerServices.GetListAsync(
+            var manufactirersAndPageData = await _manufacturerServices.GetListAsync(
+                model.Page,
+                model.PageSize,
+                model.SortColumn,
+                model.SortDirection,
                 model.SearchCriteria?.Name,
                 model.SearchCriteria?.CountryId,
                 model.SearchCriteria?.Email);
 
             var viewModel = new IndexViewModel()
             {
-                Manufacturers = manufactirers,
+                Manufacturers = manufactirersAndPageData,
                 SearchCriteria = model.SearchCriteria,
                 Countries = (await _countryServices.GetListAsync()).ToSelectList(c => c.Id.ToString(), c => c.Name, string.Empty, true)
             };

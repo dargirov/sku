@@ -1,4 +1,4 @@
-@model Store.Presenters.Dtos.IndexViewModel
+﻿@model Store.Presenters.Dtos.IndexViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -35,8 +35,8 @@
             </form>
         </div>
         <div id="search-criteria-actions">
-            <a asp-controller="store" asp-action="index"><i class="fa fa-close" aria-hidden="true"></i> @Localizer["Clear"]</a>
-            <a class="action-primary action-submit"><i class="fa fa-search" aria-hidden="true"></i> @Localizer["Search"]</a>
+            <a asp-controller="store" asp-action="index"><i class="fas fa-times"></i> @Localizer["Clear"]</a>
+            <a class="action-primary action-submit"><i class="fas fa-search"></i> @Localizer["Search"]</a>
         </div>
     </div>
 
@@ -55,7 +55,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var store in Model.Stores)
+                @foreach (var store in Model.Stores.stores)
                 {   
                     <tr>
                         <td><input type="checkbox" data-store-id="@store.Id"></td>
@@ -66,6 +66,18 @@
                     </tr>
                 }
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <div class="table-footer-wrapper">
+                            <div>Показани @Model.Stores.pageData.ResultsFrom до @Model.Stores.pageData.ResultsTo от @Model.Stores.pageData.TotalResults разултата</div>
+                            <div>
+                                @await Component.InvokeAsync("Pager", new { action = "index", pageData = Model.Stores.pageData })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 

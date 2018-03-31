@@ -42,128 +42,141 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><i class="fa fa-home" aria-hidden="true"></i> @Localizer["Stores"]</td>
+                        <td><i class="fas fa-home"></i> @Localizer["Stores"]</td>
                         <td>
-                            <input asp-for="StoreRead"><i class="fa @Html.Raw(Model.StoreRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="StoreRead"><i class="far @Html.Raw(Model.StoreRead ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="StoreWrite"><i class="fa @Html.Raw(Model.StoreWrite ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="StoreWrite"><i class="far @Html.Raw(Model.StoreWrite ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="StoreDelete"><i class="fa @Html.Raw(Model.StoreDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
-                        </td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-gears" aria-hidden="true"></i> @Localizer["Manufacturers"]</td>
-                        <td>
-                            <input asp-for="ManufacturerRead"><i class="fa @Html.Raw(Model.ManufacturerRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
-                        </td>
-                        <td>
-                            <input asp-for="ManufacturerWrite"><i class="fa @Html.Raw(Model.ManufacturerWrite ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
-                        </td>
-                        <td>
-                            <input asp-for="ManufacturerDelete"><i class="fa @Html.Raw(Model.ManufacturerDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="StoreDelete"><i class="far @Html.Raw(Model.StoreDelete ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td><i class="fa fa fa-truck" aria-hidden="true"></i> @Localizer["Suppliers"]</td>
+                        <td><i class="fas fa-cogs"></i> @Localizer["Manufacturers"]</td>
                         <td>
-                            <input asp-for="SupplierRead"><i class="fa @Html.Raw(Model.SupplierRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="ManufacturerRead"><i class="far @Html.Raw(Model.ManufacturerRead ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="SupplierWrite"><i class="fa @Html.Raw(Model.SupplierWrite ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="ManufacturerWrite"><i class="far @Html.Raw(Model.ManufacturerWrite ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="SupplierDelete"><i class="fa @Html.Raw(Model.SupplierDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
-                        </td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-wrench" aria-hidden="true"></i> @Localizer["Products"]</td>
-                        <td>
-                            <input asp-for="ProductRead"><i class="fa @Html.Raw(Model.ProductRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
-                        </td>
-                        <td>
-                            <input asp-for="ProductWrite"><i class="fa @Html.Raw(Model.ProductWrite ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
-                        </td>
-                        <td>
-                            <input asp-for="ProductDelete"><i class="fa @Html.Raw(Model.ProductDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="ManufacturerDelete"><i class="far @Html.Raw(Model.ManufacturerDelete ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td class="sub"><i class="fa fa-list-ul" aria-hidden="true"></i> @Localizer["Categories"]</td>
+                        <td><i class="fas fa-truck"></i> @Localizer["Suppliers"]</td>
                         <td>
-                            <input asp-for="CategoryRead"><i class="fa @Html.Raw(Model.CategoryRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="SupplierRead"><i class="far @Html.Raw(Model.SupplierRead ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="CategoryWrite"><i class="fa @Html.Raw(Model.CategoryWrite ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="SupplierWrite"><i class="far @Html.Raw(Model.SupplierWrite ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="CategoryDelete"><i class="fa @Html.Raw(Model.CategoryDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="SupplierDelete"><i class="far @Html.Raw(Model.SupplierDelete ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td class="sub"><i class="fa fa-folder-open" aria-hidden="true"></i> @Localizer["Import"]</td>
+                        <td><i class="fas fa-wrench"></i> @Localizer["Products"]</td>
+                        <td>
+                            <input asp-for="ProductRead"><i class="far @Html.Raw(Model.ProductRead ? "fa-check-square" : "fa-square")"></i>
+                        </td>
+                        <td>
+                            <input asp-for="ProductWrite"><i class="far @Html.Raw(Model.ProductWrite ? "fa-check-square" : "fa-square")"></i>
+                        </td>
+                        <td>
+                            <input asp-for="ProductDelete"><i class="far @Html.Raw(Model.ProductDelete ? "fa-check-square" : "fa-square")"></i>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="sub"><i class="fas fa-list-ul"></i> @Localizer["Categories"]</td>
+                        <td>
+                            <input asp-for="CategoryRead"><i class="far @Html.Raw(Model.CategoryRead ? "fa-check-square" : "fa-square")"></i>
+                        </td>
+                        <td>
+                            <input asp-for="CategoryWrite"><i class="far @Html.Raw(Model.CategoryWrite ? "fa-check-square" : "fa-square")"></i>
+                        </td>
+                        <td>
+                            <input asp-for="CategoryDelete"><i class="far @Html.Raw(Model.CategoryDelete ? "fa-check-square" : "fa-square")"></i>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="sub"><i class="fas fa-folder-open"></i> @Localizer["Import"]</td>
                         <td></td>
                         <td></td>
                         <td></td>
                         <td>
-                            <input asp-for="ProductImport"><i class="fa @Html.Raw(Model.ProductImport ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="ProductImport"><i class="far @Html.Raw(Model.ProductImport ? "fa-check-square" : "fa-square")"></i>
                         </td>
                     </tr>
                     <tr>
-                        <td><i class="fa fa-user-plus" aria-hidden="true"></i> @Localizer["Clients"]</td>
+                        <td><i class="fas fa-user-plus"></i> @Localizer["Clients"]</td>
                         <td>
-                            <input asp-for="ClientRead"><i class="fa @Html.Raw(Model.ClientRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="ClientRead"><i class="far @Html.Raw(Model.ClientRead ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="ClientWrite"><i class="fa @Html.Raw(Model.ClientWrite ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="ClientWrite"><i class="far @Html.Raw(Model.ClientWrite ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="ClientDelete"><i class="fa @Html.Raw(Model.ClientDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="ClientDelete"><i class="far @Html.Raw(Model.ClientDelete ? "fa-check-square" : "fa-square")"></i>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-shipping-fast"></i> @Localizer["Requests"]</td>
+                        <td>
+                            <input asp-for="RequestRead"><i class="far @Html.Raw(Model.RequestRead ? "fa-check-square" : "fa-square")"></i>
+                        </td>
+                        <td>
+                            <input asp-for="RequestWrite"><i class="far @Html.Raw(Model.RequestWrite ? "fa-check-square" : "fa-square")"></i>
+                        </td>
+                        <td>
+                            <input asp-for="RequestDelete"><i class="far @Html.Raw(Model.RequestDelete ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td></td>
                     </tr>
                     @*<tr>
-                        <td><i class="fa fa-sign-in" aria-hidden="true"></i> @Localizer["Incoming"]</td>
+                        <td><i class="fa fa-sign-in"></i> @Localizer["Incoming"]</td>
                         <td>
-                            <input asp-for="IncomeRead"><i class="fa @Html.Raw(Model.IncomeRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="IncomeRead"><i class="far @Html.Raw(Model.IncomeRead ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="IncomeWrite"><i class="fa @Html.Raw(Model.IncomeWrite ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="IncomeWrite"><i class="far @Html.Raw(Model.IncomeWrite ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="IncomeDelete"><i class="fa @Html.Raw(Model.IncomeDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="IncomeDelete"><i class="far @Html.Raw(Model.IncomeDelete ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td><i class="fa fa-eur" aria-hidden="true"></i> @Localizer["Sales"]</td>
+                        <td><i class="fa fa-eur"></i> @Localizer["Sales"]</td>
                         <td>
-                            <input asp-for="SaleRead"><i class="fa @Html.Raw(Model.SaleRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="SaleRead"><i class="far @Html.Raw(Model.SaleRead ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="SaleWrite"><i class="fa @Html.Raw(Model.SaleWrite ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="SaleWrite"><i class="far @Html.Raw(Model.SaleWrite ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="SaleDelete"><i class="fa @Html.Raw(Model.SaleDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="SaleDelete"><i class="far @Html.Raw(Model.SaleDelete ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td></td>
                     </tr>*@
                     <tr>
-                        <td><i class="fa fa-file-text" aria-hidden="true"></i> @Localizer["Documents"]</td>
+                        <td><i class="fas fa-file-alt"></i> @Localizer["Documents"]</td>
                         <td>
-                            <input asp-for="InvoiceRead"><i class="fa @Html.Raw(Model.InvoiceRead ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="InvoiceRead"><i class="far @Html.Raw(Model.InvoiceRead ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="InvoiceWrite"><i class="fa @Html.Raw(Model.InvoiceWrite ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="InvoiceWrite"><i class="far @Html.Raw(Model.InvoiceWrite ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td>
-                            <input asp-for="InvoiceDelete"><i class="fa @Html.Raw(Model.InvoiceDelete ? "fa-check-square-o" : "fa-square-o")" aria-hidden="true"></i>
+                            <input asp-for="InvoiceDelete"><i class="far @Html.Raw(Model.InvoiceDelete ? "fa-check-square" : "fa-square")"></i>
                         </td>
                         <td></td>
                     </tr>

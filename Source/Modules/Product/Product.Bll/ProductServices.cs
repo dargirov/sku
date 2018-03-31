@@ -75,12 +75,12 @@ namespace Product.Bll
             return product;
         }
 
-        public async Task<(IEnumerable<Entities.Product> products, int count)> GetListAsync(int start, int limit, string dir)
+        public async Task<(IEnumerable<Entities.Product> products, PageData pageSortData)> GetListAsync(int page, int pageSize, SortDirectionEnum dir)
         {
-            return await GetListAsync(start, limit, "5", dir, null, null, null, null, null, null);
+            return await GetListAsync(page, pageSize, 5, dir, null, null, null, null, null, null);
         }
 
-        public async Task<(IEnumerable<Entities.Product> products, int count)> GetListAsync(int start, int limit, string column, string dir, string name, int? storeId, int? categoryId, int? manufacturerId, int? supplierId, string description)
+        public async Task<(IEnumerable<Entities.Product> products, PageData pageSortData)> GetListAsync(int page, int pageSize, int column, SortDirectionEnum dir, string name, int? storeId, int? categoryId, int? manufacturerId, int? supplierId, string description)
         {
             var storeIds = (await _storeServices.GetListAsync()).Select(x => x.Id);
 
@@ -123,54 +123,34 @@ namespace Product.Bll
                 query = query.Where(p => p.Description.Contains(description));
             }
 
-            switch (column.ToString())
+            switch (column)
             {
-                case "2":
-                    query = dir == "desc"
+                case 2:
+                    query = dir == SortDirectionEnum.Desc
                         ? query.OrderByDescending(x => x.Name)
                         : query.OrderBy(x => x.Name);
                     break;
-                case "3":
-                    query = dir == "desc"
+                case 3:
+                    query = dir == SortDirectionEnum.Desc
                         ? query.OrderByDescending(x => x.Category.Name)
                         : query.OrderBy(x => x.Category.Name);
                     break;
-                case "4":
-                    query = dir == "desc"
+                case 4:
+                    query = dir == SortDirectionEnum.Desc
                         ? query.OrderByDescending(x => x.Supplier.Name)
                         : query.OrderBy(x => x.Supplier.Name);
                     break;
-                case "5":
-                    query = dir == "desc"
+                case 5:
+                    query = dir == SortDirectionEnum.Desc
                         ? query.OrderByDescending(x => x.Id)
                         : query.OrderBy(x => x.Id);
                     break;
+                default:
+                    query = query.OrderByDescending(x => x.Id);
+                    break;
             }
 
-            var products = await query
-                .Skip(start)
-                .Take(limit)
-                .ToListAsync();
-
-            //foreach (var product in products)
-            //{
-            //    //product.Supplier = await _repository.GetQueryable<Supplier.Entities.Supplier, int>().Where(x => x.Id == product.SupplierId).FirstOrDefaultAsync();
-            //    product.Variants = await _repository.GetListAsync<Entities.ProductVariant, int>(x => x.ProductId == product.Id);
-            //    product.Pictures = await _repository.GetListAsync<Entities.ProductPicture, int>(x => x.ProductId == product.Id);
-            //    foreach (var variant in product.Variants)
-            //    {
-            //        variant.Stocks = await _repository.GetListAsync<Entities.ProductStock, int>(x => x.VariantId == variant.Id);
-            //    }
-
-            //    foreach (var picture in product.Pictures)
-            //    {
-            //        //picture.FullSize = await filesService.GetByIdAsync(picture.FullSizeId);
-            //        //picture.Thumb = await filesService.GetByIdAsync(picture.ThumbId);
-            //    }
-            //}
-
-            var count = await query.CountAsync();
-            return (products: products, count: count);
+            return await query.ToListWithPageData(page, pageSize);
         }
 
         public async Task<int> EditAsync(Entities.Product product, IEnumerable<VariantDto> variantDtos, Messages messages)

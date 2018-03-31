@@ -7,6 +7,6 @@ namespace Product.Presenters.Widgets.LowQuantityProducts
     {
         public IEnumerable<ProductDto> Products { get; set; }
 
-        public PageSortData PageSortData { get; set; }
+        public PageData PageData { get; set; }
     }
 }

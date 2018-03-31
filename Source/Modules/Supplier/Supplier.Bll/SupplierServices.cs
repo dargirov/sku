@@ -1,7 +1,6 @@
 ﻿using Infrastructure.Data.Common;
 using Infrastructure.Database.Repository;
 using Infrastructure.Services.Common;
-using Microsoft.EntityFrameworkCore;
 using StructureMap;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,11 +28,13 @@ namespace Supplier.Bll
 
         public Task<List<Entities.Supplier>> GetListAsync()
         {
-            return GetListAsync(null, null, null, null, null, null);
+            // TODO: check privs?
+            return _repository.GetListAsync<Entities.Supplier, int>();
         }
 
-        public Task<List<Entities.Supplier>> GetListAsync(string name, string mol, string phone, string address, string email, string url)
+        public Task<(IEnumerable<Entities.Supplier> suppliers, PageData pageData)> GetListAsync(int page, int pageSize, int column, SortDirectionEnum dir, string name, string mol, string phone, string address, string email, string url)
         {
+            // TODO: check privs?
             var query = _repository.GetQueryable<Entities.Supplier, int>();
 
             if (!string.IsNullOrWhiteSpace(name))
@@ -71,7 +72,7 @@ namespace Supplier.Bll
                 query = query.Where(x => x.Url.Contains(url));
             }
 
-            return query.ToListAsync();
+            return query.ToListWithPageData(page, pageSize);
         }
 
         public Task<int> EditAsync(Entities.Supplier supplier)

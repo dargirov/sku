@@ -183,7 +183,7 @@
     var productUrl = $('#search-result-table').data('product-url');
     var ajaxUrl = $('#search-result-table').data('url');
 
-    var table = $('#search-result-table').DataTable({
+    /*var table = $('#search-result-table').DataTable({
         searching: false,
         processing: false,
         serverSide: true,
@@ -262,7 +262,7 @@
         },
         pagingType: 'full_numbers',
         dom: 'lt<"table-footer-wrapper"ip>'
-    });
+    });*/
 
     //$('#search-result-table tbody').on('click', 'td.details-control', function () {
     //    var tr = $(this).closest('tr');
@@ -293,12 +293,12 @@
     //    '</table>';
     //}
 
-    $('#search-criteria-actions').find('.action-submit').on('click', searchCriteriaFormActionSubmitClick);
-    function searchCriteriaFormActionSubmitClick(e) {
-        e.preventDefault();
-        serializeForm(table.ajax.params());
-        table.ajax.reload();
-    }
+    //$('#search-criteria-actions').find('.action-submit').on('click', searchCriteriaFormActionSubmitClick);
+    //function searchCriteriaFormActionSubmitClick(e) {
+    //    e.preventDefault();
+    //    serializeForm(table.ajax.params());
+    //    table.ajax.reload();
+    //}
 
     $('#search-result-table tbody').on('dblclick', 'tr', function () {
         var data = table.row(this).data();

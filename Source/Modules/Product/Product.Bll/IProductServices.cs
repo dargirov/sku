@@ -9,8 +9,8 @@ namespace Product.Bll
     {
         Task<Entities.Product> GetByIdAsync(int id);
         Task<IEnumerable<Dtos.Api.ProductDto>> GetByOrganizationAndVariantCodeAsync(string organizationHash, string code);
-        Task<(IEnumerable<Entities.Product> products, int count)> GetListAsync(int start, int limit, string dir);
-        Task<(IEnumerable<Entities.Product> products, int count)> GetListAsync(int start, int limit, string column, string dir, string name, int? storeId, int? categoryId, int? manufacturerId, int? supplierId, string description);
+        Task<(IEnumerable<Entities.Product> products, PageData pageSortData)> GetListAsync(int page, int pageSize, SortDirectionEnum dir);
+        Task<(IEnumerable<Entities.Product> products, PageData pageSortData)> GetListAsync(int page, int pageSize, int column, SortDirectionEnum dir, string name, int? storeId, int? categoryId, int? manufacturerId, int? supplierId, string description);
         Task<List<Entities.ProductCategory>> GetCategoryListAsync();
         Task<int> EditAsync(Entities.Product product, IEnumerable<VariantDto> variants, Messages messages);
         Task<int> DeleteAsync(Entities.Product product);

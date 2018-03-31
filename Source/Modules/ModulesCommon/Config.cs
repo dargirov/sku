@@ -29,7 +29,7 @@ namespace ModulesCommon
                 typeof(Manufacturer.Presenters.Config),
                 typeof(Client.Presenters.Config),
                 typeof(Product.Presenters.Config),
-                typeof(Product.Bll.Config),
+                typeof(Product.Bll.Config)
             };
 
             AutoMapperConfig.Execute(types.SelectMany(x => x.GetTypeInfo().Assembly.DefinedTypes).ToList());
@@ -56,6 +56,7 @@ namespace ModulesCommon
             Manufacturer.Bll.Config.RegisterServices(container);
             Client.Bll.Config.RegisterServices(container);
             Product.Bll.Config.RegisterServices(container);
+            Request.Bll.Config.RegisterServices(container);
         }
 
         private static void RegisterParts(IMvcBuilder builder)
@@ -66,12 +67,14 @@ namespace ModulesCommon
             Manufacturer.Presenters.Config.RegisterPart(builder);
             Client.Presenters.Config.RegisterPart(builder);
             Product.Presenters.Config.RegisterPart(builder);
+            Request.Presenters.Config.RegisterPart(builder);
         }
 
         private static void RegisterWidgets(Container container)
         {
             Administration.Presenters.Config.RegisterWidgets(container);
             Product.Presenters.Config.RegisterWidgets(container);
+            Request.Presenters.Config.RegisterWidgets(container);
         }
     }
 }

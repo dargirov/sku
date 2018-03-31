@@ -19,6 +19,8 @@
     <ProjectReference Include="..\Manufacturer\Manufacturer.Presenters\Manufacturer.Presenters.csproj" />
     <ProjectReference Include="..\Product\Product.Bll\Product.Bll.csproj" />
     <ProjectReference Include="..\Product\Product.Presenters\Product.Presenters.csproj" />
+    <ProjectReference Include="..\Request\Request.Bll\Request.Bll.csproj" />
+    <ProjectReference Include="..\Request\Request.Presenters\Request.Presenters.csproj" />
     <ProjectReference Include="..\Store\Store.Bll\Store.Bll.csproj" />
     <ProjectReference Include="..\Store\Store.Presenters\Store.Presenters.csproj" />
     <ProjectReference Include="..\Supplier\Supplier.Bll\Supplier.Bll.csproj" />

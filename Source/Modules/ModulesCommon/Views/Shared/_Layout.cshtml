@@ -18,7 +18,7 @@
     @*<environment names="Development">*@
         <link rel="stylesheet" href="~/lib/tooltipster/dist/css/tooltipster.bundle.min.css">
         <link rel="stylesheet" href="~/lib/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-borderless.min.css">
-        <link rel="stylesheet" href="~/css/font-awesome.min.css">
+        @*<link rel="stylesheet" href="~/css/font-awesome.min.css">*@
         <link rel="stylesheet" href="~/lib/vex/css/vex.css">
         <link rel="stylesheet" href="~/lib/vex/css/vex-theme-plain.css">
         <link rel="stylesheet" href="~/lib/autocomplete/auto-complete.css">
@@ -28,6 +28,8 @@
         @*<link rel="stylesheet" type="text/css" href="~/lib/datatables/css/jquery.dataTables.min.css">*@
     @*</environment>*@
     <link rel="stylesheet" href="~/css/site.css">
+
+    <script src="~/lib/fontawesome/fontawesome-all.min.js"></script>
 </head>
 <body data-delete-confirm-message="@Localizer["Are you sure you want to delete this entity?"]" data-clear-form-confirm-message="@Localizer["Are you sure you want to clear the form?"]" data-yes="@Localizer["Yes"]" data-no="@Localizer["No"]">
 
@@ -64,7 +66,7 @@
                     {
                     <li>
                         <a asp-controller="store" asp-action="index">
-                            <i class="fa fa-home" aria-hidden="true"></i>
+                            <i class="fas fa-home"></i>
                             @Localizer["Stores"]
                         </a>
                     </li>
@@ -73,7 +75,7 @@
                     {
                     <li>
                         <a asp-controller="manufacturer" asp-action="index">
-                            <i class="fa fa-gears" aria-hidden="true"></i>
+                            <i class="fas fa-cogs"></i>
                             @Localizer["Manufacturers"]
                         </a>
                     </li>
@@ -82,7 +84,7 @@
                     {
                     <li>
                         <a asp-controller="supplier" asp-action="index">
-                            <i class="fa fa-truck" aria-hidden="true"></i>
+                            <i class="fas fa-truck"></i>
                             @Localizer["Suppliers"]
                         </a>
                     </li>
@@ -91,14 +93,14 @@
                     {
                     <li>
                         <a asp-controller="product" asp-action="index">
-                            <i class="fa fa-wrench" aria-hidden="true"></i>
+                            <i class="fas fa-wrench"></i>
                             @Localizer["Producuts"]
                         </a>
                     </li>
                     }
-                @*<li>
+                    @*<li>
                         <a href="#">
-                            <i class="fa fa-users" aria-hidden="true"></i>
+                            <i class="fas fa-users"></i>
                             Оператори
                         </a>
                     </li>*@
@@ -106,7 +108,7 @@
                     {
                     <li>
                         <a asp-controller="client" asp-action="index">
-                            <i class="fa fa-user-plus" aria-hidden="true"></i>
+                            <i class="fas fa-user-plus"></i>
                             @Localizer["Clients"]
                         </a>
                     </li>
@@ -131,12 +133,25 @@
                             Настройки
                         </a>
                     </li>*@
-                    <li>
-                        <a asp-controller="document" asp-action="index">
-                            <i class="fa fa-file-text" aria-hidden="true"></i>
-                            Documents
-                        </a>
-                    </li>
+                    @if (modulePrivileges.RequestRead)
+                    {
+                        <li>
+                            <a asp-controller="request" asp-action="index">
+                                <i class="fas fa-shipping-fast"></i>
+                                @Localizer["Requests"]
+                            </a>
+                        </li>
+                    }
+
+                    @if (modulePrivileges.InvoiceRead)
+                    {
+                        <li>
+                            <a asp-controller="document" asp-action="index">
+                                <i class="fas fa-file-alt"></i>
+                                Documents
+                            </a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
@@ -174,7 +189,7 @@
     @*<environment names="Development">*@
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
-        <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+        @*<script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>*@
         <script src="~/lib/vex/js/vex.combined.min.js"></script>
         <script src="~/lib/notify/notify.min.js"></script>
         <script src="~/lib/autocomplete/auto-complete.min.js"></script>

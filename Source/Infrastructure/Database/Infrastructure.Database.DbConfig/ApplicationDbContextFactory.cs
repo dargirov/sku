@@ -17,7 +17,7 @@ namespace Infrastructure.Database.DbConfig
                 .Build();
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            //Debug.Print("Connection string: " + connectionString);
+            Debug.Print("Connection string: " + connectionString);
             //var connectionString = "Server=SHINOBI-PC;Database=sku3;Integrated Security=True;Trusted_Connection=True;MultipleActiveResultSets=true";
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();

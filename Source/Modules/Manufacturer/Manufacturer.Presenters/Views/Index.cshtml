@@ -1,4 +1,4 @@
-@model Manufacturer.Presenters.Dtos.IndexViewModel
+﻿@model Manufacturer.Presenters.Dtos.IndexViewModel
 
 @{
     ViewData["Title"] = "Manufacturers list";
@@ -34,8 +34,8 @@
             </form>
         </div>
         <div id="search-criteria-actions">
-            <a asp-controller="manufacturer" asp-action="index"><i class="fa fa-close" aria-hidden="true"></i> @Localizer["Clear"]</a>
-            <a class="action-primary action-submit"><i class="fa fa-search" aria-hidden="true"></i> @Localizer["Search"]</a>
+            <a asp-controller="manufacturer" asp-action="index"><i class="fas fa-times"></i> @Localizer["Clear"]</a>
+            <a class="action-primary action-submit"><i class="fas fa-search"></i> @Localizer["Search"]</a>
         </div>
     </div>
 
@@ -54,7 +54,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var manufacturer in Model.Manufacturers)
+                @foreach (var manufacturer in Model.Manufacturers.manufacturers)
                 {
                     <tr>
                         <td><input type="checkbox" data-store-id="@manufacturer.Id"></td>
@@ -65,6 +65,18 @@
                     </tr>
                 }
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <div class="table-footer-wrapper">
+                            <div>Показани @Model.Manufacturers.pageData.ResultsFrom до @Model.Manufacturers.pageData.ResultsTo от @Model.Manufacturers.pageData.TotalResults разултата</div>
+                            <div>
+                                @await Component.InvokeAsync("Pager", new { action = "index", pageData = Model.Manufacturers.pageData })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 

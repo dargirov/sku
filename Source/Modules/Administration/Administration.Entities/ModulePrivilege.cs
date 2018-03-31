@@ -40,5 +40,9 @@ namespace Administration.Entities
         public bool InvoiceRead { get; set; }
         public bool InvoiceWrite { get; set; }
         public bool InvoiceDelete { get; set; }
+
+        public bool RequestRead { get; set; }
+        public bool RequestWrite { get; set; }
+        public bool RequestDelete { get; set; }
     }
 }

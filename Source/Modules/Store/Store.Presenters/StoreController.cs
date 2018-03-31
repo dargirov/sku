@@ -25,14 +25,18 @@ namespace Store.Presenters
 
         public async Task<IActionResult> Index(IndexRequesModel model)
         {
-            var stores = await _storeServices.GetListAsync(
+            var storesAndPageData = await _storeServices.GetListAsync(
+                model.Page,
+                model.PageSize,
+                model.SortColumn,
+                model.SortDirection,
                 model.SearchCriteria?.Name,
                 model.SearchCriteria?.CityId,
                 model.SearchCriteria?.Address);
 
             var viewModel = new IndexViewModel()
             {
-                Stores = stores,
+                Stores = storesAndPageData,
                 SearchCriteria = new IndexSearchCriteria()
                 {
                     Cities = (await _storeServices.GetCityListAsync()).ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true)

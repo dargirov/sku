@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using Infrastructure.Data.Common;
 
 namespace Product.Presenters.Dtos
 {
     public class IndexRequestModel
     {
-        public int Start { get; set; }
+        public int Page { get; set; }
 
-        public int Length { get; set; }
+        public int PageSize { get; set; }
 
-        public IList<IDictionary<string, string>> Order { get; set; }
+        public int SortColumn { get; set; }
+
+        public SortDirectionEnum SortDirection { get; set; }
 
         public IndexSearchCriteria SearchCriteria { get; set; }
     }
