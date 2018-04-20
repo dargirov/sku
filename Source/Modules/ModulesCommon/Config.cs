@@ -29,7 +29,8 @@ namespace ModulesCommon
                 typeof(Manufacturer.Presenters.Config),
                 typeof(Client.Presenters.Config),
                 typeof(Product.Presenters.Config),
-                typeof(Product.Bll.Config)
+                typeof(Product.Bll.Config),
+                typeof(Request.Presenters.Config)
             };
 
             AutoMapperConfig.Execute(types.SelectMany(x => x.GetTypeInfo().Assembly.DefinedTypes).ToList());

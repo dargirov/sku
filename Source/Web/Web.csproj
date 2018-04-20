@@ -61,6 +61,9 @@
 		<!-- Request -->
 		<RequestViewsSource Include="..\Modules\Request\Request.Presenters\Views\*.cshtml" />
 		<RequestResourcesSource Include="..\Modules\Request\Request.Presenters\Resources\*.resx" />
+		<RequestViewComponentPendingRequestsSource Include="..\Modules\Request\Request.Presenters\Widgets\PendingRequests\*.cshtml" />
+		<RequestViewComponentPendingRequestsResourcesSource Include="..\Modules\Request\Request.Presenters\Widgets\PendingRequests\*.resx" />
+		
         <Compile Remove="Resources\Pages\**" />
         
         <Content Remove="Resources\Pages\**" />
@@ -134,6 +137,7 @@
         <Copy SourceFiles="@(ProductViewComponentLatestProductsSource)" DestinationFolder="$(ViewsWebDir)\Shared\Components\LatestProductsWidget" />
         <Copy SourceFiles="@(ProductViewComponentLowQuantityProductsSource)" DestinationFolder="$(ViewsWebDir)\Shared\Components\LowQuantityProductsWidget" />
 		<Copy SourceFiles="@(RequestViewsSource)" DestinationFolder="$(ViewsWebDir)\Request" />
+		<Copy SourceFiles="@(RequestViewComponentPendingRequestsSource)" DestinationFolder="$(ViewsWebDir)\Shared\Components\PendingRequestsWidget" />
     </Target>
 
     <Target Name="CopyResourcesToWeb">
@@ -147,6 +151,7 @@
         <Copy SourceFiles="@(ProductViewComponentLatestProductsResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Shared\Components\LatestProductsWidget" />
         <Copy SourceFiles="@(ProductViewComponentLowQuantityProductsResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Shared\Components\LowQuantityProductsWidget" />
 		<Copy SourceFiles="@(RequestResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Request" />
+		<Copy SourceFiles="@(RequestViewComponentPendingRequestsResourcesSource)" DestinationFolder="$(RescourcesWebDir)\Views\Shared\Components\PendingRequestsWidget" />
     </Target>
 
 </Project>

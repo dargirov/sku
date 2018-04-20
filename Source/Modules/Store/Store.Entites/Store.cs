@@ -1,6 +1,5 @@
 ﻿using Administration.Entities;
 using Infrastructure.Data.Common;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Store.Entities

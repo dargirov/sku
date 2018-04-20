@@ -22,6 +22,7 @@
         <ProjectReference Include="..\..\..\Modules\Client\Client.Entities\Client.Entities.csproj" />
         <ProjectReference Include="..\..\..\Modules\Manufacturer\Manufacturer.Entities\Manufacturer.Entities.csproj" />
         <ProjectReference Include="..\..\..\Modules\Product\Product.Entities\Product.Entities.csproj" />
+        <ProjectReference Include="..\..\..\Modules\Request\Request.Entities\Request.Entities.csproj" />
         <ProjectReference Include="..\..\..\Modules\Store\Store.Entites\Store.Entities.csproj" />
         <ProjectReference Include="..\..\..\Modules\Supplier\Supplier.Entities\Supplier.Entities.csproj" />
         <ProjectReference Include="..\..\Data\Infrastructure.Data.Common\Infrastructure.Data.Common.csproj" />

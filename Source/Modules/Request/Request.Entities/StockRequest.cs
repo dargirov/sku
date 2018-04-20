@@ -1,17 +1,24 @@
 ﻿using Infrastructure.Data.Common;
+using Product.Entities;
 using System.ComponentModel.DataAnnotations;
 
-namespace Request.Entites
+namespace Request.Entities
 {
-    public class ProductRequest : BaseTenantEntity<int>
+    public class StockRequest : BaseTenantEntity<int>
     {
         [Required]
-        public Product.Entities.Product Product { get; set; }
+        public int StockId { get; set; }
+
+        public ProductStock Stock { get; set; }
 
         [Required]
+        public int FromStoreId { get; set; }
+
         public Store.Entities.Store FromStore { get; set; }
 
         [Required]
+        public int ToStoreId { get; set; }
+
         public Store.Entities.Store ToStore { get; set; }
 
         [Required]
@@ -19,5 +26,8 @@ namespace Request.Entites
         public int Quantity { get; set; }
 
         public virtual Request Request { get; set; }
+
+        [Required]
+        public ProductPriorityEnum Priority { get; set; }
     }
 }

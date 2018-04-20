@@ -19,7 +19,7 @@
             <h2>@Localizer["Product Search"]</h2>
         </div>
         <div>
-            <form method="post" asp-controller="product" asp-action="index">
+            <form method="post" asp-controller="request" asp-action="index">
                 <div>
                     <label asp-for="SearchCriteria.Name">@Localizer["Name"]</label>
                     <input asp-for="SearchCriteria.Name">
@@ -54,6 +54,45 @@
         </div>
     </div>
 
+    @if (Model.NewRequests.Any())
+    {
+        <div class="validation-summary-warnings">
+            @Localizer["New requests"]
+            <ul>
+                @foreach (var newRequest in Model.NewRequests)
+                {
+                    <li><a asp-controller="request" asp-action="edit" asp-route-id="@newRequest.Id">@newRequest.CreatedOn</a></li>
+                }
+            </ul>
+        </div>
+        <div id="new-requests-modal" class="hidden">
+            <form>
+                <div>
+                    <label for="new-requests-modal-select-request" class="label">Добави към заявка</label>
+                    <select id="new-requests-modal-select-request" class="form-control">
+                        <option value="0">@Localizer["Create new request"]</option>
+                        @foreach (var newRequest in Model.NewRequests)
+                        {
+                            <option value="@newRequest.Id">@newRequest.CreatedOn</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label for="new-requests-modal-select-store" class="label">Заяви за склад</label>
+                    <select id="new-requests-modal-select-store" class="form-control">
+                        @foreach (var store in Model.SearchCriteria.Stores.Where(x => x.Value != "0"))
+                        {
+                            <option value="@store.Value">@store.Text</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <input type="button" value="@Localizer["Add"]" id="new-requests-modal-add" class="btn-primary">
+                </div>
+            </form>
+        </div>
+    }
+
     <div id="search-result">
         <div>
             <h2>@Localizer["Products"]</h2>
@@ -67,7 +106,7 @@
                     <th>@Localizer["Variant"]</th>
                     <th>@Localizer["Store"]</th>
                     <th>@Localizer["Quantity"]</th>
-                    <th>@Localizer["Request Quantity"]</th>
+                    <th>@Localizer["Request quantity"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -94,12 +133,12 @@
                                 @foreach (var stock in product.Variants.SelectMany(x => x.Stocks))
                                 {
                                     var hidden = stock.VariantId == variantId ? string.Empty : "hidden";
-                                    <option value="@stock.StoreId" class="@hidden" data-variant="@stock.VariantId" data-quantity="@stock.Quantity">@stock.Store.Name</option>
+                                    <option value="@stock.StoreId" class="@hidden" data-variant="@stock.VariantId" data-stock="@stock.Id" data-quantity="@stock.Quantity">@stock.Store.Name</option>
                                 }
                             </select>
                         </td>
                         <td class="request-quantity-col">@(product.Variants.SelectMany(v => v.Stocks).First(x => x.StoreId == storeId).Quantity)</td>
-                        <td><input type="number" min="0"></td>
+                        <td><input type="number" min="0" class="request-quantity-input input-small"></td>
                     </tr>
                 }
             </tbody>
@@ -116,6 +155,12 @@
                 </tr>
             </tfoot>
         </table>
+        <div>
+    </div>
+
+    <div id="search-results-actions">
+        @Html.AntiForgeryToken()
+        <input type="button" value="Request" data-url="@Url.Action("Index")" id="request-create" class="btn-primary">
     </div>
 
 </section>

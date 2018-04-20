@@ -12,6 +12,8 @@ namespace Request.Presenters.Dtos
 
         public IEnumerable<(int storeId, int quantity)> StoreQuantities { get; set; }
 
+        public IEnumerable<Entities.Request> NewRequests { get; set; }
+
         public IEnumerable<SelectListItem> Stores { get; set; }
 
         public IndexSearchCriteria SearchCriteria { get; set; }

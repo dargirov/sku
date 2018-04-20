@@ -286,7 +286,7 @@ body > footer span {
     border-color: #e0e0e1;
 }
 
-.content-box label {
+.content-box label, .label {
     color: #79797b;
     font-weight: normal;
     text-align: left;
@@ -425,6 +425,11 @@ form select {
 
 .validation-summary-warnings ul {
     list-style-type: none;
+}
+
+.validation-summary-warnings a {
+    text-decoration: none;
+    color: black;
 }
 
 .validation-summary-successes {
@@ -1208,16 +1213,24 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
 }
 
 .grid {
+    position: relative;
     width: 100%;
     font-family: Arial;
     font-size: 14px;
     border-collapse: collapse;
     border: 1px solid #cccccc;
     color: #333;
-    font-family: Arial;
-    font-size: 14px;
     text-align: center;
     background-color: white;
+}
+
+.grid-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(201, 76, 76, 0.3);
 }
 
 .grid th {
@@ -1234,11 +1247,16 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     border-bottom: 1px solid #ddd;
 }
 
+.grid tbody a {
+    color: black;
+}
+
 .grid tbody tr:hover {
     background-color: #e8e8e8 !important;
 }
 
 .grid tfoot {
+    text-align: left;
     background-color: #fafafa;
 }
 
@@ -1285,6 +1303,39 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     background-color: #f1f1f1;
     border: 1px solid #f1f1f1;
     border-radius: 5px;
+}
+
+.input-small {
+    width: 60px !important;
+    display: inline-block !important;
+}
+
+.iziModal-content form {
+    margin: 20px;
+}
+
+.iziModal-content form > div {
+    margin-bottom: 10px;
+}
+
+.btn-primary {
+    background: #3288e6;
+    color: #fff;
+    border-radius: 0;
+    border: 0;
+    text-transform: uppercase;
+    font-size: 14px;
+    line-height: 16px;
+    padding: 10px 25px;
+    cursor: pointer;
+}
+
+#search-results-actions {
+    margin-top: 20px;
+}
+
+.space-top {
+    margin-top: 20px;
 }
 
 @media all and (max-width: 516px) {

@@ -1,0 +1,70 @@
+﻿@model Request.Presenters.Dtos.ListViewModel
+
+@{
+    ViewData["Title"] = "List Index";
+}
+
+@using Infrastructure.Services.Common;
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Store" })*@
+
+    <div id="search-criteria">
+        <div>
+            <h2>@Localizer["Request Search"]</h2>
+        </div>
+        <div>
+            <form method="post" asp-controller="product" asp-action="index">
+            </form>
+        </div>
+        <div id="search-criteria-actions">
+            <a asp-controller="product" asp-action="index"><i class="fas fa-times"></i> @Localizer["Clear"]</a>
+            <a href="#disabled" class="action-primary action-submit"><i class="fas fa-search"></i> @Localizer["Search"]</a>
+        </div>
+    </div>
+
+    <div id="search-result">
+        <div>
+            <h2>@Localizer["Requests"]</h2>
+        </div>
+        <table id="search-result-table" class="no-dbclick">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="row-checkbox-all"></th>
+                    <th>@Localizer["Status"]</th>
+                    <th>@Localizer["Date Created"]</th>
+                    <th>@Localizer["Products"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model.Requests.requests)
+                {
+                    <tr>
+                        <td><input type="checkbox" data-store-id="@request.Id"></td>
+                        <td>@request.Status</td>
+                        <td><a asp-controller="request" asp-action="edit" asp-route-id="@request.Id">@request.CreatedOn</a></td>
+                        <td>@request.StockRequests.Count</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">
+                        <div class="table-footer-wrapper">
+                            <div>Показани @Model.Requests.pageData.ResultsFrom до @Model.Requests.pageData.ResultsTo от @Model.Requests.pageData.TotalResults разултата</div>
+                            <div>
+                                @await Component.InvokeAsync("Pager", new { action = "list", pageData = Model.Requests.pageData })
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+</section>

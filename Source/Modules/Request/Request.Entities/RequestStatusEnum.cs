@@ -1,4 +1,4 @@
-﻿namespace Request.Entites
+﻿namespace Request.Entities
 {
     public enum RequestStatusEnum
     {

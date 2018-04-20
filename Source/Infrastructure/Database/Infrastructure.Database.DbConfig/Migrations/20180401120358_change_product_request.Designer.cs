@@ -8,15 +8,15 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Product.Entities;
-using Request.Entities;
 using System;
 
 namespace Infrastructure.Database.DbConfig.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180401120358_change_product_request")]
+    partial class change_product_request
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -703,74 +703,6 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.ToTable("ProductVariants");
                 });
 
-            modelBuilder.Entity("Request.Entities.Request", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<int>("Status");
-
-                    b.Property<Guid>("TenantId");
-
-                    b.Property<string>("Text");
-
-                    b.Property<int>("Version");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Requests");
-                });
-
-            modelBuilder.Entity("Request.Entities.StockRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<int>("FromStoreId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<int>("Priority");
-
-                    b.Property<int>("Quantity");
-
-                    b.Property<int?>("RequestId");
-
-                    b.Property<int>("StockId");
-
-                    b.Property<Guid>("TenantId");
-
-                    b.Property<int>("ToStoreId");
-
-                    b.Property<int>("Version");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FromStoreId");
-
-                    b.HasIndex("RequestId");
-
-                    b.HasIndex("StockId");
-
-                    b.HasIndex("ToStoreId");
-
-                    b.ToTable("StockRequests");
-                });
-
             modelBuilder.Entity("Store.Entities.Store", b =>
                 {
                     b.Property<int>("Id")
@@ -1019,28 +951,6 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.HasOne("Product.Entities.Product", "Product")
                         .WithMany("Variants")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Request.Entities.StockRequest", b =>
-                {
-                    b.HasOne("Store.Entities.Store", "FromStore")
-                        .WithMany()
-                        .HasForeignKey("FromStoreId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Request.Entities.Request", "Request")
-                        .WithMany("StockRequests")
-                        .HasForeignKey("RequestId");
-
-                    b.HasOne("Product.Entities.ProductStock", "Stock")
-                        .WithMany()
-                        .HasForeignKey("StockId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Store.Entities.Store", "ToStore")
-                        .WithMany()
-                        .HasForeignKey("ToStoreId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

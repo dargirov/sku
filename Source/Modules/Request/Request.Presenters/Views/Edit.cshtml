@@ -1,0 +1,143 @@
+﻿@model Request.Presenters.Dtos.EditViewModel
+@{
+    ViewData["Title"] = "Edit Request";
+}
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Administration.Bll
+
+@inject IViewLocalizer Localizer
+@inject IAuthorizationServices AuthorizationServices
+
+@{
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+    var isReadOnly = !modulePrivileges.RequestWrite;
+    var readOnlyClass = modulePrivileges.RequestWrite ? string.Empty : "readonly";
+}
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Supplier", id = Model.Id })*@
+
+    <div asp-validation-summary="All"></div>
+
+    @Html.Partial("_StatusPartial")
+
+    <div class="content-box"> 
+        <form method="post" asp-controller="request" asp-action="edit" class="main-form validate">
+            <div class="form-split">
+                <div class="padding-right">
+                    <label asp-for="Status">@Localizer["Status"]</label>
+                    <input asp-for="Status" class="form-control @readOnlyClass" readonly="readonly">
+                </div>
+                <div>
+                    <label>@Localizer["Text"]</label>
+                    <textarea asp-for="Text" class="form-control @readOnlyClass" readonly="@isReadOnly"></textarea>
+                </div>
+            </div>
+            
+            <div class="space-top">
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["Name"]</th>
+                            <th>@Localizer["Variant"]</th>
+                            <th>@Localizer["From store"]</th>
+                            <th>@Localizer["To store"]</th>
+                            <th>@Localizer["Quantity"]</th>
+                            <th>@Localizer["Request quantity"]</th>
+                            <th>@Localizer["Priority"]</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody data-url-delete="@Url.Action("DeleteRequestStock")">
+                        @{int i = 0;}
+                        @foreach (var requestStock in Model.StockRequests)
+                        {
+                            <tr data-id="@requestStock.Id">
+                                <td>@requestStock.Stock.Variant.Product.Name</td>
+                                <td>@requestStock.Stock.Variant.Code</td>
+                                <td>@requestStock.FromStore.Name</td>
+                                <td>
+                                    @if (Model.Status == Request.Entities.RequestStatusEnum.New)
+                                    {
+                                        <select name="StockRequests[@i].ToStoreId" class="form-control" data-val-required>
+                                            @foreach (var toStore in Model.ToStores)
+                                            {
+                                                string selected = requestStock.ToStoreId == toStore.Id ? " selected=\"selected\"" : string.Empty;
+                                                <!option value="@toStore.Id" @selected>@toStore.Name</!option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        @requestStock.ToStore.Name;
+                                    }
+                                </td>
+                                <td>@requestStock.Stock.Quantity</td>
+                                <td>
+                                    @if (Model.Status == Request.Entities.RequestStatusEnum.New)
+                                    {
+                                        <input type="number" name="StockRequests[@i].Quantity" min="0" class="form-control input-small" value="@requestStock.Quantity" data-val-required>
+                                    }
+                                    else
+                                    {
+                                        @requestStock.Quantity
+                                    }
+                                </td>
+                                <td>
+                                    @if (Model.Status == Request.Entities.RequestStatusEnum.New)
+                                    {
+                                        <select name="StockRequests[@i].Priority" class="form-control" data-val-required>
+                                            @foreach (var priority in Model.Priorities)
+                                            {
+                                                string selected = ((int)requestStock.Priority).ToString() == priority.Value ? " selected=\"selected\"" : string.Empty;
+                                                <!option value="@priority.Value" @selected>@priority.Text</!option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        @requestStock.Priority
+                                    }
+                                </td>
+                                <td>
+                                    <input type="hidden" name="StockRequests[@(i++)].StockId" value="@requestStock.Id">
+                                    @if (Model.Status == Request.Entities.RequestStatusEnum.New)
+                                    {
+                                        <a class="tooltip request-item-delete" title="@Localizer["Delete"]"><i class="fas fa-times"></i></a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="8">
+                                @Localizer["Total results"]: @Model.StockRequests.Count
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <input asp-for="Id">
+            @if (!isReadOnly)
+            {
+                <input type="submit" class="hidden">
+            }
+
+            <input type="reset" class="hidden">
+        </form>
+    </div>
+
+</section>
+
+@section footer {
+    @await Component.InvokeAsync("FooterActions", new { controller = "Request", id = Model.Id, showReset = false, showEdit = !isReadOnly, showDelete = modulePrivileges.RequestDelete, showNextStep = !isReadOnly, nextAction = "EditNext" })
+}
+
+@section scripts {
+    <script src="~/js/request-edit.js" asp-append-version="true"></script>
+}

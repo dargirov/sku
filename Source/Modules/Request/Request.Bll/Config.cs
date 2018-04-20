@@ -6,6 +6,7 @@ namespace Request.Bll
     {
         public static void RegisterServices(Container container)
         {
+            container.Configure(x => x.For<IRequestServices>().Use<RequestServices>());
         }
     }
 }

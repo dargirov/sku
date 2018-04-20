@@ -2,6 +2,11 @@
 
 <div>
     <ul>
+        @if (Model.ShowNextStep)
+        {
+            <li><a asp-controller="@Model.Controller" asp-action="@Model.NextAction" asp-route-id="@Model.Id" asp-route-param="@(Model.RouteParam > 0 ? Model.RouteParam.ToString() : string.Empty)"><i class="fas fa-chevron-circle-right"></i><span>@Model.LocalizedNextStep</span></a></li>
+        }
+
         @if (Model.ShowEdit)
         {
             <li><a href="" class="btn-submit"><i class="fas fa-save"></i><span>@Model.LocalizedEdit</span></a></li>
@@ -14,7 +19,7 @@
 
         @if (Model.ShowDelete)
         {
-            <li><a asp-controller="@Model.Controller" asp-action="@Model.DeleteAction" asp-route-id="@Model.Id" asp-route-param="@(Model.RouteParam > 0 ? Model.RouteParam.ToString() : "")" class="btn-delete"><i class="fas fa-times-circle"></i><span>@Model.LocalizedDelete</span></a></li>
+            <li><a asp-controller="@Model.Controller" asp-action="@Model.DeleteAction" asp-route-id="@Model.Id" asp-route-param="@(Model.RouteParam > 0 ? Model.RouteParam.ToString() : string.Empty)" class="btn-delete"><i class="fas fa-times-circle"></i><span>@Model.LocalizedDelete</span></a></li>
         }
 
         <li><a asp-controller="@Model.Controller" asp-action="@Model.Action"><i class="fas fa-chevron-circle-left"></i><span>@Model.LocalizedBack</span></a></li>

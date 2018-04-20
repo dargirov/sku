@@ -41,6 +41,9 @@ namespace Infrastructure.Database.DbConfig
         public DbSet<Product.Entities.ProductVariant> ProductVariants { get; set; }
         public DbSet<Product.Entities.ProductPriority> ProductPriorities { get; set; }
 
+        public DbSet<Request.Entities.Request> Requests { get; set; }
+        public DbSet<Request.Entities.StockRequest> StockRequests { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -75,6 +78,10 @@ namespace Infrastructure.Database.DbConfig
             modelBuilder.Entity<Product.Entities.ProductStock>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
             modelBuilder.Entity<Product.Entities.ProductVariant>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
             modelBuilder.Entity<Product.Entities.ProductPriority>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
+
+            // Request
+            modelBuilder.Entity<Request.Entities.Request>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
+            modelBuilder.Entity<Request.Entities.StockRequest>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
         }
     }
 }

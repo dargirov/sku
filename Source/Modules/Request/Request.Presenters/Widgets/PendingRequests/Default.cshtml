@@ -1,0 +1,42 @@
+﻿@model Request.Presenters.Widgets.PendingRequests.ViewModel
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<div class="widget">
+    <strong>@Localizer["Pending Requests"]</strong>
+    <div>
+        <table id="low-quantity-products-list" class="grid">
+            <thead>
+                <tr>
+                    <th>@Localizer["Status"]</th>
+                    <th>@Localizer["Created On"]</th>
+                    <th>@Localizer["Products"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model.Requests)
+                {
+                    <tr>
+                        <td>@request.Status</td>
+                        <td>@request.CreatedOn</td>
+                        <td>@request.ProductCount</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="1">
+                        <ul>
+                            @for (int i = 1; i <= Model.PageData.TotalPages; i++)
+                            {
+                                var active = i == Model.PageData.Page ? "active" : string.Empty;
+                                <li class="@active"><a href="?pendingrequestpage=@i">@i</a></li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

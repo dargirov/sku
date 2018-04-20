@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Request.Entites
+namespace Request.Entities
 {
     public class Request : BaseTenantEntity<int>
     {
-        public ICollection<ProductRequest> ProductRequests { get; set; }
+        public virtual ICollection<StockRequest> StockRequests { get; set; }
 
         public string Text { get; set; }
 

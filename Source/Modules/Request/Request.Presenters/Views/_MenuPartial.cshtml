@@ -12,9 +12,10 @@
     <strong>@Localizer["Actions"]</strong>
     <ul>
         <li><a asp-controller="request" asp-action="index">@Localizer["List products"]</a></li>
+        <li><a asp-controller="request" asp-action="list">@Localizer["List requests"]</a></li>
         @if (modulePrivileges.RequestWrite)
         {
-            <li><a asp-controller="request" asp-action="edit" asp-route-id="">@Localizer["New request"]</a></li>
+            @*<li><a asp-controller="request" asp-action="edit" asp-route-id="">@Localizer["New request"]</a></li>*@
         }
     </ul>
 </section>
