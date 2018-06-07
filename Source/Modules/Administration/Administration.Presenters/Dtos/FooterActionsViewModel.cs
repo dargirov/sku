@@ -31,5 +31,7 @@
         public bool ShowDelete { get; set; }
 
         public bool ShowNextStep { get; set; }
+
+        public bool SubmitNextStep { get; set; }
     }
 }

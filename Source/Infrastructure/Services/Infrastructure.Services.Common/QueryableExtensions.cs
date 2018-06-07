@@ -28,7 +28,7 @@ namespace Infrastructure.Services.Common
         {
             var pageData = new PageData(0, 1, _defaultPageSize);
 
-            return (results: default(IEnumerable<T>), pageData: pageData);
+            return (results: Enumerable.Empty<T>(), pageData: pageData);
         }
     }
 }

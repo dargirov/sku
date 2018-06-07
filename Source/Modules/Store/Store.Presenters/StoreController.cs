@@ -15,19 +15,25 @@ namespace Store.Presenters
         private readonly IStoreServices _storeServices;
         private readonly ICityServices _cityServices;
         private readonly IUserServices _userServices;
+        private readonly IMemoServices _memoServices;
+        private readonly IGridServices _gridServices;
 
-        public StoreController(IStoreServices storeServices, ICityServices cityServices, IUserServices userServices)
+        public StoreController(IStoreServices storeServices, ICityServices cityServices, IUserServices userServices, IMemoServices memoServices, IGridServices gridServices)
         {
             _storeServices = storeServices;
             _cityServices = cityServices;
             _userServices = userServices;
+            _memoServices = memoServices;
+            _gridServices = gridServices;
         }
 
         public async Task<IActionResult> Index(IndexRequesModel model)
         {
+            var pageSize = await _gridServices.UpdateAndGetPageSizeAsync("StoreIndex", model.PageSize, Messages);
+
             var storesAndPageData = await _storeServices.GetListAsync(
                 model.Page,
-                model.PageSize,
+                pageSize,
                 model.SortColumn,
                 model.SortDirection,
                 model.SearchCriteria?.Name,
@@ -84,8 +90,10 @@ namespace Store.Presenters
             else
             {
                 store = Mapper.Map(model, store);
-                await _storeServices.EditAsync(store);
-                Messages.AddSuccess("Store Edited");
+                if (await _storeServices.EditAsync(store, Messages))
+                {
+                    Messages.AddSuccess("Store Edited");
+                }
             }
 
             return RedirectToAction(nameof(Edit), new { id = store?.Id });
@@ -120,9 +128,28 @@ namespace Store.Presenters
                 return BadRequest();
             }
 
-            await _storeServices.EditPrivilegesAsync(user.Id, model.StorePrivileges);
+            await _storeServices.EditPrivilegesAsync(user.Id, model.StorePrivileges, Messages);
 
             return RedirectToAction(nameof(Privileges), new { id = model.UserId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> History(int id, int page)
+        {
+            var store = await _storeServices.GetByIdAsync(id);
+            if (store == null)
+            {
+                return NotFound();
+            }
+
+            var memos = await _memoServices.GetMemosAsync(store.Id, store.GetType().Name, page, 10);
+            var viewModel = new Administration.Presenters.Dtos.HistoryViewModel
+            {
+                Id = store.Id,
+                Memos = memos
+            };
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Delete(int id)

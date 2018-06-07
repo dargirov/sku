@@ -17,6 +17,8 @@ namespace Administration.Bll
             container.Configure(x => x.For<INotificationServices>().Use<NotificationServices>());
             container.Configure(x => x.For<IConfigServices>().Use<ConfigServices>());
             container.Configure(x => x.For<IWidgetProvider>().Use<WidgetProvider>());
+            container.Configure(x => x.For<IMemoServices>().Use<MemoServices>());
+            container.Configure(x => x.For<IGridServices>().Use<GridServices>());
         }
     }
 }

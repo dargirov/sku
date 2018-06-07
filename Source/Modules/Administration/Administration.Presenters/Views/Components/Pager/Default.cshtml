@@ -1,25 +1,35 @@
 ﻿@model Administration.Presenters.Dtos.PagerViewModel
 
-<ul>
-    @if (Model.PageData.Page > 1)
-    {
-        <li><a asp-action="@Model.Action" asp-route-page="1"><i class="fas fa-angle-double-left"></i></a></li>
-        <li><a asp-action="@Model.Action" asp-route-page="@(Model.PageData.Page - 1)"><i class="fas fa-angle-left"></i></a></li>
-    }
+<div>
+    <ul>
+        @if (Model.PageData.Page > 1)
+        {
+            <li><a asp-action="@Model.Action" asp-route-page="1"><i class="fas fa-angle-double-left"></i></a></li>
+            <li><a asp-action="@Model.Action" asp-route-page="@(Model.PageData.Page - 1)"><i class="fas fa-angle-left"></i></a></li>
+        }
 
-    @{
-        int pageStart = Model.PageData.Page - Model.PageOffset > 1 ? Model.PageData.Page - Model.PageOffset : 1;
-        int pageEnd = Model.PageData.Page + Model.PageOffset < Model.PageData.TotalPages ? Model.PageData.Page + Model.PageOffset : Model.PageData.TotalPages;
-    }
-    @for (int i = pageStart; i <= pageEnd; i++)
-    {
-        var currentClass = i == Model.PageData.Page ? "current" : string.Empty;
-        <li><a class="@currentClass" asp-action="@Model.Action" asp-route-page="@i">@i</a></li>
-    }
+        @{
+            int pageStart = Model.PageData.Page - Model.PageOffset > 1 ? Model.PageData.Page - Model.PageOffset : 1;
+            int pageEnd = Model.PageData.Page + Model.PageOffset < Model.PageData.TotalPages ? Model.PageData.Page + Model.PageOffset : Model.PageData.TotalPages;
+        }
+        @for (int i = pageStart; i <= pageEnd; i++)
+        {
+            var currentClass = i == Model.PageData.Page ? "current" : string.Empty;
+            <li><a class="@currentClass" asp-action="@Model.Action" asp-route-page="@i">@i</a></li>
+        }
 
-    @if (Model.PageData.Page < Model.PageData.TotalPages)
-    {
-        <li><a asp-action="@Model.Action" asp-route-page="@(Model.PageData.Page + 1)"><i class="fas fa-angle-right"></i></a></li>
-        <li><a asp-action="@Model.Action" asp-route-page="@Model.PageData.TotalPages"><i class="fas fa-angle-double-right"></i></a></li>
-    }
-</ul>
+        @if (Model.PageData.Page < Model.PageData.TotalPages)
+        {
+            <li><a asp-action="@Model.Action" asp-route-page="@(Model.PageData.Page + 1)"><i class="fas fa-angle-right"></i></a></li>
+            <li><a asp-action="@Model.Action" asp-route-page="@Model.PageData.TotalPages"><i class="fas fa-angle-double-right"></i></a></li>
+        }
+    </ul>
+</div>
+<div>
+    <select name="pageSize" class="pager-pagesize" data-grid-id="@Model.GridId">
+        <!option valaue="10" @(Model.PageData.PageSize == 10 ? "selected=\"selected\"" : string.Empty)>10</!option>
+        <!option valaue="20" @(Model.PageData.PageSize == 20 ? "selected=\"selected\"" : string.Empty)>20</!option>
+        <!option valaue="50" @(Model.PageData.PageSize == 50 ? "selected=\"selected\"" : string.Empty)>50</!option>
+        <!option valaue="100" @(Model.PageData.PageSize == 100 ? "selected=\"selected\"" : string.Empty)>100</!option>
+    </select>
+</div>

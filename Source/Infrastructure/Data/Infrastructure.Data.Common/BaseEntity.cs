@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Infrastructure.Data.Common
 {
-    public abstract class BaseEntity<T>
+    public abstract class BaseEntity
     {
         [Required]
-        public T Id { get; set; }
+        public int Id { get; set; }
 
         public bool IsDeleted { get; set; }
 
@@ -21,18 +21,8 @@ namespace Infrastructure.Data.Common
         public int Version { get; set; }
 
         [NotMapped]
-        public bool IsSaved
-        {
-            get
-            {
-                // entity framework sets temporary negative number for the key
-                if (Id.GetType() == typeof(int))
-                {
-                    return Convert.ToInt32(Id) > 0;
-                }
+        public bool IsSaved => Id != default(int) && Id > 0;
 
-                return Id != null && !object.Equals(Id, default(T));
-            }
-        }
+        public override string ToString() => IsSaved ? $"{GetType().Name} - {Id}" : GetType().Name;
     }
 }

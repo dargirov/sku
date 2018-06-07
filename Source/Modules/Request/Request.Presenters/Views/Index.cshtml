@@ -133,7 +133,12 @@
                                 @foreach (var stock in product.Variants.SelectMany(x => x.Stocks))
                                 {
                                     var hidden = stock.VariantId == variantId ? string.Empty : "hidden";
-                                    <option value="@stock.StoreId" class="@hidden" data-variant="@stock.VariantId" data-stock="@stock.Id" data-quantity="@stock.Quantity">@stock.Store.Name</option>
+                                    if (!Model.Stores.Any(x => x.Value == stock.Store.Id.ToString()))
+                                    {
+                                        continue;
+                                    }
+
+                                    <option value="@stock.StoreId" class="@hidden" data-variant="@stock.VariantId" data-stock="@stock.Id" data-quantity="@stock.Quantity" data-priority="@((int)Model.ProductsPriority[stock.Variant.ProductId])">@stock.Store.Name</option>
                                 }
                             </select>
                         </td>
@@ -148,7 +153,7 @@
                         <div class="table-footer-wrapper">
                             <div>Показани @Model.Products.pageData.ResultsFrom до @Model.Products.pageData.ResultsTo от @Model.Products.pageData.TotalResults разултата</div>
                             <div>
-                                @await Component.InvokeAsync("Pager", new { action = "index", pageData = Model.Products.pageData })
+                                @await Component.InvokeAsync("Pager", new { action = "index", pageData = Model.Products.pageData, gridId = "RequestIndex" })
                             </div>
                         </div>
                     </td>

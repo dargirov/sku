@@ -31,8 +31,10 @@ namespace Product.Presenters
         private readonly IStoreServices _storeServices;
         private readonly IPriorityServices _priorityServices;
         private readonly IAuthenticationServices _authenticationServices;
+        private readonly IMemoServices _memoServices;
+        private readonly IGridServices _gridServices;
 
-        public ProductController(IProductServices productServices, ISupplierServices supplierServices, IContentServer contentServer, IManufacturerServices manufacturerServices, IStoreServices storeServices, IPriorityServices priorityServices, IAuthenticationServices authenticationServices)
+        public ProductController(IProductServices productServices, ISupplierServices supplierServices, IContentServer contentServer, IManufacturerServices manufacturerServices, IStoreServices storeServices, IPriorityServices priorityServices, IAuthenticationServices authenticationServices, IMemoServices memoServices, IGridServices gridServices)
         {
             _productServices = productServices;
             _supplierServices = supplierServices;
@@ -41,13 +43,17 @@ namespace Product.Presenters
             _storeServices = storeServices;
             _priorityServices = priorityServices;
             _authenticationServices = authenticationServices;
+            _memoServices = memoServices;
+            _gridServices = gridServices;
         }
 
         public async Task<IActionResult> Index(IndexRequestModel model)
         {
+            var pageSize = await _gridServices.UpdateAndGetPageSizeAsync("ProductIndex", model.PageSize, Messages);
+
             var (products, pageData) = await _productServices.GetListAsync(
                 model.Page,
-                model.PageSize,
+                pageSize,
                 model.SortColumn,
                 model.SortDirection,
                 model.SearchCriteria?.Name,
@@ -56,21 +62,6 @@ namespace Product.Presenters
                 model.SearchCriteria?.ManufacturerId,
                 model.SearchCriteria?.SupplierId,
                 model.SearchCriteria?.Description);
-
-            //var result = new List<Dictionary<string, object>>();
-            //foreach (var product in products)
-            //{
-            //    result.Add(new Dictionary<string, object>()
-            //        {
-            //            { "id", product.Id.ToString() },
-            //            { "picture", product.Pictures.Any() ? Url.Action("index", "contentserver", new { id = product.Pictures.FirstOrDefault()?.Thumb.Guid, area = string.Empty }) : null },
-            //            { "productName", product.Name },
-            //            { "categoryName", product.Category.Name },
-            //            { "manufacturerName", product.Manufacturer.Name },
-            //            { "modifiedOn", (product.ModifiedOn ?? product.CreatedOn).ToString("dd.MM.yyyy") },
-            //            { "quantity", product.Variants.SelectMany(x => x.Stocks).Select(x => new IndexQuantityDto() { Variant = x.Variant.Code, Store = x.Store.Name, Quantity = x.Quantity, LowQuantity = x.LowQuantity }).ToArray() }
-            //        });
-            //}
 
             var stores = await _storeServices.GetListAsync();
             var categories = await _productServices.GetCategoryListAsync();
@@ -217,8 +208,10 @@ namespace Product.Presenters
             else
             {
                 category = Mapper.Map(model, category);
-                await _productServices.EditCategoryAsync(category);
-                Messages.AddSuccess("Store Edited");
+                if (await _productServices.EditCategoryAsync(category, Messages))
+                {
+                    Messages.AddSuccess("Store Edited");
+                }
             }
 
             return RedirectToAction(nameof(EditCategory), new { id = category?.Id });
@@ -256,7 +249,7 @@ namespace Product.Presenters
                 return BadRequest();
             }
 
-            await _productServices.DeletePictureAsync(picture);
+            await _productServices.DeletePictureAsync(picture, Messages);
             return Ok();
         }
 
@@ -368,11 +361,32 @@ namespace Product.Presenters
                     };
                 }
 
-                await _priorityServices.EditAsync(priority);
-                Messages.AddSuccess("Priority Edited");
+                if (await _priorityServices.EditAsync(priority, Messages))
+                {
+                    Messages.AddSuccess("Priority Edited");
+                }
             }
 
             return RedirectToAction(nameof(Priority), new { id = product?.Id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> History(int id, int page)
+        {
+            var product = await _productServices.GetByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var memos = await _memoServices.GetMemosAsync(product.Id, product.GetType().Name, page, 10);
+            var viewModel = new Administration.Presenters.Dtos.HistoryViewModel
+            {
+                Id = product.Id,
+                Memos = memos
+            };
+
+            return View(viewModel);
         }
     }
 }

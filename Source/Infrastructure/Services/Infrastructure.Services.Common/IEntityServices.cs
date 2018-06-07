@@ -5,7 +5,8 @@ namespace Infrastructure.Services.Common
 {
     public interface IEntityServices
     {
-        Task<int> SaveAsync<TEntity, T>(TEntity entity) where TEntity : BaseTenantEntity<T>;
-        Task<int> DeleteAsync<TEntity, T>(TEntity entity) where TEntity : BaseTenantEntity<T>;
+        Task<bool> SaveAsync<TEntity>(TEntity entity, Messages messages) where TEntity : BaseTenantEntity;
+        Task<bool> DeleteAsync<TEntity>(TEntity entity, Messages messages) where TEntity : BaseTenantEntity;
+        EntityChangeTree CreateEntityChangeTree<TEntity>(TEntity entity) where TEntity : BaseTenantEntity;
     }
 }

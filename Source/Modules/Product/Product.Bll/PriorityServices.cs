@@ -1,4 +1,5 @@
-﻿using Infrastructure.Database.Repository;
+﻿using Infrastructure.Data.Common;
+using Infrastructure.Database.Repository;
 using Infrastructure.Services.Common;
 using Microsoft.EntityFrameworkCore;
 using Product.Entities;
@@ -29,7 +30,7 @@ namespace Product.Bll
         public Task<List<ProductPriority>> GetListAsync(int productId, Expression<Func<ProductPriority, bool>> predicate)
         {
             return _repository
-                .GetQueryable<ProductPriority, int>()
+                .GetQueryable<ProductPriority>()
                 .Include(x => x.User)
                 .Include(x => x.Product)
                 .Where(x => x.ProductId == productId)
@@ -37,9 +38,9 @@ namespace Product.Bll
                 .ToListAsync();
         }
 
-        public Task<int> EditAsync(ProductPriority priority)
+        public Task<bool> EditAsync(ProductPriority priority, Messages messages)
         {
-            return _entityServices.SaveAsync<ProductPriority, int>(priority);
+            return _entityServices.SaveAsync<ProductPriority>(priority, messages);
         }
     }
 }

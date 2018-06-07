@@ -10,20 +10,21 @@ namespace Infrastructure.Database.Repository
 {
     public interface IRepository
     {
-        IQueryable<TEntity> GetQueryable<TEntity, T>(bool ignoreQueryFilters = false) where TEntity : BaseEntity<T>;
+        IQueryable<TEntity> GetQueryable<TEntity>(bool ignoreQueryFilters = false) where TEntity : BaseEntity;
 
-        Task<TEntity> GetByIdAsync<TEntity, T>(T id) where TEntity : BaseEntity<T>;
+        Task<TEntity> GetByIdAsync<TEntity>(int id) where TEntity : BaseEntity;
 
-        Task<List<TEntity>> GetListAsync<TEntity, T>() where TEntity : BaseEntity<T>;
-        Task<List<TEntity>> GetListAsync<TEntity, T>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity<T>;
+        Task<List<TEntity>> GetListAsync<TEntity>() where TEntity : BaseEntity;
+        Task<List<TEntity>> GetListAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity;
 
-        void Add<TEntity, T>(TEntity entity) where TEntity : BaseEntity<T>;
+        void Add<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
-        void Update<TEntity, T>(TEntity entity) where TEntity : BaseEntity<T>;
+        void Update<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
         Task<int> SaveAsync();
 
-        bool HasEntityChanges<TEntity, T>(TEntity entity) where TEntity : BaseEntity<T>;
+        bool HasEntityChanges<TEntity>(TEntity entity) where TEntity : BaseEntity;
+        IEnumerable<(string name, string original, string current)> GetEntityChanges<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
         Task<IDbContextTransaction> BeginTransactionAsync();
     }

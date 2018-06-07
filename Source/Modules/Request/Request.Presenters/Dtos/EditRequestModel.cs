@@ -11,6 +11,8 @@ namespace Request.Presenters.Dtos
 
         public string Text { get; set; }
 
+        public bool IsNextStep { get; set; }
+
         [Required]
         public IEnumerable<StockRequestDto> StockRequests { get; set; }
     }

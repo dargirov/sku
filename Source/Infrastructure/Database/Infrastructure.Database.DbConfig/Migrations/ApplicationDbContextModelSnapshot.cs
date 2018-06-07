@@ -167,6 +167,48 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.ToTable("Files");
                 });
 
+            modelBuilder.Entity("Administration.Entities.Memo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("BaseEntityId");
+
+                    b.Property<string>("BaseEntityName")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<DateTime?>("ChangedOn");
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<int>("EntityId");
+
+                    b.Property<string>("EntityName")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<string>("NewValue");
+
+                    b.Property<string>("OldValue");
+
+                    b.Property<string>("Property");
+
+                    b.Property<Guid>("TenantId");
+
+                    b.Property<int>("Version");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Memos");
+                });
+
             modelBuilder.Entity("Administration.Entities.ModulePrivilege", b =>
                 {
                     b.Property<int>("Id")
@@ -283,6 +325,38 @@ namespace Infrastructure.Database.DbConfig.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Organizations");
+                });
+
+            modelBuilder.Entity("Administration.Entities.PageData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<string>("GridId")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<int>("PageSize");
+
+                    b.Property<Guid>("TenantId");
+
+                    b.Property<int>("UserId");
+
+                    b.Property<int>("Version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PageData");
                 });
 
             modelBuilder.Entity("Administration.Entities.User", b =>
@@ -899,6 +973,14 @@ namespace Infrastructure.Database.DbConfig.Migrations
                 });
 
             modelBuilder.Entity("Administration.Entities.File", b =>
+                {
+                    b.HasOne("Administration.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Administration.Entities.PageData", b =>
                 {
                     b.HasOne("Administration.Entities.User", "User")
                         .WithMany()

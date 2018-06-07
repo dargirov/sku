@@ -6,7 +6,7 @@ using Infrastructure.Utils;
 
 namespace Product.Entities
 {
-    public class ProductVariant : BaseTenantEntity<int>
+    public class ProductVariant : BaseTenantEntity
     {
         [Required]
         [MinLength(2)]

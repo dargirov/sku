@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Request.Entities
 {
-    public class StockRequest : BaseTenantEntity<int>
+    public class StockRequest : BaseTenantEntity
     {
         [Required]
         public int StockId { get; set; }
@@ -29,5 +29,7 @@ namespace Request.Entities
 
         [Required]
         public ProductPriorityEnum Priority { get; set; }
+
+        public override string ToString() => IsSaved ? $"Заявка на продукт {Stock.Variant.Product.Name}" : "Заявка на продукт";
     }
 }

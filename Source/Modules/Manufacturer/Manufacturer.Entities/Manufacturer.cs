@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Manufacturer.Entities
 {
-    public class Manufacturer : BaseTenantEntity<int>
+    public class Manufacturer : BaseTenantEntity
     {
         [Required]
         [MaxLength(100)]

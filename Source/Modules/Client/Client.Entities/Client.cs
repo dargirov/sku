@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Client.Entities
 {
-    public abstract class Client : BaseTenantEntity<int>
+    public abstract class Client : BaseTenantEntity
     {
         [MaxLength(50)]
         public string Phone { get; set; }

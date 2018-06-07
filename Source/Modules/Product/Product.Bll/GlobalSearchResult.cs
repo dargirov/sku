@@ -24,7 +24,7 @@ namespace Product.Bll
         {
             var storeIds = (await _storeServices.GetListAsync()).Select(x => x.Id);
 
-            var products = await _repository.GetQueryable<Entities.Product, int>()
+            var products = await _repository.GetQueryable<Entities.Product>()
                .Include(x => x.Pictures).ThenInclude(x => x.FullSize)
                .Include(x => x.Pictures).ThenInclude(x => x.Thumb)
                .Include(x => x.Variants).ThenInclude(x => x.Stocks)

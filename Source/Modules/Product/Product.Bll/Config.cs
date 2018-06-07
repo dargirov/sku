@@ -15,6 +15,7 @@ namespace Product.Bll
             container.Configure(x => x.For<IManufacturerEntityPlugin>().Add<ManufacturerEntityPlugin>().Named("ProductManufacturerEntityPlugin"));
             container.Configure(x => x.For<ISupplierEntityPlugin>().Add<SupplierEntityPlugin>().Named("ProductSupplierEntityPlugin"));
             container.Configure(x => x.For<IProductCategoryEntityPlugin>().Add<ProductCategoryEntityPlugin>().Named("ProductProductCategoryEntityPlugin"));
+            container.Configure(x => x.For<IUserEntityPlugin>().Add<UserEntityPlugin>().Named("ProductUserEntityPlugin"));
 
             container.Configure(x => x.For<INotificationPlugin>().Add<ProductNotificationPlugin>().Named("ProductNotificationPlugin"));
 

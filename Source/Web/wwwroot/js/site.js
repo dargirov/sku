@@ -159,6 +159,13 @@ $(document).ready(function () {
         $('.main-form').find('input[type="submit"]').click();
     }
 
+    $('.btn-submit-next-step').on('click', submitNextBtnClick);
+    function submitNextBtnClick(e) {
+        e.preventDefault();
+        $('.main-form').append('<input type="hidden" name="IsNextStep" value="True">');
+        $('.main-form').find('input[type="submit"]').click();
+    }
+
     $('.datetime-picker').flatpickr({
         dateFormat: 'd.m.Y',
     });
@@ -219,6 +226,15 @@ $(document).ready(function () {
         e.preventDefault();
         this.blur();
         window.focus();
+    }
+
+    $('.pager-pagesize').on('change', pagerPageSizeChange);
+    function pagerPageSizeChange(e) {
+        var gridId = $(this).data('grid-id');
+        var url = new URL(document.location.href);
+        url.searchParams.set('gridId', gridId);
+        url.searchParams.set('pageSize', $(this).val());
+        window.location.href = url.href;
     }
 
 });

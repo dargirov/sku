@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Product.Entities
 {
-    public class ProductCategory : BaseTenantEntity<int>
+    public class ProductCategory : BaseTenantEntity
     {
         [Required]
         [MinLength(3)]

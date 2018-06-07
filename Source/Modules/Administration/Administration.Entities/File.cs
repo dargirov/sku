@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Administration.Entities
 {
-    public class File : BaseTenantEntity<int>
+    public class File : BaseTenantEntity
     {
         [Required]
         [MaxLength(100)]

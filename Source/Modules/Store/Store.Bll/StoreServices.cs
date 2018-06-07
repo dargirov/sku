@@ -31,17 +31,17 @@ namespace Store.Bll
 
         public Task<Entities.Store> GetByIdAsync(int id)
         {
-            return _repository.GetByIdAsync<Entities.Store, int>(id);
+            return _repository.GetByIdAsync<Entities.Store>(id);
         }
 
         public async Task<List<Entities.Store>> GetListAsync()
         {
             var user = await _authenticationServices.GetCurrentUserAsync();
-            var query = _repository.GetQueryable<Entities.Store, int>();
+            var query = _repository.GetQueryable<Entities.Store>();
 
             if (!user.IsAdmin)
             {
-                var storeIds = _repository.GetQueryable<StorePrivilege, int>()
+                var storeIds = _repository.GetQueryable<StorePrivilege>()
                     .Where(x => x.User == user && x.Read)
                     .Select(x => x.StoreId);
 
@@ -53,17 +53,17 @@ namespace Store.Bll
 
         public Task<List<Entities.Store>> GetListWithoutPrivCheckAsync()
         {
-            return _repository.GetListAsync<Entities.Store, int>();
+            return _repository.GetListAsync<Entities.Store>();
         }
 
         public async Task<(IEnumerable<Entities.Store> stores, PageData pageData)> GetListAsync(int page, int pageSize, int column, SortDirectionEnum dir, string name, int? cityId, string address)
         {
             var user = await _authenticationServices.GetCurrentUserAsync();
-            var query = _repository.GetQueryable<Entities.Store, int>();
+            var query = _repository.GetQueryable<Entities.Store>();
 
             if (!user.IsAdmin)
             {
-                var storeIds = _repository.GetQueryable<StorePrivilege, int>()
+                var storeIds = _repository.GetQueryable<StorePrivilege>()
                     .Where(x => x.User == user && x.Read)
                     .Select(x => x.StoreId);
 
@@ -90,16 +90,16 @@ namespace Store.Bll
 
         public Task<List<Administration.Entities.City>> GetCityListAsync()
         {
-            var s = _repository.GetQueryable<Entities.Store, int>()
+            var s = _repository.GetQueryable<Entities.Store>()
                 .Select(x => x.CityId);
 
-            return _repository.GetQueryable<Administration.Entities.City, int>()
+            return _repository.GetQueryable<Administration.Entities.City>()
                 .Where(x => s.Contains(x.Id))
                 .Distinct()
                 .ToListAsync();
         }
 
-        public async Task<int> EditAsync(Entities.Store store)
+        public async Task<bool> EditAsync(Entities.Store store, Messages messages)
         {
             var user = await _authenticationServices.GetCurrentUserAsync();
             var generateHashId = false;
@@ -117,15 +117,22 @@ namespace Store.Bll
                     User = user
                 };
 
-                await _entityServices.SaveAsync<StorePrivilege, int>(storePriv);
+                if (!await _entityServices.SaveAsync<StorePrivilege>(storePriv, messages))
+                {
+                    return false;
+                }
             }
 
-            var result = await _entityServices.SaveAsync<Entities.Store, int>(store);
+            var result = await _entityServices.SaveAsync<Entities.Store>(store, messages);
+            if (!result)
+            {
+                return false;
+            }
 
             if (generateHashId)
             {
                 store.HashId = _hashServices.Base36Encode(100000 + store.Id);
-                await _entityServices.SaveAsync<Entities.Store, int>(store);
+                await _entityServices.SaveAsync<Entities.Store>(store, messages);
             }
 
             return result;
@@ -133,16 +140,19 @@ namespace Store.Bll
 
         public Task<List<StorePrivilege>> GetPrivilegeForUserListAsync(int userId)
         {
-            return _repository.GetListAsync<StorePrivilege, int>(x => x.UserId == userId);
+            return _repository.GetListAsync<StorePrivilege>(x => x.UserId == userId);
         }
 
-        public async Task<int> EditPrivilegesAsync(int userId, IEnumerable<StorePrivilege> privileges)
+        public async Task<bool> EditPrivilegesAsync(int userId, IEnumerable<StorePrivilege> privileges, Messages messages)
         {
             var currentPrivs = await GetPrivilegeForUserListAsync(userId);
 
             foreach (var priv in currentPrivs.Where(x => !privileges.Select(y => y.Id).ToList().Contains(x.Id)))
             {
-                await _entityServices.DeleteAsync<StorePrivilege, int>(priv);
+                if (!await _entityServices.DeleteAsync<StorePrivilege>(priv, messages))
+                {
+                    return false;
+                }
             }
 
             foreach (var privilege in privileges)
@@ -157,10 +167,13 @@ namespace Store.Bll
                     existingPriv.Delete = privilege.Delete;
                 }
 
-                await _entityServices.SaveAsync<StorePrivilege, int>(existingPriv ?? privilege);
+                if (!await _entityServices.SaveAsync<StorePrivilege>(existingPriv ?? privilege, messages))
+                {
+                    return false;
+                }
             }
 
-            return 0;
+            return true;
         }
 
         public async Task<List<Entities.Store>> GetStoreListWithReadPrivilegeAsync()
@@ -188,9 +201,7 @@ namespace Store.Bll
                 }
             }
 
-            var result = await _entityServices.DeleteAsync<Entities.Store, int>(store);
-
-            return result != 0;
+            return await _entityServices.DeleteAsync<Entities.Store>(store, messages);
         }
 
         private async Task<List<Entities.Store>> GetStoreListWithPrivilegeAsync(Func<StorePrivilege, bool> filter)
@@ -199,14 +210,14 @@ namespace Store.Bll
 
             if (user.IsAdmin)
             {
-                return await _repository.GetListAsync<Entities.Store, int>();
+                return await _repository.GetListAsync<Entities.Store>();
             }
 
-            var storeIds = (await _repository.GetListAsync<StorePrivilege, int>(x => x.User == user))
+            var storeIds = (await _repository.GetListAsync<StorePrivilege>(x => x.User == user))
                 .Where(filter)
                 .Select(x => x.StoreId);
 
-            return await _repository.GetQueryable<Entities.Store, int>()
+            return await _repository.GetQueryable<Entities.Store>()
                 .Where(x => storeIds.Contains(x.Id))
                 .ToListAsync();
         }

@@ -27,5 +27,7 @@ namespace Store.Presenters.Dtos
         public string Description { get; set; }
 
         public IEnumerable<SelectListItem> Cities { get; set; }
+
+        public bool IsSaved => Id > 0;
     }
 }

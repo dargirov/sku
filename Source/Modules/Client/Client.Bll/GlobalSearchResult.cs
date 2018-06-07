@@ -29,11 +29,11 @@ namespace Client.Bll
                 return result;
             }
 
-            var naturalClients = await _repository.GetQueryable<Entities.NaturalClient, int>()
+            var naturalClients = await _repository.GetQueryable<Entities.NaturalClient>()
                 .Where(x => x.Name.Contains(search) || x.PersonalNo.Contains(search))
                 .ToListAsync();
 
-            var legalClients = await _repository.GetQueryable<Entities.LegalClient, int>()
+            var legalClients = await _repository.GetQueryable<Entities.LegalClient>()
                 .Where(x => x.FirmName.Contains(search) || x.Mol.Contains(search) || x.Phone.Contains(search) || x.Eik.Contains(search))
                 .ToListAsync();
 

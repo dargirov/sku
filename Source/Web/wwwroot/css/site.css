@@ -533,7 +533,7 @@ form select {
     font-size: 13px;
 }
 
-#search-criteria input, #search-criteria select, #search-result-table select, #search-result-table input[type=number] {
+#search-criteria input, #search-criteria select, #search-result-table tbody select, #search-result-table tbody input[type=number] {
     width: 170px;
     height: 28px;
     font-size: 14px;
@@ -668,15 +668,28 @@ form select {
 }
 
 .table-footer-wrapper a.current {
-    color: #08da94;
+    color: #333;
     font-weight: bold;
     padding-top: 8px;
     border-top: 2px solid #08da94;
+    text-decoration: none;
 }
 
 .table-footer-wrapper ul {
     list-style-type: none;
     display: flex;
+}
+
+.table-footer-wrapper > div {
+    display: flex;
+    align-items: center;
+}
+
+.table-footer-wrapper select {
+    background-color: #eeeeee;
+    width: 50px;
+    border: 0;
+    outline: none;
 }
 
 .privilages-container {
@@ -1242,13 +1255,18 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     padding: 5px 8px;
 }
 
-.grid td {
+.grid tbody td {
     padding: 5px 8px;
     border-bottom: 1px solid #ddd;
 }
 
 .grid tbody a {
     color: black;
+    text-decoration: none;
+}
+
+.grid tbody a:hover {
+    color: #333;
 }
 
 .grid tbody tr:hover {
@@ -1265,10 +1283,6 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     display: flex;
 }
 
-.grid tfoot li {
-    padding: 5px 8px;
-}
-
 .grid tfoot a {
     color: #79797b;
 }
@@ -1283,6 +1297,10 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
 
 .text-alert {
     color: #a94442;
+}
+
+.row-alert {
+    background-color: #fbe185;
 }
 
 .product-table-quantity {

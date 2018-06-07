@@ -74,6 +74,13 @@ namespace Administration.Presenters.Dtos
         [Required]
         public bool InvoiceDelete { get; set; }
 
+        [Required]
+        public bool RequestRead { get; set; }
+        [Required]
+        public bool RequestWrite { get; set; }
+        [Required]
+        public bool RequestDelete { get; set; }
+
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<ModulePrivilegesRequestModel, Entities.ModulePrivilege>()

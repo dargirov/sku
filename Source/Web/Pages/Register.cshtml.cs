@@ -1,5 +1,6 @@
 ﻿using Administration.Bll;
 using Administration.Entities;
+using Infrastructure.Data.Common;
 using Infrastructure.Services.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -134,7 +135,8 @@ namespace Web.Pages
 
             _cacheServices.Set<string>("tenant_id", Guid.NewGuid().ToString());
 
-            await _userServices.EditAsync(newUser);
+            var messages = new Messages();
+            await _userServices.EditAsync(newUser, messages);
 
             return RedirectToPage("index");
         }

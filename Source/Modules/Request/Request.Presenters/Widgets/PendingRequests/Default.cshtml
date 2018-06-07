@@ -17,23 +17,29 @@
             <tbody>
                 @foreach (var request in Model.Requests)
                 {
-                    <tr>
+                    var alertClass = request.HasHightPriorityProduct ? "row-alert" : string.Empty;
+                    <tr class="@alertClass">
                         <td>@request.Status</td>
-                        <td>@request.CreatedOn</td>
+                        <td><a asp-controller="request" asp-action="edit" asp-route-id="@request.Id">@request.CreatedOn</a></td>
                         <td>@request.ProductCount</td>
                     </tr>
                 }
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="1">
-                        <ul>
-                            @for (int i = 1; i <= Model.PageData.TotalPages; i++)
-                            {
-                                var active = i == Model.PageData.Page ? "active" : string.Empty;
-                                <li class="@active"><a href="?pendingrequestpage=@i">@i</a></li>
-                            }
-                        </ul>
+                    <td colspan="3">
+                        <div class="table-footer-wrapper">
+                            <div></div>
+                            <div>
+                                <ul>
+                                    @for (int i = 1; i <= Model.PageData.TotalPages; i++)
+                                    {
+                                        var current = i == Model.PageData.Page ? "current" : string.Empty;
+                                        <li><a href="?pendingrequestpage=@i" class="@current">@i</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tfoot>

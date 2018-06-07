@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Product.Bll
@@ -43,7 +44,7 @@ namespace Product.Bll
         {
             var storeReadIds = (await _storeServices.GetStoreListWithReadPrivilegeAsync()).Select(x => x.Id);
 
-            var product = await _repository.GetQueryable<Entities.Product, int>()
+            var product = await _repository.GetQueryable<Entities.Product>()
                 .Include(x => x.Supplier)
                 .Include(x => x.Category)
                 .Include(x => x.Manufacturer)
@@ -57,16 +58,16 @@ namespace Product.Bll
                 return null;
             }
 
-            product.Variants = await _repository.GetListAsync<Entities.ProductVariant, int>(x => x.ProductId == product.Id);
+            product.Variants = await _repository.GetListAsync<Entities.ProductVariant>(x => x.ProductId == product.Id);
             foreach (var variant in product.Variants)
             {
-                variant.Stocks = await _repository.GetQueryable<Entities.ProductStock, int>()
+                variant.Stocks = await _repository.GetQueryable<Entities.ProductStock>()
                     .Include(x => x.Store)
                     .Where(x => x.VariantId == variant.Id && storeReadIds.Contains(x.StoreId))
                     .ToListAsync();
             }
 
-            product.Pictures = await _repository.GetQueryable<Entities.ProductPicture, int>()
+            product.Pictures = await _repository.GetQueryable<Entities.ProductPicture>()
                 .Include(p => p.FullSize)
                 .Include(p => p.Thumb)
                 .Where(x => x.ProductId == product.Id)
@@ -84,13 +85,14 @@ namespace Product.Bll
         {
             var storeIds = (await _storeServices.GetListAsync()).Select(x => x.Id);
 
-            var query = _repository.GetQueryable<Entities.Product, int>()
+            // TODO: this will return stocks for stores with no privs!!!
+            var query = _repository.GetQueryable<Entities.Product>()
                 .Include(x => x.Supplier)
                 .Include(x => x.Category)
                 .Include(x => x.Manufacturer)
                 .Include(x => x.Pictures).ThenInclude(x => x.FullSize)
                 .Include(x => x.Pictures).ThenInclude(x => x.Thumb)
-                .Include(x => x.Variants).ThenInclude(x => x.Stocks)
+                .Include(x => x.Variants).ThenInclude(x => x.Stocks).ThenInclude(x => x.Store)
                 .Where(x => x.Variants.Any(v => v.Stocks.Any(s => storeIds.Contains(s.StoreId))));
 
             if (!string.IsNullOrWhiteSpace(name))
@@ -153,7 +155,7 @@ namespace Product.Bll
             return await query.ToListWithPageData(page, pageSize);
         }
 
-        public async Task<int> EditAsync(Entities.Product product, IEnumerable<VariantDto> variantDtos, Messages messages)
+        public async Task<bool> EditAsync(Entities.Product product, IEnumerable<VariantDto> variantDtos, Messages messages)
         {
             var storeWriteIds = (await _storeServices.GetStoreListWithWritePrivilegeAsync()).Select(x => x.Id);
             var storeDeleteIds = (await _storeServices.GetStoreListWithDeletePrivilegeAsync()).Select(x => x.Id);
@@ -174,7 +176,7 @@ namespace Product.Bll
                     product.Variants.Add(variant);
                 }
 
-                return await _entityServices.SaveAsync<Entities.Product, int>(product);
+                return await _entityServices.SaveAsync<Entities.Product>(product, messages);
             }
 
             for (var i = 0; i < product.Variants.Count; i++)
@@ -208,7 +210,10 @@ namespace Product.Bll
                         {
                             if (storeDeleteIds.Contains(stock.StoreId))
                             {
-                                await _entityServices.DeleteAsync<Entities.ProductStock, int>(stock);
+                                if (!await _entityServices.DeleteAsync<Entities.ProductStock>(stock, messages))
+                                {
+                                    return false;
+                                }
                             }
                             else
                             {
@@ -222,7 +227,10 @@ namespace Product.Bll
                     // TODO: I should probably check product write priv?
                     if (variant.Stocks.All(x => storeDeleteIds.Contains(x.StoreId)))
                     {
-                        await _entityServices.DeleteAsync<Entities.ProductVariant, int>(variant);
+                        if (!await _entityServices.DeleteAsync<Entities.ProductVariant>(variant, messages))
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
@@ -268,41 +276,41 @@ namespace Product.Bll
                             || stockDto.QuantityMeasureType != stock.QuantityMeasureType)
                         {
                             var storeName = stock?.Store?.Name
-                                ?? (await _repository.GetByIdAsync<Store.Entities.Store, int>(stockDto.StoreId)).Name;
+                                ?? (await _repository.GetByIdAsync<Store.Entities.Store>(stockDto.StoreId)).Name;
                             messages.AddWarning($"Cant make changes to store {storeName}. You dont have write permissions.");
                         }
                     }
                 }
             }
 
-            return await _entityServices.SaveAsync<Entities.Product, int>(product);
+            return await _entityServices.SaveAsync<Entities.Product>(product, messages);
         }
 
         public Task<List<Entities.ProductCategory>> GetCategoryListAsync()
         {
-            return _repository.GetQueryable<Entities.ProductCategory, int>()
+            return _repository.GetQueryable<Entities.ProductCategory>()
                 .OrderByDescending(x => x.Id)
                 .ToListAsync();
         }
 
         public Task<Entities.ProductCategory> GetCategoryByIdAsync(int id)
         {
-            return _repository.GetByIdAsync<Entities.ProductCategory, int>(id);
+            return _repository.GetByIdAsync<Entities.ProductCategory>(id);
         }
 
-        public Task<int> EditCategoryAsync(Entities.ProductCategory category)
+        public Task<bool> EditCategoryAsync(Entities.ProductCategory category, Messages messages)
         {
-            return _entityServices.SaveAsync<Entities.ProductCategory, int>(category);
+            return _entityServices.SaveAsync<Entities.ProductCategory>(category, messages);
         }
 
-        public Task<int> DeleteAsync(Entities.Product product)
+        public Task<bool> DeleteAsync(Entities.Product product, Messages messages)
         {
-            return _entityServices.DeleteAsync<Entities.Product, int>(product);
+            return _entityServices.DeleteAsync<Entities.Product>(product, messages);
         }
 
-        public Task<int> DeletePictureAsync(Entities.ProductPicture picture)
+        public Task<bool> DeletePictureAsync(Entities.ProductPicture picture, Messages messages)
         {
-            return _entityServices.DeleteAsync<Entities.ProductPicture, int>(picture);
+            return _entityServices.DeleteAsync<Entities.ProductPicture>(picture, messages);
         }
 
         public async Task<bool> DeleteCategoryAsync(Entities.ProductCategory productCategory, Messages messages)
@@ -315,9 +323,7 @@ namespace Product.Bll
                 }
             }
 
-            var result = await _entityServices.DeleteAsync<Entities.ProductCategory, int>(productCategory);
-
-            return result != 0;
+            return await _entityServices.DeleteAsync<Entities.ProductCategory>(productCategory, messages);
         }
 
         public async Task<bool> ImportAsync(IList<Dtos.Import.ProductDto> productDtos, Messages messages)
@@ -415,7 +421,10 @@ namespace Product.Bll
 
                 try
                 {
-                    await _entityServices.SaveAsync<Entities.Product, int>(product);
+                    if (!await _entityServices.SaveAsync<Entities.Product>(product, messages))
+                    {
+                        return false;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -439,9 +448,19 @@ namespace Product.Bll
 
         public async Task<IEnumerable<Dtos.Api.ProductDto>> GetByOrganizationAndVariantCodeAsync(string organizationHash, string code)
         {
+            return await GetByOrganizationAndVariantCodeInternalAsync(organizationHash, code);
+        }
+
+        public async Task<IEnumerable<Dtos.Api.ProductDto>> GetByOrganization(string organizationHash)
+        {
+            return await GetByOrganizationAndVariantCodeInternalAsync(organizationHash, null);
+        }
+
+        private async Task<IEnumerable<Dtos.Api.ProductDto>> GetByOrganizationAndVariantCodeInternalAsync(string organizationHash, string code)
+        {
             var result = new List<Dtos.Api.ProductDto>();
 
-            var tenantId = await _repository.GetQueryable<Administration.Entities.Organization, int>(ignoreQueryFilters: true)
+            var tenantId = await _repository.GetQueryable<Administration.Entities.Organization>(ignoreQueryFilters: true)
                 .Where(x => x.HashId == organizationHash)
                 .Select(x => x.TenantId)
                 .FirstOrDefaultAsync();
@@ -451,7 +470,7 @@ namespace Product.Bll
                 return result;
             }
 
-            var storeIds = await _repository.GetQueryable<Administration.Entities.ConfigOption, int>(ignoreQueryFilters: true)
+            var storeIds = await _repository.GetQueryable<Administration.Entities.ConfigOption>(ignoreQueryFilters: true)
                 .Where(x => x.TenantId == tenantId
                     && x.Category == Administration.Entities.ConfigOptionCategoryEnum.Api
                     && x.Value == "True"
@@ -459,18 +478,24 @@ namespace Product.Bll
                 .Select(x => x.EntityId)
                 .ToListAsync();
 
-            var products = await _repository.GetQueryable<Entities.Product, int>(ignoreQueryFilters: true)
+            Expression<Func<Entities.ProductVariant, bool>> codePridecaite = x => true;
+            if (!string.IsNullOrEmpty(code))
+            {
+                codePridecaite = x => x.Code == code;
+            }
+
+            var products = await _repository.GetQueryable<Entities.Product>(ignoreQueryFilters: true)
                 .Include(x => x.Variants)
                 .ThenInclude(x => x.Stocks)
                 .ThenInclude(x => x.Store)
-                .Where(x => x.TenantId == tenantId && x.Variants.Any(v => v.Code == code) && x.Variants.Any(v => v.Stocks.Any(s => storeIds.Contains(s.StoreId))))
+                .Where(x => x.TenantId == tenantId && x.Variants.Any(v => string.IsNullOrEmpty(code) ? true : v.Code == code) && x.Variants.Any(v => v.Stocks.Any(s => storeIds.Contains(s.StoreId))))
                 .ToListAsync();
 
             foreach (var product in products)
             {
                 foreach (var variant in product.Variants)
                 {
-                    if (code != variant.Code)
+                    if (!string.IsNullOrEmpty(code) && code != variant.Code)
                     {
                         continue;
                     }

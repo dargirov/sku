@@ -4,9 +4,7 @@ using Infrastructure.Database.Repository;
 using Infrastructure.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Primitives;
 using Store.Bll;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,14 +31,14 @@ namespace Product.Presenters.Widgets.LowQuantityProducts
             var stores = await _storeServices.GetStoreListWithReadPrivilegeAsync();
             var storeIds = stores.Select(x => x.Id);
 
-            var productIds = await _repository.GetQueryable<Entities.Product, int>()
+            var productIds = await _repository.GetQueryable<Entities.Product>()
                 .Where(x => x.Variants.Any(v => v.Stocks.Any(s => storeIds.Contains(s.StoreId) && s.Quantity < s.LowQuantity)))
                 .Select(x => x.Id)
                 .ToListAsync();
 
-            var products = await _repository.GetQueryable<Entities.Product, int>()
+            var products = await _repository.GetQueryable<Entities.Product>()
                 .Include(x => x.Variants)
-                .ThenInclude(x => x.Stocks)
+                .ThenInclude(x => x.Stocks).ThenInclude(x => x.Store)
                 .Where(x => productIds.Contains(x.Id))
                 .Skip((currentPage - 1) * limit)
                 .Take(limit)
@@ -52,12 +50,13 @@ namespace Product.Presenters.Widgets.LowQuantityProducts
 
             foreach (var product in products)
             {
-                var stock = product.Variants.First(v => v.Stocks.Any(s => s.Quantity < s.LowQuantity)).Stocks.First(s => s.Quantity < s.LowQuantity);
+                var stock = product.Variants.First(v => v.Stocks.Any(s => storeIds.Contains(s.StoreId) && s.Quantity < s.LowQuantity)).Stocks.First(s => s.Quantity < s.LowQuantity);
+
                 var dto = new ProductDto()
                 {
                     Id = product.Id,
                     Name = product.Name,
-                    StoreName = stores.First(x => x.Id == stock.StoreId).Name,
+                    StoreName = stores.FirstOrDefault(x => x.Id == stock.StoreId)?.Name,
                     Quantity = stock.Quantity,
                     LowQuantity = stock.LowQuantity
                 };

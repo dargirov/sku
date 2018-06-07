@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Product.Entities
 {
-    public class ProductPicture : BaseTenantEntity<int>
+    public class ProductPicture : BaseTenantEntity
     {
         [Required]
         public int FullSizeId { get; set; }

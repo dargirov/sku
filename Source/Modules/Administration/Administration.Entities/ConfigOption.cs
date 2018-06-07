@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Administration.Entities
 {
-    public class ConfigOption : BaseTenantEntity<int>
+    public class ConfigOption : BaseTenantEntity
     {
         [Required]
         public int EntityId { get; set; }

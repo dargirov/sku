@@ -2,7 +2,7 @@
 
 namespace Administration.Entities
 {
-    public class ModulePrivilege : BaseTenantEntity<int>
+    public class ModulePrivilege : BaseTenantEntity
     {
         public bool StoreRead { get; set; }
         public bool StoreWrite { get; set; }

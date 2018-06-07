@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Administration.Entities
 {
-    public class Organization : BaseTenantEntity<int>
+    public class Organization : BaseTenantEntity
     {
         [Required]
         [MinLength(3)]

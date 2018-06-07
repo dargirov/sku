@@ -1,4 +1,5 @@
-﻿using Administration.Presenters;
+﻿using Administration.Bll;
+using Administration.Presenters;
 using Infrastructure.Services.Common;
 using Manufacturer.Bll;
 using Microsoft.AspNetCore.Mvc;
@@ -22,22 +23,32 @@ namespace Request.Presenters
         private readonly ISupplierServices _supplierServices;
         private readonly IManufacturerServices _manufacturerServices;
         private readonly IRequestServices _requestServices;
+        private readonly IPriorityServices _priorityServices;
+        private readonly IAuthenticationServices _authenticationServices;
+        private readonly IMemoServices _memoServices;
+        private readonly IGridServices _gridServices;
 
-        public RequestController(IProductServices productServices, IStoreServices storeServices, ISupplierServices supplierServices, IManufacturerServices manufacturerServices, IRequestServices requestServices)
+        public RequestController(IProductServices productServices, IStoreServices storeServices, ISupplierServices supplierServices, IManufacturerServices manufacturerServices, IRequestServices requestServices, IPriorityServices priorityServices, IAuthenticationServices authenticationServices, IMemoServices memoServices, IGridServices gridServices)
         {
             _productServices = productServices;
             _storeServices = storeServices;
             _supplierServices = supplierServices;
             _manufacturerServices = manufacturerServices;
             _requestServices = requestServices;
+            _priorityServices = priorityServices;
+            _authenticationServices = authenticationServices;
+            _memoServices = memoServices;
+            _gridServices = gridServices;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index(IndexRequestModel model)
         {
+            var pageSize = await _gridServices.UpdateAndGetPageSizeAsync("RequestIndex", model.PageSize, Messages);
+
             var (products, pageData) = await _productServices.GetListAsync(
                 model.Page,
-                model.PageSize, // its not set
+                pageSize,
                 model.SortColumn,
                 model.SortDirection,
                 model.SearchCriteria?.Name,
@@ -47,6 +58,7 @@ namespace Request.Presenters
                 model.SearchCriteria?.SupplierId,
                 model.SearchCriteria?.Description);
 
+            var user = await _authenticationServices.GetCurrentUserAsync();
             var stores = await _storeServices.GetListAsync();
             var categories = await _productServices.GetCategoryListAsync();
             var suppliers = await _supplierServices.GetListAsync();
@@ -57,6 +69,14 @@ namespace Request.Presenters
                 .Select(x => (storeId: x.StoreId, quantity: x.Quantity))
                 .ToList();
 
+            var productsPriority = new Dictionary<int, ProductPriorityEnum>();
+
+            foreach (var productId in products.Select(x => x.Id).Distinct())
+            {
+                var priority = (await _priorityServices.GetListAsync(productId, x => x.User == user)).FirstOrDefault();
+                productsPriority.Add(productId, priority?.Priority ?? ProductPriorityEnum.Normal);
+            }
+
             var newRequests = await _requestServices.GetListAsync(1, 10, Entities.RequestStatusEnum.New);
 
             var viewModel = new IndexViewModel()
@@ -66,6 +86,7 @@ namespace Request.Presenters
                 StoreQuantities = storeQuantities,
                 Stores = stores.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, false),
                 NewRequests = newRequests.requests,
+                ProductsPriority = productsPriority,
                 SearchCriteria = new IndexSearchCriteria()
                 {
                     Stores = stores.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),
@@ -95,31 +116,7 @@ namespace Request.Presenters
                 return BadRequest();
             }
 
-            //foreach (var stockRequestDto in model.StockRequests)
-            //{
-            //    var fromStore = await _storeServices.GetByIdAsync(stockRequestDto.FromStoreId);
-            //    var toStore = await _storeServices.GetByIdAsync(stockRequestDto.FromStoreId);
-
-            //    var stockRequest = request.StockRequests.FirstOrDefault(x => x.StockId == stockRequestDto.StockId);
-            //    if (stockRequest == null)
-            //    {
-            //        request.StockRequests.Add(new Entities.StockRequest()
-            //        {
-            //            StockId = stockRequestDto.StockId,
-            //            FromStore = fromStore,
-            //            ToStore = toStore,
-            //            Quantity = stockRequestDto.Quantity
-            //        });
-            //    }
-            //    else
-            //    {
-            //        stockRequest.FromStore = fromStore;
-            //        stockRequest.ToStore = toStore;
-            //        stockRequest.Quantity = stockRequestDto.Quantity;
-            //    }
-            //}
-
-            await _requestServices.EditAsync(request, model.StockRequests);
+            await _requestServices.EditAsync(request, model.StockRequests, Messages);
 
             return Ok();
         }
@@ -156,6 +153,7 @@ namespace Request.Presenters
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditRequestModel model)
         {
             var request = await _requestServices.GetByIdAsync(model.Id);
@@ -164,10 +162,71 @@ namespace Request.Presenters
                 return NotFound();
             }
 
-            request.Text = model.Text;
-            await _requestServices.EditAsync(request, model.StockRequests);
+            if (!ModelState.IsValid)
+            {
+                ModelState.GetErrors().ForEach(x => Messages.AddWarning(x));
+                return RedirectToAction(nameof(Edit).ToLower(), new { id = model.Id });
+            }
+
+            if (!model.IsNextStep)
+            {
+                request.Text = model.Text;
+                if (await _requestServices.EditAsync(request, model.StockRequests, Messages))
+                {
+                    Messages.AddSuccess("Request Edited");
+                }
+
+                return RedirectToAction(nameof(Edit).ToLower(), new { id = model.Id });
+            }
+
+            if (request.Status == Entities.RequestStatusEnum.New)
+            {
+                request.Text = model.Text;
+                request.Status = Entities.RequestStatusEnum.Sent;
+                if (await _requestServices.EditAsync(request, model.StockRequests, Messages))
+                {
+                    Messages.AddSuccess("Request Edited");
+                }
+            }
+            else if (request.Status == Entities.RequestStatusEnum.Sent)
+            {
+                if (!await _requestServices.EditProductsQuantityAsync(request, model.StockRequests, Messages))
+                {
+                    Messages.AddSuccess("Error changing product quantities");
+                    return RedirectToAction(nameof(Edit).ToLower(), new { id = model.Id });
+                }
+
+                request.Status = request.StockRequests.Any(x => x.Quantity != 0) 
+                    ? Entities.RequestStatusEnum.PartiallyCompleted 
+                    : Entities.RequestStatusEnum.Completed;
+
+                if (!await _requestServices.EditAsync(request, Messages))
+                {
+                    Messages.AddSuccess("Error saving request status");
+                    return RedirectToAction(nameof(Edit).ToLower(), new { id = model.Id });
+                }
+            }
 
             return RedirectToAction(nameof(Edit).ToLower(), new { id = model.Id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> History(int id)
+        {
+            var request = await _requestServices.GetByIdAsync(id);
+            if (request == null)
+            {
+                return NotFound();
+            }
+
+            var memos = await _memoServices.GetMemosAsync(request.Id, request.GetType().Name, 1, 10);
+            var viewModel = new HistoryViewModel()
+            {
+                Id = request.Id,
+                Memos = memos
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -179,36 +238,12 @@ namespace Request.Presenters
                 return NotFound();
             }
 
-            var result = await _requestServices.DeleteStockRequestAsync(stockRequest);
-            if (result == default(int))
+            if (!await _requestServices.DeleteStockRequestAsync(stockRequest, Messages))
             {
                 return BadRequest();
             }
 
             return Ok();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> EditNext(int id)
-        {
-            var request = await _requestServices.GetByIdAsync(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-
-            var newStatus = _requestServices.GetNextStatus(request.Status);
-            if (!newStatus.HasValue)
-            {
-                Messages.AddError($"Can not find next status for status {request.Status}");
-            }
-            else
-            {
-                request.Status = newStatus.Value;
-                await _requestServices.EditAsync(request);
-            }
-
-            return RedirectToAction(nameof(Edit).ToLower(), new { id = id });
         }
     }
 }

@@ -29,13 +29,18 @@
             <tfoot>
                 <tr>
                     <td colspan="4">
-                        <ul>
-                            @for (int i = 1; i <= Model.PageData.TotalPages; i++)
-                            {
-                                var active = i == Model.PageData.Page ? "active" : string.Empty;
-                                <li class="@active"><a href="?lowquantitypage=@i">@i</a></li>
-                            }
-                        </ul>
+                        <div class="table-footer-wrapper">
+                            <div></div>
+                            <div>
+                                <ul>
+                                    @for (int i = 1; i <= Model.PageData.TotalPages; i++)
+                                    {
+                                        var current = i == Model.PageData.Page ? "current" : string.Empty;
+                                        <li><a href="?lowquantitypage=@i" class="@current">@i</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tfoot>

@@ -1,5 +1,6 @@
 ﻿using Administration.Bll;
 using Administration.Entities;
+using Infrastructure.Data.Common;
 using Infrastructure.Services.Common;
 using Infrastructure.Utils;
 using Microsoft.AspNetCore.Hosting;
@@ -82,8 +83,9 @@ namespace Infrastructure.Services.ContentServer
 
         public async Task<File> SaveAsync(IFormFile formFile)
         {
+            var messages = new Messages();
             var file = await Context.SaveAsync(formFile);
-            await _filesServices.SaveAsync(file);
+            await _filesServices.SaveAsync(file, messages);
             return file;
         }
 
@@ -104,8 +106,9 @@ namespace Infrastructure.Services.ContentServer
                 throw new Exception("ImageThumbWidth or ImageThumbHeight is not set in config file");
             }
 
+            var messages = new Messages();
             var file = await Context.ResizeAndSaveAsync(formFile, width.Value, height.Value);
-            await _filesServices.SaveAsync(file);
+            await _filesServices.SaveAsync(file, messages);
             return file;
         }
 

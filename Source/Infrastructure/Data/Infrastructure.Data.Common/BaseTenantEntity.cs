@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.Data.Common
 {
-    public abstract class BaseTenantEntity<T> : BaseEntity<T>
+    public abstract class BaseTenantEntity : BaseEntity
     {
         [Required]
         public Guid TenantId { get; set; }

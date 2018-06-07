@@ -29,7 +29,7 @@ namespace Manufacturer.Bll
                 return result;
             }
 
-            var manufacturers = await _repository.GetQueryable<Entities.Manufacturer, int>()
+            var manufacturers = await _repository.GetQueryable<Entities.Manufacturer>()
                 .Include(x => x.Country)
                 .Where(x => x.Name.Contains(search))
                 .ToListAsync();

@@ -7,12 +7,13 @@ namespace Administration.Presenters.ViewComponents
 {
     public class PagerViewComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync(string action, PageData pageData)
+        public async Task<IViewComponentResult> InvokeAsync(string action, PageData pageData, string gridId)
         {
             var viewModel = new PagerViewModel()
             {
                 Action = action,
-                PageData = pageData
+                PageData = pageData,
+                GridId = gridId
             };
 
             return View(viewModel);

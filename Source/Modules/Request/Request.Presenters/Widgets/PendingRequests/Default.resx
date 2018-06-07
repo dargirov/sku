@@ -107,4 +107,7 @@
     <data name="Priority" xml:space="preserve">
         <value>Приоритет</value>
     </data>
+    <data name="Pending Requests" xml:space="preserve">
+        <value>Чакащи заявки</value>
+    </data>
 </root>

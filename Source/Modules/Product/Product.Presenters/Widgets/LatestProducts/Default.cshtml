@@ -33,17 +33,22 @@
             <tfoot>
                 <tr>
                     <td colspan="5">
-                        <ul>
-                            @{
-                                int pageStart = Model.PageData.Page - 3 > 1 ? Model.PageData.Page - 3 : 1;
-                                int pageEnd = Model.PageData.Page + 3 < Model.PageData.TotalPages ? Model.PageData.Page + 3 : Model.PageData.TotalPages;
-                            }
-                            @for (int i = pageStart; i <= pageEnd; i++)
-                            {
-                                var active = i == Model.PageData.Page ? "active" : string.Empty;
-                                <li class="@active"><a href="?latestpage=@i">@i</a></li>
-                            }
-                        </ul>
+                        <div class="table-footer-wrapper">
+                            <div></div>
+                            <div>
+                                <ul>
+                                    @{
+                                        int pageStart = Model.PageData.Page - 3 > 1 ? Model.PageData.Page - 3 : 1;
+                                        int pageEnd = Model.PageData.Page + 3 < Model.PageData.TotalPages ? Model.PageData.Page + 3 : Model.PageData.TotalPages;
+                                    }
+                                    @for (int i = pageStart; i <= pageEnd; i++)
+                                    {
+                                        var current = i == Model.PageData.Page ? "current" : string.Empty;
+                                        <li><a href="?latestpage=@i" class="@current">@i</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tfoot>

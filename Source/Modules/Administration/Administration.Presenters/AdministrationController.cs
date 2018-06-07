@@ -104,6 +104,7 @@ namespace Administration.Presenters
                     IncomeRead = true,
                     InvoiceRead = true,
                     SaleRead = true,
+                    RequestRead = true
                 };
                 model.ChangePassword = true;
             }
@@ -116,8 +117,10 @@ namespace Administration.Presenters
                 user.Password = initialPassword;
             }
 
-            await _userServices.EditAsync(user, hashPassword: model.ChangePassword);
-            Messages.AddSuccess("User Edited");
+            if (await _userServices.EditAsync(user, model.ChangePassword, Messages))
+            {
+                Messages.AddSuccess("User Edited");
+            }
 
             return RedirectToAction(nameof(UserEdit), new { id = user.Id });
         }
@@ -157,11 +160,29 @@ namespace Administration.Presenters
             }
 
             Mapper.Map(model, user.ModulePrivilege);
-            await _userServices.EditAsync(user);
-
-            Messages.AddSuccess("Privileges edite");
+            if (await _userServices.EditAsync(user, Messages))
+            {
+                Messages.AddSuccess("Privileges edite");
+            }
 
             return RedirectToAction(nameof(ModulePrivileges), new { id = user.Id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _userServices.GetByIdAsync(id);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            if (await _userServices.DeleteAsync(user, Messages))
+            {
+                Messages.AddSuccess("User deleted");
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

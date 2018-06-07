@@ -2,19 +2,23 @@
 
 <div>
     <ul>
-        @if (Model.ShowNextStep)
+        @if (Model.ShowNextStep && !Model.SubmitNextStep)
         {
             <li><a asp-controller="@Model.Controller" asp-action="@Model.NextAction" asp-route-id="@Model.Id" asp-route-param="@(Model.RouteParam > 0 ? Model.RouteParam.ToString() : string.Empty)"><i class="fas fa-chevron-circle-right"></i><span>@Model.LocalizedNextStep</span></a></li>
+        }
+        else if (Model.ShowNextStep && Model.SubmitNextStep)
+        {
+            <li><a class="btn-submit-next-step"><i class="fas fa-chevron-circle-right"></i><span>@Model.LocalizedNextStep</span></a></li>
         }
 
         @if (Model.ShowEdit)
         {
-            <li><a href="" class="btn-submit"><i class="fas fa-save"></i><span>@Model.LocalizedEdit</span></a></li>
+            <li><a class="btn-submit"><i class="fas fa-save"></i><span>@Model.LocalizedEdit</span></a></li>
         }
 
         @if (Model.ShowReset)
         {
-            <li><a href="" class="btn-reset"><i class="fas fa-eraser"></i><span>@Model.LocalizedReset</span></a></li>
+            <li><a class="btn-reset"><i class="fas fa-eraser"></i><span>@Model.LocalizedReset</span></a></li>
         }
 
         @if (Model.ShowDelete)

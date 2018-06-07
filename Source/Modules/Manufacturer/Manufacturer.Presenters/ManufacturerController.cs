@@ -14,18 +14,24 @@ namespace Manufacturer.Presenters
     {
         private readonly IManufacturerServices _manufacturerServices;
         private readonly ICountryServices _countryServices;
+        private readonly IMemoServices _memoServices;
+        private readonly IGridServices _gridServices;
 
-        public ManufacturerController(IManufacturerServices manufacturerServices, ICountryServices countryServices)
+        public ManufacturerController(IManufacturerServices manufacturerServices, ICountryServices countryServices, IMemoServices memoServices, IGridServices gridServices)
         {
             _manufacturerServices = manufacturerServices;
             _countryServices = countryServices;
+            _memoServices = memoServices;
+            _gridServices = gridServices;
         }
 
         public async Task<IActionResult> Index(IndexRequestModel model)
         {
+            var pageSize = await _gridServices.UpdateAndGetPageSizeAsync("ManufacturerIndex", model.PageSize, Messages);
+
             var manufactirersAndPageData = await _manufacturerServices.GetListAsync(
                 model.Page,
-                model.PageSize,
+                pageSize,
                 model.SortColumn,
                 model.SortDirection,
                 model.SearchCriteria?.Name,
@@ -83,11 +89,32 @@ namespace Manufacturer.Presenters
             else
             {
                 manufacturer = Mapper.Map(model, manufacturer);
-                await _manufacturerServices.EditAsync(manufacturer);
-                Messages.AddSuccess("Manufacturer Edited");
+                if (await _manufacturerServices.EditAsync(manufacturer, Messages))
+                {
+                    Messages.AddSuccess("Manufacturer Edited");
+                }
             }
 
             return RedirectToAction(nameof(Edit), new { id = manufacturer?.Id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> History(int id, int page)
+        {
+            var manufacturer = await _manufacturerServices.GetByIdAsync(id);
+            if (manufacturer == null)
+            {
+                return NotFound();
+            }
+
+            var memos = await _memoServices.GetMemosAsync(manufacturer.Id, manufacturer.GetType().Name, page, 10);
+            var viewModel = new Administration.Presenters.Dtos.HistoryViewModel
+            {
+                Id = manufacturer.Id,
+                Memos = memos
+            };
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Delete(int id)

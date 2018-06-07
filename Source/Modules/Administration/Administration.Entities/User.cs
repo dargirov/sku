@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Administration.Entities
 {
-    public class User : BaseTenantEntity<int>
+    public class User : BaseTenantEntity
     {
         [Required]
         [MaxLength(256)]

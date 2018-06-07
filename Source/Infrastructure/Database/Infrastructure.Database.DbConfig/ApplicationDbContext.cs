@@ -23,6 +23,8 @@ namespace Infrastructure.Database.DbConfig
         public DbSet<File> Files { get; set; }
         public DbSet<ModulePrivilege> ModulePrivileges { get; set; }
         public DbSet<ConfigOption> ConfigOptions { get; set; }
+        public DbSet<Memo> Memos { get; set; }
+        public DbSet<PageData> PageData { get; set; }
 
         public DbSet<Store.Entities.Store> Stores { get; set; }
         public DbSet<Store.Entities.StorePrivilege> StorePrivileges { get; set; }
@@ -56,6 +58,8 @@ namespace Infrastructure.Database.DbConfig
             modelBuilder.Entity<File>().HasQueryFilter(x => !x.IsDeleted);
             modelBuilder.Entity<ModulePrivilege>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
             modelBuilder.Entity<ConfigOption>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
+            modelBuilder.Entity<Memo>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
+            modelBuilder.Entity<PageData>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);
 
             // Store
             modelBuilder.Entity<Store.Entities.Store>().HasQueryFilter(x => !x.IsDeleted && x.TenantId == _tenantId);

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Request.Entities
 {
-    public class Request : BaseTenantEntity<int>
+    public class Request : BaseTenantEntity
     {
         public virtual ICollection<StockRequest> StockRequests { get; set; }
 
@@ -12,5 +12,7 @@ namespace Request.Entities
 
         [Required]
         public RequestStatusEnum Status { get; set; }
+
+        public override string ToString() => "Заявка";
     }
 }

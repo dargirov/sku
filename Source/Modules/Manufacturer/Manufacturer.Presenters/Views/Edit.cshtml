@@ -21,6 +21,14 @@
 
     @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Manufacturer", id = Model.Id })*@
 
+    <ul class="tabs">
+        <li class="active"><a asp-action="edit" asp-route-id="@Model.Id">@Localizer["Info"]</a></li>
+        @if (Model.IsSaved)
+        {
+            <li><a asp-action="history" asp-route-id="@Model.Id">@Localizer["History"]</a></li>
+        }
+    </ul>
+
     <div asp-validation-summary="All"></div>
 
     @Html.Partial("_StatusPartial")

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Administration.Entities
 {
-    public class City : BaseEntity<int>
+    public class City : BaseEntity
     {
         [Required]
         [MaxLength(50)]

@@ -1,0 +1,37 @@
+﻿@model Administration.Presenters.Dtos.HistoryViewModel
+@{
+    ViewData["Title"] = "View Manufacturer History";
+}
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Administration.Bll
+
+@inject IViewLocalizer Localizer
+@inject IAuthorizationServices AuthorizationServices
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Supplier", id = Model.Id })*@
+
+    <ul class="tabs">
+        <li><a asp-action="edit" asp-route-id="@Model.Id">@Localizer["Info"]</a></li>
+        <li class="active"><a asp-action="history" asp-route-id="@Model.Id">@Localizer["History"]</a></li>
+    </ul>
+
+    <div asp-validation-summary="All"></div>
+
+    @Html.Partial("_StatusPartial")
+
+    <div class="content-box">
+
+        @Html.Partial("_History")
+
+    </div>
+
+</section>
+
+@section footer {
+    @await Component.InvokeAsync("FooterActions", new { controller = "Manufacturer", id = Model.Id, showEdit = false, showDelete = false, showReset = false })
+}

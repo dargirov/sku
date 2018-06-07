@@ -9,7 +9,7 @@ namespace Supplier.Bll
         Task<Entities.Supplier> GetByIdAsync(int id);
         Task<List<Entities.Supplier>> GetListAsync();
         Task<(IEnumerable<Entities.Supplier> suppliers, PageData pageData)> GetListAsync(int page, int pageSize, int column, SortDirectionEnum dir, string name, string mol, string phone, string address, string email, string url);
-        Task<int> EditAsync(Entities.Supplier supplier);
+        Task<bool> EditAsync(Entities.Supplier supplier, Messages messages);
         Task<bool> DeleteAsync(Entities.Supplier supplier, Messages messages);
     }
 }

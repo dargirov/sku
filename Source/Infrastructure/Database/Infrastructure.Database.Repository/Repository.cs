@@ -19,7 +19,7 @@ namespace Infrastructure.Database.Repository
             _dbContext = dbContext;
         }
 
-        public IQueryable<TEntity> GetQueryable<TEntity, T>(bool ignoreQueryFilters = false) where TEntity : BaseEntity<T>
+        public IQueryable<TEntity> GetQueryable<TEntity>(bool ignoreQueryFilters = false) where TEntity : BaseEntity
         {
             if (ignoreQueryFilters)
             {
@@ -29,27 +29,27 @@ namespace Infrastructure.Database.Repository
             return _dbContext.Set<TEntity>();
         }
 
-        public Task<TEntity> GetByIdAsync<TEntity, T>(T id) where TEntity : BaseEntity<T>
+        public Task<TEntity> GetByIdAsync<TEntity>(int id) where TEntity : BaseEntity
         {
             return _dbContext.Set<TEntity>().FirstOrDefaultAsync(x => x.Id.Equals(id));
         }
 
-        public Task<List<TEntity>> GetListAsync<TEntity, T>() where TEntity : BaseEntity<T>
+        public Task<List<TEntity>> GetListAsync<TEntity>() where TEntity : BaseEntity
         {
-            return GetListAsync<TEntity, T>(x => true);
+            return GetListAsync<TEntity>(x => true);
         }
 
-        public Task<List<TEntity>> GetListAsync<TEntity, T>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity<T>
+        public Task<List<TEntity>> GetListAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
             return _dbContext.Set<TEntity>().Where(predicate).ToListAsync();
         }
 
-        public void Add<TEntity, T>(TEntity entity) where TEntity : BaseEntity<T>
+        public void Add<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             _dbContext.Set<TEntity>().Add(entity);
         }
 
-        public void Update<TEntity, T>(TEntity entity) where TEntity : BaseEntity<T>
+        public void Update<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             var entry = _dbContext.Entry(entity);
             if (entry.State == EntityState.Detached)
@@ -65,9 +65,42 @@ namespace Infrastructure.Database.Repository
             return _dbContext.SaveChangesAsync();
         }
 
-        public bool HasEntityChanges<TEntity, T>(TEntity entity) where TEntity : BaseEntity<T>
+        public bool HasEntityChanges<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             return _dbContext.Entry(entity).State != EntityState.Unchanged;
+        }
+
+        public IEnumerable<(string name, string original, string current)> GetEntityChanges<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            var entry = _dbContext.Entry<TEntity>(entity);
+
+            foreach (var property in entry.CurrentValues.Properties)
+            {
+                var currentValue = entry.CurrentValues[property];
+                var originalValue = entry.OriginalValues[property];
+
+                if (currentValue == null && originalValue == null)
+                {
+                    continue;
+                }
+
+                if ((currentValue == null && originalValue != null)
+                    || (currentValue != null && originalValue == null))
+                {
+                    yield return GetResult(property.Name, originalValue, currentValue);
+                    continue;
+                }
+
+                if (!currentValue.Equals(originalValue))
+                {
+                    yield return GetResult(property.Name, originalValue, currentValue);
+                }
+            }
+
+            (string name, string original, string current) GetResult(string name, object originalObject, object currentObject)
+            {
+                return (name: name, original: originalObject?.ToString(), current: currentObject?.ToString());
+            }
         }
 
         // TODO: expose commint transaction in method?

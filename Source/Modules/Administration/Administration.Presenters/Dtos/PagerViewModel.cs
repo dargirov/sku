@@ -7,5 +7,6 @@ namespace Administration.Presenters.Dtos
         public int PageOffset => 4;
         public string Action { get; set; }
         public PageData PageData { get; set; }
+        public string GridId { get; set; }
     }
 }

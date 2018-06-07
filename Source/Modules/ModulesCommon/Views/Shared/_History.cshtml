@@ -1,0 +1,41 @@
+﻿@model Administration.Presenters.Dtos.HistoryViewModel
+
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+<table class="grid">
+    <thead>
+        <tr>
+            <th>@Localizer["Entity name"]</th>
+            <th>@Localizer["Property"]</th>
+            <th>@Localizer["Old value"]</th>
+            <th>@Localizer["New value"]</th>
+            <th>@Localizer["Changed on"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var memo in Model.Memos.memos)
+        {
+            <tr>
+                <td>@memo.EntityName</td>
+                <td>@memo.Property</td>
+                <td>@memo.OldValue</td>
+                <td>@memo.NewValue</td>
+                <td>@memo.ChangedOn</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5">
+                <div class="table-footer-wrapper">
+                    <div>Показани @Model.Memos.pageData.ResultsFrom до @Model.Memos.pageData.ResultsTo от @Model.Memos.pageData.TotalResults разултата</div>
+                    <div>
+                        @await Component.InvokeAsync("Pager", new { action = "history", pageData = Model.Memos.pageData })
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>

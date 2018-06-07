@@ -1,4 +1,5 @@
 ﻿using Administration.Bll.Dtos;
+using Infrastructure.Data.Common;
 using Infrastructure.Database.Repository;
 using Infrastructure.Services.Common;
 using StructureMap;
@@ -33,7 +34,7 @@ namespace Administration.Bll
                     break;
             }
 
-            var dbOptions = await _repository.GetListAsync<Entities.ConfigOption, int>(x => x.Category == category);
+            var dbOptions = await _repository.GetListAsync<Entities.ConfigOption>(x => x.Category == category);
 
             foreach (var dbOption in dbOptions)
             {
@@ -68,15 +69,18 @@ namespace Administration.Bll
             return result;
         }
 
-        public async Task<int> EditAsync(IEnumerable<ConfigOptionDto> configOptionDtos)
+        public async Task<bool> EditAsync(IEnumerable<ConfigOptionDto> configOptionDtos, Messages messages)
         {
             using (var transaction = await _repository.BeginTransactionAsync())
             {
                 foreach (var configOptionDto in configOptionDtos.Where(x => x.Id > 0))
                 {
-                    var configOption = await _repository.GetByIdAsync<Entities.ConfigOption, int>(configOptionDto.Id);
+                    var configOption = await _repository.GetByIdAsync<Entities.ConfigOption>(configOptionDto.Id);
                     configOption.Value = configOptionDto.Value;
-                    await _entityServices.SaveAsync<Entities.ConfigOption, int>(configOption);
+                    if (!await _entityServices.SaveAsync<Entities.ConfigOption>(configOption, messages))
+                    {
+                        return false;
+                    }
                 }
 
                 foreach (var configOptionDto in configOptionDtos.Where(x => x.Id == 0))
@@ -90,13 +94,16 @@ namespace Administration.Bll
                         Category = configOptionDto.Category
                     };
 
-                    await _entityServices.SaveAsync<Entities.ConfigOption, int>(configOption);
+                    if (!await _entityServices.SaveAsync<Entities.ConfigOption>(configOption, messages))
+                    {
+                        return false;
+                    }
                 }
 
                 transaction.Commit();
             }
 
-            return 1;
+            return true;
         }
 
         private async Task<IList<ConfigOptionDto>> GetApiOptions()

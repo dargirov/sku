@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Product.Entities
 {
-    public class ProductStock : BaseTenantEntity<int>
+    public class ProductStock : BaseTenantEntity
     {
         [Required]
         [Range(0, int.MaxValue)]

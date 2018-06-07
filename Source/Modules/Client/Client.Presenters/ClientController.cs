@@ -129,8 +129,10 @@ namespace Client.Presenters
             else
             {
                 client = Mapper.Map(model, client as LegalClient);
-                await _clientServices.EditAsync(client);
-                Messages.AddSuccess("Legal client Edited");
+                if (await _clientServices.EditAsync(client, Messages))
+                {
+                    Messages.AddSuccess("Legal client Edited");
+                }
             }
 
             return RedirectToAction(nameof(EditLegal), new { id = client?.Id });
@@ -154,8 +156,10 @@ namespace Client.Presenters
             else
             {
                 client = Mapper.Map(model, client as NaturalClient);
-                await _clientServices.EditAsync(client);
-                Messages.AddSuccess("Natural client Edited");
+                if (await _clientServices.EditAsync(client, Messages))
+                {
+                    Messages.AddSuccess("Natural client Edited");
+                }
             }
 
             return this.RedirectToAction(nameof(EditNatural), new { id = client?.Id });

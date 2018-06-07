@@ -14,7 +14,7 @@ namespace Administration.Presenters.ViewComponents
             _localizer = localizer;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string controller, string action = "index", string deleteAction = "delete", string nextAction = "next", int id = 0, int routeParam = 0, bool showReset = true, bool showEdit = true, bool showDelete = true, bool showNextStep = false)
+        public async Task<IViewComponentResult> InvokeAsync(string controller, string action = "index", string deleteAction = "delete", string nextAction = "next", int id = 0, int routeParam = 0, bool showReset = true, bool showEdit = true, bool showDelete = true, bool showNextStep = false, bool submitNextStep = false)
         {
             var viewModel = new FooterActionsViewModel()
             {
@@ -32,6 +32,7 @@ namespace Administration.Presenters.ViewComponents
                 ShowEdit = showEdit,
                 ShowDelete = showDelete && id > 0,
                 ShowNextStep = showNextStep,
+                SubmitNextStep = submitNextStep,
                 LocalizedEdit = id > 0 ? _localizer["Edit"] : _localizer["Create"]
             };
 

@@ -18,7 +18,7 @@ namespace Product.Bll
 
         public async Task<bool> OnDelete(Store.Entities.Store store, Messages messages)
         {
-            var hasProducts = await _repository.GetQueryable<Entities.ProductStock, int>()
+            var hasProducts = await _repository.GetQueryable<Entities.ProductStock>()
                 .Where(x => x.Store == store)
                 .AnyAsync();
 

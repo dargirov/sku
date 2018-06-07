@@ -1,4 +1,5 @@
 ﻿using Client.Entities;
+using Infrastructure.Data.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,6 +9,6 @@ namespace Client.Bll
     {
         Task<Entities.Client> GetByIdAsync(int id, ClientTypeEnum type);
         Task<IEnumerable<Entities.Client>> GetListAsync(string molName, string firmNamePersonalNo, int? cityId, string address, string phone, string email);
-        Task<int> EditAsync(Entities.Client client);
+        Task<bool> EditAsync(Entities.Client client, Messages messages);
     }
 }

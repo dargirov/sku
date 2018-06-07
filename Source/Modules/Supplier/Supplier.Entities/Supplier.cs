@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Supplier.Entities
 {
-    public class Supplier : BaseTenantEntity<int>
+    public class Supplier : BaseTenantEntity
     {
         [Required]
         [MaxLength(100)]
@@ -26,5 +26,10 @@ namespace Supplier.Entities
 
         [MaxLength(100)]
         public string Url { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Name} - {Id}";
+        }
     }
 }

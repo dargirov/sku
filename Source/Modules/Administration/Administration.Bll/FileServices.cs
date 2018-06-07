@@ -1,4 +1,5 @@
 ﻿using Administration.Entities;
+using Infrastructure.Data.Common;
 using Infrastructure.Database.Repository;
 using Infrastructure.Services.Common;
 using Microsoft.EntityFrameworkCore;
@@ -21,19 +22,19 @@ namespace Administration.Bll
 
         public Task<File> GetAsync(Guid guid)
         {
-            return _repository.GetQueryable<File, int>()
+            return _repository.GetQueryable<File>()
                 .Where(x => x.Guid == guid)
                 .FirstOrDefaultAsync();
         }
 
-        public Task<int> SaveAsync(File file)
+        public Task<bool> SaveAsync(File file, Messages messages)
         {
-            return _entityServices.SaveAsync<File, int>(file);
+            return _entityServices.SaveAsync<File>(file, messages);
         }
 
         public Task<File> GetByIdAsync(int id)
         {
-            return _repository.GetByIdAsync<File, int>(id);
+            return _repository.GetByIdAsync<File>(id);
         }
     }
 }

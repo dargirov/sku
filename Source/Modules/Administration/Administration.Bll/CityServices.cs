@@ -15,7 +15,7 @@ namespace Administration.Bll
 
         public Task<List<Entities.City>> GetListAsync()
         {
-            return _repository.GetListAsync<Entities.City, int>();
+            return _repository.GetListAsync<Entities.City>();
         }
     }
 }

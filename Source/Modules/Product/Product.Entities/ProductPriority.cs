@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Product.Entities
 {
-    public class ProductPriority : BaseTenantEntity<int>
+    public class ProductPriority : BaseTenantEntity
     {
         [Required]
         public ProductPriorityEnum Priority { get; set; }

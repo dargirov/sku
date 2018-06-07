@@ -41,8 +41,11 @@ namespace Administration.Presenters
         public async Task<IActionResult> Api(ConfigApiRequestModel model)
         {
             // TODO: fix when IP Address is not set!
-            await _configServices.EditAsync(model.ConfigOptions);
-            Messages.AddSuccess("Api Edited");
+            if (await _configServices.EditAsync(model.ConfigOptions, Messages))
+            {
+                Messages.AddSuccess("Api Edited");
+            }
+
             return RedirectToAction(nameof(Api));
         }
 

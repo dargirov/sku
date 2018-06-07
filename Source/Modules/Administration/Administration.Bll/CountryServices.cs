@@ -17,7 +17,7 @@ namespace Administration.Bll
 
         public Task<List<Entities.Country>> GetListAsync()
         {
-            return _repository.GetQueryable<Entities.Country, int>()
+            return _repository.GetQueryable<Entities.Country>()
                 .OrderByDescending(c => c.Highlight)
                 .ThenBy(c => c.Name)
                 .ToListAsync();

@@ -1,4 +1,5 @@
-﻿using Administration.Presenters;
+﻿using Administration.Bll;
+using Administration.Presenters;
 using Infrastructure.Services.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,17 +13,23 @@ namespace Supplier.Presenters
     public class SupplierController : BaseController
     {
         private readonly ISupplierServices _supplierServices;
+        private readonly IMemoServices _memoServices;
+        private readonly IGridServices _gridServices;
 
-        public SupplierController(ISupplierServices supplierServices)
+        public SupplierController(ISupplierServices supplierServices, IMemoServices memoServices, IGridServices gridServices)
         {
             _supplierServices = supplierServices;
+            _memoServices = memoServices;
+            _gridServices = gridServices;
         }
 
         public async Task<IActionResult> Index(IndexRequestModel model)
         {
+            var pageSize = await _gridServices.UpdateAndGetPageSizeAsync("SupplierIndex", model.PageSize, Messages);
+
             var suppliersAndPageData = await _supplierServices.GetListAsync(
                 model.Page,
-                model.PageSize,
+                pageSize,
                 model.SortColumn,
                 model.SortDirection,
                 model.SearchCriteria?.Name,
@@ -77,11 +84,32 @@ namespace Supplier.Presenters
             else
             {
                 supplier = Mapper.Map(model, supplier);
-                await _supplierServices.EditAsync(supplier);
-                Messages.AddSuccess("Supplier Edited");
+                if (await _supplierServices.EditAsync(supplier, Messages))
+                {
+                    Messages.AddSuccess("Supplier Edited");
+                }
             }
 
             return RedirectToAction(nameof(Edit), new { id = supplier?.Id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> History(int id, int page)
+        {
+            var supplier = await _supplierServices.GetByIdAsync(id);
+            if (supplier == null)
+            {
+                return NotFound();
+            }
+
+            var memos = await _memoServices.GetMemosAsync(supplier.Id, supplier.GetType().Name, page, 10);
+            var viewModel = new Administration.Presenters.Dtos.HistoryViewModel
+            {
+                Id = supplier.Id,
+                Memos = memos
+            };
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Delete(int id)

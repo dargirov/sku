@@ -28,7 +28,11 @@ namespace Request.Presenters.Widgets.PendingRequests
             {
                 Requests = requests.Select(x => new RequestDto()
                 {
-                    CreatedOn = x.CreatedOn
+                    Id = x.Id,
+                    CreatedOn = x.CreatedOn,
+                    Status = x.Status.ToString(),
+                    ProductCount = x.StockRequests.Count,
+                    HasHightPriorityProduct = x.StockRequests.Any(s => s.Priority == Product.Entities.ProductPriorityEnum.High)
                 }),
                 PageData = pageData
             };

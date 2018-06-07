@@ -70,6 +70,15 @@ namespace Request.Presenters.Widgets.PendingRequests {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Чакащи заявки.
+        /// </summary>
+        internal static string Pending_Requests {
+            get {
+                return ResourceManager.GetString("Pending Requests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Приоритет.
         /// </summary>
         internal static string Priority {

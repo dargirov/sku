@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Store.Entities
 {
-    public class StorePrivilege : BaseTenantEntity<int>
+    public class StorePrivilege : BaseTenantEntity
     {
         [Required]
         public bool Read { get; set; }

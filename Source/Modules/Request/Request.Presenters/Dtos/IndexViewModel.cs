@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Data.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Product.Entities;
 using System.Collections.Generic;
 
 namespace Request.Presenters.Dtos
@@ -17,5 +18,7 @@ namespace Request.Presenters.Dtos
         public IEnumerable<SelectListItem> Stores { get; set; }
 
         public IndexSearchCriteria SearchCriteria { get; set; }
+
+        public Dictionary<int, ProductPriorityEnum> ProductsPriority { get; set; }
     }
 }

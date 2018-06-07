@@ -32,9 +32,7 @@ namespace Administration.Bll
             }
 
             SetupCacheData(user);
-            await UpdateActivity(user);
-
-            return true;
+            return await UpdateActivity(user, messages);
         }
 
         public void Logout()
@@ -92,11 +90,11 @@ namespace Administration.Bll
             _cacheServices.Remove("organization_name");
         }
 
-        private Task<int> UpdateActivity(User user)
+        private Task<bool> UpdateActivity(User user, Messages messages)
         {
             user.LastLogIn = DateTime.Now;
             user.LastActivity = DateTime.Now;
-            return _userServices.EditAsync(user);
+            return _userServices.EditAsync(user, messages);
         }
     }
 }

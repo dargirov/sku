@@ -21,6 +21,14 @@
 
     @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Supplier", id = Model.Id })*@
 
+    <ul class="tabs">
+        <li class="active"><a asp-action="edit" asp-route-id="@Model.Id">@Localizer["Info"]</a></li>
+        @if (Model.IsSaved)
+        {
+            <li><a asp-action="history" asp-route-id="@Model.Id">@Localizer["History"]</a></li>
+        }
+    </ul>
+
     <div asp-validation-summary="All"></div>
 
     @Html.Partial("_StatusPartial")
@@ -56,10 +64,15 @@
                         @{int i = 0;}
                         @foreach (var requestStock in Model.StockRequests)
                         {
-                            <tr data-id="@requestStock.Id">
-                                <td>@requestStock.Stock.Variant.Product.Name</td>
+                            var alertClass = requestStock.Quantity > 0 && Model.Status == Request.Entities.RequestStatusEnum.Sent ? "row-alert" : string.Empty;
+
+                            <tr data-id="@requestStock.Id" class="@alertClass">
+                                <td><a asp-controller="product" asp-action="edit" asp-route-id="@requestStock.Stock.Variant.Product.Id">@requestStock.Stock.Variant.Product.Name</a></td>
                                 <td>@requestStock.Stock.Variant.Code</td>
-                                <td>@requestStock.FromStore.Name</td>
+                                <td>
+                                    <input type="hidden" name="StockRequests[@i].FromStoreId" value="@requestStock.FromStoreId">
+                                    <a asp-controller="store" asp-action="edit" asp-route-id="@requestStock.FromStore.Id">@requestStock.FromStore.Name</a>
+                                </td>
                                 <td>
                                     @if (Model.Status == Request.Entities.RequestStatusEnum.New)
                                     {
@@ -73,12 +86,13 @@
                                     }
                                     else
                                     {
-                                        @requestStock.ToStore.Name;
+                                        <input type="hidden" name="StockRequests[@i].ToStoreId" value="@requestStock.ToStoreId">
+                                        <a asp-controller="store" asp-action="edit" asp-route-id="@requestStock.ToStore.Id">@requestStock.ToStore.Name</a>
                                     }
                                 </td>
                                 <td>@requestStock.Stock.Quantity</td>
                                 <td>
-                                    @if (Model.Status == Request.Entities.RequestStatusEnum.New)
+                                    @if (Model.Status == Request.Entities.RequestStatusEnum.New || Model.Status == Request.Entities.RequestStatusEnum.Sent)
                                     {
                                         <input type="number" name="StockRequests[@i].Quantity" min="0" class="form-control input-small" value="@requestStock.Quantity" data-val-required>
                                     }
@@ -100,11 +114,12 @@
                                     }
                                     else
                                     {
+                                        <input type="hidden" name="StockRequests[@i].Priority" value="@((int)requestStock.Priority)">
                                         @requestStock.Priority
                                     }
                                 </td>
                                 <td>
-                                    <input type="hidden" name="StockRequests[@(i++)].StockId" value="@requestStock.Id">
+                                    <input type="hidden" name="StockRequests[@(i++)].StockId" value="@requestStock.StockId">
                                     @if (Model.Status == Request.Entities.RequestStatusEnum.New)
                                     {
                                         <a class="tooltip request-item-delete" title="@Localizer["Delete"]"><i class="fas fa-times"></i></a>
@@ -135,7 +150,7 @@
 </section>
 
 @section footer {
-    @await Component.InvokeAsync("FooterActions", new { controller = "Request", id = Model.Id, showReset = false, showEdit = !isReadOnly, showDelete = modulePrivileges.RequestDelete, showNextStep = !isReadOnly, nextAction = "EditNext" })
+    @await Component.InvokeAsync("FooterActions", new { controller = "Request", id = Model.Id, showReset = false, showEdit = !isReadOnly, showDelete = modulePrivileges.RequestDelete, showNextStep = !isReadOnly, submitNextStep = true })
 }
 
 @section scripts {

@@ -12,9 +12,9 @@ namespace Store.Bll
         Task<List<Entities.Store>> GetListWithoutPrivCheckAsync();
         Task<(IEnumerable<Entities.Store> stores, PageData pageData)> GetListAsync(int page, int pageSize, int column, SortDirectionEnum dir, string name, int? cityId, string address);
         Task<List<Administration.Entities.City>> GetCityListAsync();
-        Task<int> EditAsync(Entities.Store store);
+        Task<bool> EditAsync(Entities.Store store, Messages messages);
         Task<List<StorePrivilege>> GetPrivilegeForUserListAsync(int userId);
-        Task<int> EditPrivilegesAsync(int userId, IEnumerable<StorePrivilege> privileges);
+        Task<bool> EditPrivilegesAsync(int userId, IEnumerable<StorePrivilege> privileges, Messages messages);
         Task<List<Entities.Store>> GetStoreListWithReadPrivilegeAsync();
         Task<List<Entities.Store>> GetStoreListWithWritePrivilegeAsync();
         Task<List<Entities.Store>> GetStoreListWithDeletePrivilegeAsync();

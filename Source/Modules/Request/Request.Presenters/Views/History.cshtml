@@ -1,0 +1,60 @@
+﻿@model Request.Presenters.Dtos.HistoryViewModel
+@{
+    ViewData["Title"] = "View Request History";
+}
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Administration.Bll
+
+@inject IViewLocalizer Localizer
+@inject IAuthorizationServices AuthorizationServices
+
+@{
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+    var isReadOnly = !modulePrivileges.RequestWrite;
+    var readOnlyClass = modulePrivileges.RequestWrite ? string.Empty : "readonly";
+}
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Supplier", id = Model.Id })*@
+
+    <ul class="tabs">
+        <li><a asp-action="edit" asp-route-id="@Model.Id">@Localizer["Info"]</a></li>
+        <li class="active"><a asp-action="history" asp-route-id="@Model.Id">@Localizer["History"]</a></li>
+    </ul>
+
+    <div asp-validation-summary="All"></div>
+
+    @Html.Partial("_StatusPartial")
+
+    <div class="content-box">
+        <table class="grid">
+            <thead>
+                <tr>
+                    <th>@Localizer["Entity name"]</th>
+                    <th>@Localizer["Property"]</th>
+                    <th>@Localizer["Old value"]</th>
+                    <th>@Localizer["New value"]</th>
+                    <th>@Localizer["Changed on"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var memo in Model.Memos.memos)
+                {
+                    <tr>
+                        <td>@memo.EntityName</td>
+                        <td>@memo.Property</td>
+                        <td>@memo.OldValue</td>
+                        <td>@memo.NewValue</td>
+                        <td>@memo.ChangedOn</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+</section>

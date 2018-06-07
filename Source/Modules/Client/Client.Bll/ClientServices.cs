@@ -1,4 +1,5 @@
 ﻿using Client.Entities;
+using Infrastructure.Data.Common;
 using Infrastructure.Database.Repository;
 using Infrastructure.Services.Common;
 using Microsoft.EntityFrameworkCore;
@@ -22,11 +23,11 @@ namespace Client.Bll
 
         public Task<Entities.Client> GetByIdAsync(int id, ClientTypeEnum type)
         {
-            IQueryable<Entities.Client> query = _repository.GetQueryable<NaturalClient, int>();
+            IQueryable<Entities.Client> query = _repository.GetQueryable<NaturalClient>();
 
             if (type == ClientTypeEnum.Legal)
             {
-                query = _repository.GetQueryable<LegalClient, int>();
+                query = _repository.GetQueryable<LegalClient>();
             }
 
             return  query.FirstOrDefaultAsync();
@@ -34,8 +35,8 @@ namespace Client.Bll
 
         public async Task<IEnumerable<Entities.Client>> GetListAsync(string molName, string firmNamePersonalNo, int? cityId, string address, string phone, string email)
         {
-            var naturalClients = _repository.GetQueryable<NaturalClient, int>();
-            var legalClients = _repository.GetQueryable<LegalClient, int>();
+            var naturalClients = _repository.GetQueryable<NaturalClient>();
+            var legalClients = _repository.GetQueryable<LegalClient>();
 
             if (!string.IsNullOrWhiteSpace(molName))
             {
@@ -80,21 +81,21 @@ namespace Client.Bll
 
             var clientIds = legalClientIds.Union(naturalClientIds).ToList();
 
-            result.AddRange(await _repository.GetQueryable<LegalClient, int>().Include(c => c.City).Where(c => clientIds.Where(lc => lc.Type == ClientTypeEnum.Legal).Select(lc => lc.Id).Contains(c.Id)).ToListAsync());
-            result.AddRange(await _repository.GetQueryable<NaturalClient, int>().Include(c => c.City).Where(c => clientIds.Where(nc => nc.Type == ClientTypeEnum.Natural).Select(nc => nc.Id).Contains(c.Id)).ToListAsync());
+            result.AddRange(await _repository.GetQueryable<LegalClient>().Include(c => c.City).Where(c => clientIds.Where(lc => lc.Type == ClientTypeEnum.Legal).Select(lc => lc.Id).Contains(c.Id)).ToListAsync());
+            result.AddRange(await _repository.GetQueryable<NaturalClient>().Include(c => c.City).Where(c => clientIds.Where(nc => nc.Type == ClientTypeEnum.Natural).Select(nc => nc.Id).Contains(c.Id)).ToListAsync());
 
             return result;
         }
 
-        public Task<int> EditAsync(Entities.Client client)
+        public Task<bool> EditAsync(Entities.Client client, Messages messages)
         {
             if (client is LegalClient)
             {
-                return _entityServices.SaveAsync<LegalClient, int>(client as LegalClient);
+                return _entityServices.SaveAsync<LegalClient>(client as LegalClient, messages);
             }
             else if (client is NaturalClient)
             {
-                return _entityServices.SaveAsync<NaturalClient, int>(client as NaturalClient);
+                return _entityServices.SaveAsync<NaturalClient>(client as NaturalClient, messages);
             }
 
             throw new Exception("Unknown client type");

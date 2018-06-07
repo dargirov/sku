@@ -14,6 +14,7 @@
         <ProjectReference Include="..\..\..\Infrastructure\Data\Infrastructure.Data.Common\Infrastructure.Data.Common.csproj" />
         <ProjectReference Include="..\..\..\Infrastructure\Services\Infrastructure.Services.Common\Infrastructure.Services.Common.csproj" />
         <ProjectReference Include="..\..\Administration\Administration.Bll\Administration.Bll.csproj" />
+        <ProjectReference Include="..\..\Store\Store.Bll\Store.Bll.csproj" />
         <ProjectReference Include="..\Request.Entities\Request.Entities.csproj" />
     </ItemGroup>
 

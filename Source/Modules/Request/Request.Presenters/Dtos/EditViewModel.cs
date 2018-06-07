@@ -29,6 +29,8 @@ namespace Request.Presenters.Dtos
 
         public IEnumerable<SelectListItem> Priorities { get; set; }
 
+        public bool IsSaved => Id > 0;
+
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<Entities.Request, EditViewModel>()

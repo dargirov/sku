@@ -23,19 +23,19 @@ namespace Manufacturer.Bll
 
         public Task<Entities.Manufacturer> GetByIdAsync(int id)
         {
-            return _repository.GetByIdAsync<Entities.Manufacturer, int>(id);
+            return _repository.GetByIdAsync<Entities.Manufacturer>(id);
         }
 
         public Task<List<Entities.Manufacturer>> GetListAsync()
         {
             // TODO: shouldn't I check privileges?
-            return _repository.GetListAsync<Entities.Manufacturer, int>();
+            return _repository.GetListAsync<Entities.Manufacturer>();
         }
 
         public Task<(IEnumerable<Entities.Manufacturer> manufacturers, PageData pageData)> GetListAsync(int page, int pageSize, int column, SortDirectionEnum dir, string name, int? countryId, string email)
         {
             // TODO: shouldn't I check privileges?
-            var query = _repository.GetQueryable<Entities.Manufacturer, int>();
+            var query = _repository.GetQueryable<Entities.Manufacturer>();
 
             if (!string.IsNullOrWhiteSpace(name))
             {
@@ -55,9 +55,9 @@ namespace Manufacturer.Bll
             return query.ToListWithPageData(page, pageSize);
         }
 
-        public Task<int> EditAsync(Entities.Manufacturer manufacturer)
+        public Task<bool> EditAsync(Entities.Manufacturer manufacturer, Messages messages)
         {
-            return _entityServices.SaveAsync<Entities.Manufacturer, int>(manufacturer);
+            return _entityServices.SaveAsync<Entities.Manufacturer>(manufacturer, messages);
         }
 
         public async Task<bool> DeleteAsync(Entities.Manufacturer manufacturer, Messages messages)
@@ -70,9 +70,7 @@ namespace Manufacturer.Bll
                 }
             }
 
-            var result = await _entityServices.DeleteAsync<Entities.Manufacturer, int>(manufacturer);
-
-            return result != 0;
+            return await _entityServices.DeleteAsync<Entities.Manufacturer>(manufacturer, messages);
         }
     }
 }

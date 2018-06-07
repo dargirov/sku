@@ -37,9 +37,10 @@
             var quantity = parseInt($(element).find('.request-quantity-input').val());
             if (!isNaN(quantity) && quantity > 0) {
                 var stockId = parseInt($(element).find('.request-store-select option:selected').data('stock'));
+                var priority = parseInt($(element).find('.request-store-select option:selected').data('priority'));
                 var storeId = parseInt($(element).find('.request-store-select').val());
 
-                data.push({ stockId: stockId, fromStoreId: storeId, toStoreId: toStoreId === 0 ? storeId : toStoreId, quantity: quantity, priority: 2 });
+                data.push({ stockId: stockId, fromStoreId: storeId, toStoreId: toStoreId === 0 ? storeId : toStoreId, quantity: quantity, priority: priority });
             }
         });
 

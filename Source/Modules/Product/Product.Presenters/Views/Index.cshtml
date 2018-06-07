@@ -104,7 +104,7 @@
                         <div class="table-footer-wrapper">
                             <div>Показани @Model.Products.pageData.ResultsFrom до @Model.Products.pageData.ResultsTo от @Model.Products.pageData.TotalResults разултата</div>
                             <div>
-                                @await Component.InvokeAsync("Pager", new { action = "index", pageData = Model.Products.pageData })
+                                @await Component.InvokeAsync("Pager", new { action = "index", pageData = Model.Products.pageData, gridId = "ProductIndex" })
                             </div>
                         </div>
                     </td>
