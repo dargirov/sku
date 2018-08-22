@@ -19,7 +19,7 @@ namespace Infrastructure.Services.Common
             {
                 result.Add(new SelectListItem()
                 {
-                    Value = "0",
+                    Value = null,
                     Text = "",
                     Selected = false
                 });

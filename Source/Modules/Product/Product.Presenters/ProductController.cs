@@ -379,6 +379,7 @@ namespace Product.Presenters
                 return NotFound();
             }
 
+            ViewData["PictureCount"] = product.Pictures.Count;
             var memos = await _memoServices.GetMemosAsync(product.Id, product.GetType().Name, page, 10);
             var viewModel = new Administration.Presenters.Dtos.HistoryViewModel
             {
@@ -387,6 +388,27 @@ namespace Product.Presenters
             };
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var product = await _productServices.GetByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            if (await _productServices.DeleteAsync(product, Messages))
+            {
+                Messages.AddSuccess("Product deleted");
+            }
+            else
+            {
+                Messages.AddError("Cannot delete product");
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Infrastructure.Services.Common
             _tenantProvider = tenantProvider;
         }
 
+        // TODO: use messages?
         public async Task<bool> SaveAsync<TEntity>(TEntity entity, Messages messages) where TEntity : BaseTenantEntity
         {
             var visited = new EntityVisitTree();
@@ -34,10 +35,13 @@ namespace Infrastructure.Services.Common
             return true;
         }
 
+        // TODO: use messages?
         public async Task<bool> DeleteAsync<TEntity>(TEntity entity, Messages messages) where TEntity : BaseTenantEntity
         {
-            entity.IsDeleted = true;
-            entity.DeletedOn = DateTime.Now;
+            var visited = new EntityVisitTree();
+            visited.Add<TEntity>(entity);
+
+            DeleteInternal<TEntity>(entity, true, visited);
 
             await _repository.SaveAsync();
             return true;
@@ -181,6 +185,32 @@ namespace Infrastructure.Services.Common
                 {
                     _repository.Add<TEntity>(entity);
                 }
+            }
+        }
+
+        private void DeleteInternal<TEntity>(TEntity entity, bool modifyRepo, EntityVisitTree visited) where TEntity : BaseTenantEntity
+        {
+            var method = typeof(EntityServices).GetMethod(nameof(DeleteInternal), BindingFlags.NonPublic | BindingFlags.Instance);
+
+            foreach (var collection in GetCollectionProperties<TEntity>(entity))
+            {
+                var generic = method.MakeGenericMethod(new Type[] { collection[0].GetType() });
+                foreach (BaseTenantEntity childValue in collection)
+                {
+                    if (!visited.IsVisited<BaseTenantEntity>(childValue))
+                    {
+                        visited.Add<BaseTenantEntity>(childValue);
+                        generic.Invoke(this, new[] { childValue, (object)false, visited });
+                    }
+                }
+            }
+
+            entity.IsDeleted = true;
+            entity.DeletedOn = Time.Now;
+
+            if (modifyRepo)
+            {
+                _repository.Update<TEntity>(entity);
             }
         }
 

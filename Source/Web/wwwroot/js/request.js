@@ -55,6 +55,7 @@
         var data = getNewRequestData(0);
 
         if (data.length === 0) {
+            $.notify("Въведи заявено количество");
             return;
         }
 

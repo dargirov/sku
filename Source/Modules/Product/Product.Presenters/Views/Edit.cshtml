@@ -94,7 +94,7 @@
                                     <div class="form-split">
                                         <div class="form-split-32">
                                             <label for="variant-price-net-@i">@Localizer["Price Net"]</label>
-                                            <div class="form-split">
+                                            <div class="form-split form-split-row">
                                                 <select name="Variants[0].PriceNetType" class="variant-price-net-type form-control auto-width no-border-right @readOnlyClass" data-val-required="@Localizer["Price net currency is required"]">
                                                     @(variant.PriceNetType == Product.Entities.CurrencyTypeEnum.BGN ? Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.BGN}\" selected=\"selected\">BGN</option>") : Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.BGN}\">BGN</option>"))
                                                     @(variant.PriceNetType == Product.Entities.CurrencyTypeEnum.EUR ? Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.EUR}\" selected=\"selected\">EUR</option>") : Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.EUR}\">EUR</option>"))
@@ -105,7 +105,7 @@
                                         </div>
                                         <div class="form-split-32">
                                             <label for="variant-price-net-vat-@i">@Localizer["Price Gross"]</label>
-                                            <div class="form-split">
+                                            <div class="form-split form-split-row">
                                                 <select name="Variants[0].PriceGrossType" class="variant-price-gross-type form-control auto-width no-border-right readonly">
                                                     @(variant.PriceNetType == Product.Entities.CurrencyTypeEnum.BGN ? Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.BGN}\" selected=\"selected\">BGN</option>") : Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.BGN}\">BGN</option>"))
                                                     @(variant.PriceNetType == Product.Entities.CurrencyTypeEnum.EUR ? Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.EUR}\" selected=\"selected\">EUR</option>") : Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.EUR}\">EUR</option>"))
@@ -116,7 +116,7 @@
                                         </div>
                                         <div class="form-split-32">
                                             <label for="variant-price-customer-@i">@Localizer["Price Customer"]</label>
-                                            <div class="form-split">
+                                            <div class="form-split form-split-row">
                                                 <select name="Variants[0].PriceCustomerType" class="variant-price-customer-type form-control auto-width no-border-right @readOnlyClass" data-val-required="@Localizer["Price net currency is required"]">
                                                     @(variant.PriceCustomerType == Product.Entities.CurrencyTypeEnum.BGN ? Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.BGN}\" selected=\"selected\">BGN</option>") : Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.BGN}\">BGN</option>"))
                                                     @(variant.PriceCustomerType == Product.Entities.CurrencyTypeEnum.EUR ? Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.EUR}\" selected=\"selected\">EUR</option>") : Html.Raw($"<option value=\"{(int)Product.Entities.CurrencyTypeEnum.EUR}\">EUR</option>"))
@@ -130,9 +130,11 @@
                                     <ul>
                                         @foreach (var store in Model.Stores)
                                         {
+                                            var storeColor = !string.IsNullOrEmpty(store.Color) ? store.Color : "none";
                                             var stock = variant.Stocks.FirstOrDefault(x => x.StoreId == store.Id);
-                                            <li>
-                                                <input type="checkbox" @(stock != null ? "checked=\"checked\"" : "") class="store-toggle @readOnlyClass" data-store-id="@store.Id"> @store.Name
+                                            var lowQuantityAlertClass = stock?.Quantity < stock?.LowQuantity ? "form-control-alert" : string.Empty;
+                                            <li class="space-bottom">
+                                                <input type="checkbox" @(stock != null ? "checked=\"checked\"" : "") class="store-toggle no-margin @readOnlyClass" data-store-id="@store.Id"> <i class="fas fa-home" style="color: @storeColor"></i> <span class="bold" style="color: @storeColor">@store.Name</span>
                                                 <div class="@(stock != null ? "" : "hidden") stock-data">
                                                     <input type="hidden" name="Variants[0].Stocks[0].Id" value="@(stock?.Id ?? 0)" class="stock-stock-id">
                                                     <input type="hidden" name="Variants[0].Stocks[0].StoreId" value="@store?.Id" class="stock-store-id">
@@ -140,7 +142,7 @@
                                                         <div class="form-split-49">
                                                             <label for="variant-@i-stock-@store.Id-quantity">@Localizer["Quantity"]</label>
                                                             <div class="form-split">
-                                                                <select name="Variants[0].Stocks[0].QuantityMeasureType" class="stock-quantity-measure-type form-control auto-width no-border-right @readOnlyClass" data-val-required="@Localizer["Quantity measure type is required"]" readonly="@isReadOnly">
+                                                                <select name="Variants[0].Stocks[0].QuantityMeasureType" class="stock-quantity-measure-type form-control auto-width no-border-right @lowQuantityAlertClass @readOnlyClass" data-val-required="@Localizer["Quantity measure type is required"]" readonly="@isReadOnly" style="border-color: @storeColor">
                                                                     <!option value="@((int)Product.Entities.MeasureTypeEnum.Quantity)" @(stock?.QuantityMeasureType == Product.Entities.MeasureTypeEnum.Quantity ? "selected=selected" : "")>@Localizer["qty"]</!option>
                                                                     <!option value="@((int)Product.Entities.MeasureTypeEnum.Gram)" @(stock?.QuantityMeasureType == Product.Entities.MeasureTypeEnum.Gram ? "selected=selected" : "")>@Localizer["gram"]</!option>
                                                                     <!option value="@((int)Product.Entities.MeasureTypeEnum.Kilogram)" @(stock?.QuantityMeasureType == Product.Entities.MeasureTypeEnum.Kilogram ? "selected=selected" : "")>@Localizer["kilogram"]</!option>
@@ -148,13 +150,13 @@
                                                                     <!option value="@((int)Product.Entities.MeasureTypeEnum.Quadrate)" @(stock?.QuantityMeasureType == Product.Entities.MeasureTypeEnum.Quadrate ? "selected=selected" : "")>@Localizer["quadrate"]</!option>
                                                                     <!option value="@((int)Product.Entities.MeasureTypeEnum.Meter)" @(stock?.QuantityMeasureType == Product.Entities.MeasureTypeEnum.Meter ? "selected=selected" : "")>@Localizer["meter"]</!option>
                                                                 </select>
-                                                                <input type="number" name="Variants[0].Stocks[0].Quantity" id="variant-@i-stock-@store.Id-quantity" value="@stock?.Quantity" class="stock-quantity allow-zero-value form-control no-border-left @readOnlyClass" data-val-required="@Localizer["Quantity is required"]" readonly="@isReadOnly">
+                                                                <input type="number" name="Variants[0].Stocks[0].Quantity" id="variant-@i-stock-@store.Id-quantity" value="@stock?.Quantity" class="stock-quantity allow-zero-value form-control no-border-left @lowQuantityAlertClass @readOnlyClass" data-val-required="@Localizer["Quantity is required"]" readonly="@isReadOnly" style="border-color: @storeColor">
                                                             </div>
                                                         </div>
                                                         <div class="form-split-49">
                                                             <label for="variant-@i-stock-@store.Id-low-quantity">@Localizer["Low Quantity"]</label>
                                                             <div class="form-split">
-                                                                <select name="Variants[0].Stocks[0].LowQuantityMeasureType" class="stock-low-quantity-measure-type form-control auto-width no-border-right @readOnlyClass" data-val-required="@Localizer["Low quantity measure type is required"]" readonly="@isReadOnly">
+                                                                <select name="Variants[0].Stocks[0].LowQuantityMeasureType" class="stock-low-quantity-measure-type form-control auto-width no-border-right @readOnlyClass" data-val-required="@Localizer["Low quantity measure type is required"]" readonly="@isReadOnly" style="border-color: @storeColor">
                                                                     <!option value="@((int)Product.Entities.MeasureTypeEnum.Quantity)" @(stock?.LowQuantityMeasureType == Product.Entities.MeasureTypeEnum.Quantity ? "selected=selected" : "")>@Localizer["qty"]</!option>
                                                                     <!option value="@((int)Product.Entities.MeasureTypeEnum.Gram)" @(stock?.LowQuantityMeasureType == Product.Entities.MeasureTypeEnum.Gram ? "selected=selected" : "")>@Localizer["gram"]</!option>
                                                                     <!option value="@((int)Product.Entities.MeasureTypeEnum.Kilogram)" @(stock?.LowQuantityMeasureType == Product.Entities.MeasureTypeEnum.Kilogram ? "selected=selected" : "")>@Localizer["kilogram"]</!option>
@@ -162,7 +164,7 @@
                                                                     <!option value="@((int)Product.Entities.MeasureTypeEnum.Quadrate)" @(stock?.LowQuantityMeasureType == Product.Entities.MeasureTypeEnum.Quadrate ? "selected=selected" : "")>@Localizer["quadrate"]</!option>
                                                                     <!option value="@((int)Product.Entities.MeasureTypeEnum.Meter)" @(stock?.LowQuantityMeasureType == Product.Entities.MeasureTypeEnum.Meter ? "selected=selected" : "")>@Localizer["meter"]</!option>
                                                                 </select>
-                                                                <input type="number" name="Variants[0].Stocks[0].LowQuantity" id="variant-@i-stock-@store.Id-low-quantity" value="@stock?.LowQuantity" class="stock-low-quantity allow-zero-value form-control no-border-left @readOnlyClass" data-val-required="@Localizer["Low quantity is required"]" readonly="@isReadOnly">
+                                                                <input type="number" name="Variants[0].Stocks[0].LowQuantity" id="variant-@i-stock-@store.Id-low-quantity" value="@stock?.LowQuantity" class="stock-low-quantity allow-zero-value form-control no-border-left @readOnlyClass" data-val-required="@Localizer["Low quantity is required"]" readonly="@isReadOnly" style="border-color: @storeColor">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -182,7 +184,7 @@
                                 <div class="form-split">
                                     <div class="form-split-32">
                                         <label for="variant-price-net-0">@Localizer["Price Net"]</label>
-                                        <div class="form-split">
+                                        <div class="form-split form-split-row">
                                             <select name="Variants[0].PriceNetType" class="variant-price-net-type form-control auto-width no-border-right" data-val-required="@Localizer["Price net currency is required"]">
                                                 <option value="@((int)Product.Entities.CurrencyTypeEnum.BGN)">BGN</option>
                                                 <option value="@((int)Product.Entities.CurrencyTypeEnum.EUR)">EUR</option>
@@ -193,7 +195,7 @@
                                     </div>
                                     <div class="form-split-32">
                                         <label for="variant-price-net-vat-0">@Localizer["Price Gross"]</label>
-                                        <div class="form-split">
+                                        <div class="form-split form-split-row">
                                             <select name="Variants[0].PriceGrossType" class="variant-price-gross-type form-control auto-width no-border-right readonly">
                                                 <option value="@((int)Product.Entities.CurrencyTypeEnum.BGN)">BGN</option>
                                                 <option value="@((int)Product.Entities.CurrencyTypeEnum.EUR)">EUR</option>
@@ -204,7 +206,7 @@
                                     </div>
                                     <div class="form-split-32">
                                         <label for="variant-price-customer-0">@Localizer["Price Customer"]</label>
-                                        <div class="form-split">
+                                        <div class="form-split form-split-row">
                                             <select name="Variants[0].PriceCustomerType" class="variant-price-customer-type form-control auto-width no-border-right" data-val-required="@Localizer["Price net currency is required"]">
                                                 <option value="@((int)Product.Entities.CurrencyTypeEnum.BGN)">BGN</option>
                                                 <option value="@((int)Product.Entities.CurrencyTypeEnum.EUR)">EUR</option>
@@ -218,15 +220,16 @@
                                 <ul>
                                     @foreach (var store in Model.Stores)
                                     {
-                                        <li>
-                                            <input type="checkbox" class="store-toggle" data-store-id="@store.Id"> @store.Name
+                                        var storeColor = !string.IsNullOrEmpty(store.Color) ? store.Color : "none";
+                                        <li class="space-bottom">
+                                            <input type="checkbox" class="store-toggle no-margin" data-store-id="@store.Id"> <i class="fas fa-home" style="color: @storeColor"></i> <span class="bold" style="color: @storeColor">@store.Name</span>
                                             <div class="hidden stock-data">
                                                 <input type="hidden" name="Variants[0].Stocks[0].StoreId" value="@store.Id" class="stock-store-id">
                                                 <div class="form-split">
                                                     <div class="form-split-49">
                                                         <label for="variant-0-stock-@store.Id-quantity">@Localizer["Quantity"]</label>
                                                         <div class="form-split">
-                                                            <select name="Variants[0].Stocks[0].QuantityMeasureType" class="stock-quantity-measure-type form-control auto-width no-border-right" data-val-required="@Localizer["Quantity measure type is required"]">
+                                                            <select name="Variants[0].Stocks[0].QuantityMeasureType" class="stock-quantity-measure-type form-control auto-width no-border-right" data-val-required="@Localizer["Quantity measure type is required"]" style="border-color: @storeColor">
                                                                 <option value="@((int)Product.Entities.MeasureTypeEnum.Quantity)">@Localizer["qty"]</option>
                                                                 <option value="@((int)Product.Entities.MeasureTypeEnum.Gram)">@Localizer["gram"]</option>
                                                                 <option value="@((int)Product.Entities.MeasureTypeEnum.Kilogram)">@Localizer["kilogram"]</option>
@@ -234,13 +237,13 @@
                                                                 <option value="@((int)Product.Entities.MeasureTypeEnum.Quadrate)">@Localizer["quadrate"]</option>
                                                                 <option value="@((int)Product.Entities.MeasureTypeEnum.Meter)">@Localizer["meter"]</option>
                                                             </select>
-                                                            <input type="number" name="Variants[0].Stocks[0].Quantity" id="variant-0-stock-@store.Id-quantity" class="stock-quantity allow-zero-value form-control no-border-left" data-val-required="@Localizer["Quantity is required"]">
+                                                            <input type="number" name="Variants[0].Stocks[0].Quantity" id="variant-0-stock-@store.Id-quantity" class="stock-quantity allow-zero-value form-control no-border-left" data-val-required="@Localizer["Quantity is required"]" style="border-color: @storeColor">
                                                         </div>
                                                     </div>
                                                     <div class="form-split-49">
                                                         <label for="variant-0-stock-@store.Id-low-quantity">@Localizer["Low Quantity"]</label>
                                                         <div class="form-split">
-                                                            <select name="Variants[0].Stocks[0].LowQuantityMeasureType" class="stock-low-quantity-measure-type form-control auto-width no-border-right" data-val-required="@Localizer["Low quantity measure type is required"]">
+                                                            <select name="Variants[0].Stocks[0].LowQuantityMeasureType" class="stock-low-quantity-measure-type form-control auto-width no-border-right" data-val-required="@Localizer["Low quantity measure type is required"]" style="border-color: @storeColor">
                                                                 <option value="@((int)Product.Entities.MeasureTypeEnum.Quantity)">@Localizer["qty"]</option>
                                                                 <option value="@((int)Product.Entities.MeasureTypeEnum.Gram)">@Localizer["gram"]</option>
                                                                 <option value="@((int)Product.Entities.MeasureTypeEnum.Kilogram)">@Localizer["kilogram"]</option>
@@ -248,7 +251,7 @@
                                                                 <option value="@((int)Product.Entities.MeasureTypeEnum.Quadrate)">@Localizer["quadrate"]</option>
                                                                 <option value="@((int)Product.Entities.MeasureTypeEnum.Meter)">@Localizer["meter"]</option>
                                                             </select>
-                                                            <input type="number" name="Variants[0].Stocks[0].LowQuantity" id="variant-0-stock-@store.Id-low-quantity" class="stock-low-quantity allow-zero-value form-control no-border-left" data-val-required="@Localizer["Low Quantity is required"]">
+                                                            <input type="number" name="Variants[0].Stocks[0].LowQuantity" id="variant-0-stock-@store.Id-low-quantity" class="stock-low-quantity allow-zero-value form-control no-border-left" data-val-required="@Localizer["Low Quantity is required"]" style="border-color: @storeColor">
                                                         </div>
                                                     </div>
                                                 </div>

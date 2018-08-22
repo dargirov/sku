@@ -16,6 +16,7 @@
         <li><a asp-action="edit" asp-route-id="@Model.Id">@Localizer["Info"]</a></li>
         <li class="active"><a asp-action="pictures" asp-route-id="@Model.Id">@Localizer["Pictures"] (@Model.Pictures.Count())</a></li>
         <li><a asp-action="priority" asp-route-id="@Model.Id">@Localizer["Priority"]</a></li>
+        <li><a asp-action="history" asp-route-id="@Model.Id">@Localizer["History"]</a></li>
     </ul>
 
     @Html.Partial("_StatusPartial")

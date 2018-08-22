@@ -27,6 +27,7 @@
         <li class="active"><a asp-action="edit" asp-route-id="@Model.Id">@Localizer["Info"]</a></li>
         @if (Model.IsSaved)
         {
+            <li><a asp-action="config" asp-route-id="@Model.Id">@Localizer["Config"]</a></li>
             <li><a asp-action="history" asp-route-id="@Model.Id">@Localizer["History"]</a></li>
         }
     </ul>

@@ -65,33 +65,34 @@
                 }
             </ul>
         </div>
-        <div id="new-requests-modal" class="hidden">
-            <form>
-                <div>
-                    <label for="new-requests-modal-select-request" class="label">Добави към заявка</label>
-                    <select id="new-requests-modal-select-request" class="form-control">
-                        <option value="0">@Localizer["Create new request"]</option>
-                        @foreach (var newRequest in Model.NewRequests)
-                        {
-                            <option value="@newRequest.Id">@newRequest.CreatedOn</option>
-                        }
-                    </select>
-                </div>
-                <div>
-                    <label for="new-requests-modal-select-store" class="label">Заяви за склад</label>
-                    <select id="new-requests-modal-select-store" class="form-control">
-                        @foreach (var store in Model.SearchCriteria.Stores.Where(x => x.Value != "0"))
-                        {
-                            <option value="@store.Value">@store.Text</option>
-                        }
-                    </select>
-                </div>
-                <div>
-                    <input type="button" value="@Localizer["Add"]" id="new-requests-modal-add" class="btn-primary">
-                </div>
-            </form>
-        </div>
     }
+
+    <div id="new-requests-modal" class="hidden">
+        <form>
+            <div>
+                <label for="new-requests-modal-select-request" class="label">Добави към заявка</label>
+                <select id="new-requests-modal-select-request" class="form-control">
+                    <option value="0">@Localizer["Create new request"]</option>
+                    @foreach (var newRequest in Model.NewRequests)
+                    {
+                        <option value="@newRequest.Id">@newRequest.CreatedOn</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label for="new-requests-modal-select-store" class="label">Заяви за склад</label>
+                <select id="new-requests-modal-select-store" class="form-control">
+                    @foreach (var store in Model.SearchCriteria.Stores.Where(x => x.Value != "0"))
+                    {
+                        <option value="@store.Value">@store.Text</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <input type="button" value="@Localizer["Add"]" id="new-requests-modal-add" class="btn-primary">
+            </div>
+        </form>
+    </div>
 
     <div id="search-result">
         <div>
@@ -160,12 +161,11 @@
                 </tr>
             </tfoot>
         </table>
-        <div>
     </div>
 
     <div id="search-results-actions">
         @Html.AntiForgeryToken()
-        <input type="button" value="Request" data-url="@Url.Action("Index")" id="request-create" class="btn-primary">
+        <input type="button" value="Request" data-url="@Url.Action("IndexRequest")" id="request-create" class="btn-primary">
     </div>
 
 </section>

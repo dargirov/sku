@@ -152,6 +152,46 @@ namespace Store.Presenters
             return View(viewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Config(int id)
+        {
+            var store = await _storeServices.GetByIdAsync(id);
+            if (store == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = Mapper.Map<ConfigViewModel>(store);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Config(ConfigRequestModel model)
+        {
+            var store = await _storeServices.GetByIdAsync(model.Id);
+            if (model.Id > 0 && store == null)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.GetErrors().ForEach(x => Messages.AddWarning(x));
+            }
+            else
+            {
+                store.Color = !string.IsNullOrWhiteSpace(model.Color) ? model.Color : null;
+                if (await _storeServices.EditAsync(store, Messages))
+                {
+                    Messages.AddSuccess("Store Edited");
+                }
+            }
+
+            return RedirectToAction(nameof(Config), new { id = store?.Id });
+        }
+
         public async Task<IActionResult> Delete(int id)
         {
             var store = await _storeServices.GetByIdAsync(id);

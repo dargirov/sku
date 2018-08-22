@@ -143,10 +143,10 @@
     </div>
 
     <div id="home-widgets">
-        @await WidgetProvider.Get("LowQuantityProducts", Component, new { page = Context.Request.Query["lowquantitypage"].FirstOrDefault(), limit = 10 })
-        @await WidgetProvider.Get("LatestProducts", Component, new { page = Context.Request.Query["latestpage"].FirstOrDefault(), limit = 10 })
-        @await WidgetProvider.Get("Todos", Component)
         @await WidgetProvider.Get("PendingRequests", Component, new { page = Context.Request.Query["pendingrequestpage"].FirstOrDefault(), limit = 10 })
+        @await WidgetProvider.Get("LowQuantityProducts", Component, new { page = Context.Request.Query["lowquantitypage"].FirstOrDefault(), limit = 10 })
+        @await WidgetProvider.Get("Todos", Component)
+        @await WidgetProvider.Get("LatestProducts", Component, new { page = Context.Request.Query["latestpage"].FirstOrDefault(), limit = 10 })
     </div>
 
 </section>

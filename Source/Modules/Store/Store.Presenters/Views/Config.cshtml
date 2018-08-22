@@ -1,0 +1,60 @@
+﻿@model Store.Presenters.Dtos.ConfigViewModel
+@{
+    ViewData["Title"] = "Config Store";
+}
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Administration.Bll
+
+@inject IViewLocalizer Localizer
+@inject IAuthorizationServices AuthorizationServices
+
+@{
+    var modulePrivileges = await AuthorizationServices.GetModulePrivileges();
+    var isReadOnly = !modulePrivileges.StoreWrite;
+    var readOnlyClass = modulePrivileges.StoreWrite ? string.Empty : "readonly";
+}
+
+@Html.Partial("_MenuPartial")
+
+<section id="module-content">
+
+    @*@await Component.InvokeAsync("Breadcrumb", new { controller = "Supplier", id = Model.Id })*@
+
+    <ul class="tabs">
+        <li><a asp-action="edit" asp-route-id="@Model.Id">@Localizer["Info"]</a></li>
+        <li class="active"><a asp-action="config" asp-route-id="@Model.Id">@Localizer["Config"]</a></li>
+        <li><a asp-action="history" asp-route-id="@Model.Id">@Localizer["History"]</a></li>
+    </ul>
+
+    <div asp-validation-summary="All"></div>
+
+    @Html.Partial("_StatusPartial")
+
+    <div class="content-box">
+
+        <form method="post" asp-controller="store" asp-action="config" class="main-form validate">
+            <div class="form-split">
+                <div class="padding-right">
+                    <label asp-for="Color">@Localizer["Color"]</label>
+                    <input asp-for="Color" type="color" class="@readOnlyClass" readonly="@isReadOnly">
+                </div>
+                <div>
+                </div>
+            </div>
+            <input asp-for="Id">
+            @if (!isReadOnly)
+            {
+                <input type="submit" class="hidden">
+            }
+
+            <input type="reset" class="hidden">
+        </form>
+
+    </div>
+
+</section>
+
+@section footer {
+    @await Component.InvokeAsync("FooterActions", new { controller = "Store", id = Model.Id, showEdit = true, showDelete = false, showReset = true })
+}

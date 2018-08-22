@@ -2,6 +2,7 @@
 using Administration.Presenters;
 using Infrastructure.Services.Common;
 using Manufacturer.Bll;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Product.Bll;
 using Product.Entities;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace Request.Presenters
 {
+    [Authorize(Policy = "LoggedIn")]
     public class RequestController : BaseController
     {
         private readonly IProductServices _productServices;
@@ -41,7 +43,6 @@ namespace Request.Presenters
             _gridServices = gridServices;
         }
 
-        [HttpGet]
         public async Task<IActionResult> Index(IndexRequestModel model)
         {
             var pageSize = await _gridServices.UpdateAndGetPageSizeAsync("RequestIndex", model.PageSize, Messages);
@@ -100,7 +101,7 @@ namespace Request.Presenters
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index([FromBody]IndexCreateRequestModel model)
+        public async Task<IActionResult> IndexRequest([FromBody]IndexCreateRequestModel model)
         {
             if (!IsAjax())
             {

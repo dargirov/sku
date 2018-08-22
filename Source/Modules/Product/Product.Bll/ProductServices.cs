@@ -502,6 +502,12 @@ namespace Product.Bll
 
                     foreach (var stock in variant.Stocks)
                     {
+                        // TODO: remove this and fix query above!!!
+                        if (stock.Store.Name != "Централен склад")
+                        {
+                            continue;
+                        }
+
                         var productDto = new Dtos.Api.ProductDto
                         {
                             Name = product.Name,

@@ -122,13 +122,13 @@ body > main {
 
 body > nav {
     background-color: #525157;
-    filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF525157', endColorstr='#FF343336');
+    /*filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF525157', endColorstr='#FF343336');
     background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgi…pZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
     background-size: 100%;
     background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #525157), color-stop(100%, #343336));
     background-image: -moz-linear-gradient(top, #525157 0%, #343336 100%);
     background-image: -webkit-linear-gradient(top, #525157 0%, #343336 100%);
-    background-image: linear-gradient(to bottom, #525157 0%, #343336 100%);
+    background-image: linear-gradient(to bottom, #525157 0%, #343336 100%);*/
 }
 
 body > nav > ul {
@@ -158,13 +158,13 @@ body > nav a {
 
 body > nav a:hover {
     background-color: #39393d;
-    filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF39393D', endColorstr='#FF242426');
+    /*filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FF39393D', endColorstr='#FF242426');
     background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgi…pZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
     background-size: 100%;
     background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #39393d), color-stop(100%, #242426));
     background-image: -moz-linear-gradient(top, #39393d 0%, #242426 100%);
     background-image: -webkit-linear-gradient(top, #39393d 0%, #242426 100%);
-    background-image: linear-gradient(to bottom, #39393d 0%, #242426 100%);
+    background-image: linear-gradient(to bottom, #39393d 0%, #242426 100%);*/
     color: #FFF;
 }
 
@@ -370,6 +370,10 @@ textarea.form-control {
     height: 101px;
 }
 
+.form-control-alert {
+    background-color: #f7dfb5 !important;
+}
+
 form select {
     height: 27px;
     border-style: none;
@@ -493,8 +497,12 @@ form select {
     width: 100%;
 }
 
-.variant-data:hover {
-    background-color: #ebebec;
+.variant-data {
+    border-bottom: 1px solid #333;
+}
+
+.variant-data:last-of-type {
+    border-bottom: 0;
 }
 
 #search-criteria {
@@ -1356,6 +1364,18 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     margin-top: 20px;
 }
 
+.space-bottom {
+    margin-bottom: 20px;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.bold {
+    font-weight: bold;
+}
+
 @media all and (max-width: 516px) {
     body > header > div {
         padding: 0 20px;
@@ -1503,5 +1523,13 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     .widget {
         width: 100%;
         padding: 20px 0;
+    }
+
+    .form-split-32 {
+        width: 100% !important;
+    }
+
+    .form-split-row {
+        flex-direction: row;
     }
 }
