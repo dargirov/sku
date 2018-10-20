@@ -193,14 +193,6 @@ namespace Store.Bll
 
         public async Task<bool> DeleteAsync(Entities.Store store, Messages messages)
         {
-            foreach (var plugin in _container.GetAllInstances<IStoreEntityPlugin>())
-            {
-                if (!await plugin.OnDelete(store, messages))
-                {
-                    return false;
-                }
-            }
-
             return await _entityServices.DeleteAsync<Entities.Store>(store, messages);
         }
 

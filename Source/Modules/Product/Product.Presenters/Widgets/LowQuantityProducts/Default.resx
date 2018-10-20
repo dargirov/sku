@@ -101,6 +101,9 @@
     <data name="Name" xml:space="preserve">
         <value>Име</value>
     </data>
+    <data name="Variant" xml:space="preserve">
+        <value>Вариант</value>
+    </data>
     <data name="Store" xml:space="preserve">
         <value>Склад</value>
     </data>
@@ -112,5 +115,8 @@
     </data>
     <data name="Low Quantity Products" xml:space="preserve">
         <value>Продукти с малко количество</value>
+    </data>
+    <data name="Date" xml:space="preserve">
+        <value>Дата</value>
     </data>
 </root>

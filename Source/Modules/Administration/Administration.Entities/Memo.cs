@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Data.Common;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Administration.Entities
 {
@@ -27,5 +28,10 @@ namespace Administration.Entities
         public string NewValue { get; set; }
 
         public DateTime? ChangedOn { get; set; }
+
+        public int ChangedById { get; set; }
+
+        [NotMapped]
+        public string ChangedByName { get; set; }
     }
 }

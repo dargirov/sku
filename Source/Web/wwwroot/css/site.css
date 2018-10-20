@@ -794,7 +794,7 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     color: black;
 }
 
-.variant-price-net, .variant-price-customer, .stock-quantity, .stock-low-quantity {
+.variant-price-net, .variant-price-customer, .stock-quantity, .stock-low-quantity, .variant-price-gross {
     text-align: right;
 }
 
@@ -1204,6 +1204,10 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     color: #333;
 }
 
+.widget ul {
+    list-style-type: none;
+}
+
 #todo-list {
     list-style-position: inside;
     font-family: Arial;
@@ -1374,6 +1378,19 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
 
 .bold {
     font-weight: bold;
+}
+
+.widget-heading-col {
+    background-color: #f3f3f3;
+}
+
+.widget-heading-col ul {
+    display: flex;
+}
+
+.widget-heading-col li {
+    list-style-type: none;
+    margin-right: 10px;
 }
 
 @media all and (max-width: 516px) {

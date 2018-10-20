@@ -221,7 +221,7 @@ namespace Request.Presenters
             }
 
             var memos = await _memoServices.GetMemosAsync(request.Id, request.GetType().Name, 1, 10);
-            var viewModel = new HistoryViewModel()
+            var viewModel = new Administration.Presenters.Dtos.HistoryViewModel()
             {
                 Id = request.Id,
                 Memos = memos

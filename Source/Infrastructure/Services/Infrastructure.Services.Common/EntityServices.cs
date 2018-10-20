@@ -2,6 +2,7 @@
 using Infrastructure.Data.Common;
 using Infrastructure.Database.Repository;
 using Infrastructure.Services.Multitenancy;
+using StructureMap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,15 @@ namespace Infrastructure.Services.Common
     {
         private readonly IRepository _repository;
         private readonly ITenantProvider _tenantProvider;
+        private readonly ICacheServices _cacheServices;
+        private readonly IContainer _container;
 
-        public EntityServices(IRepository repository, ITenantProvider tenantProvider)
+        public EntityServices(IRepository repository, ITenantProvider tenantProvider, ICacheServices cacheServices, IContainer container)
         {
             _repository = repository;
             _tenantProvider = tenantProvider;
+            _cacheServices = cacheServices;
+            _container = container;
         }
 
         // TODO: use messages?
@@ -27,23 +32,44 @@ namespace Infrastructure.Services.Common
             var visited = new EntityVisitTree();
             visited.Add<TEntity>(entity);
 
-            SaveMemoInternal<TEntity>(entity);
+            using (var transaction = await _repository.BeginTransactionAsync())
+            {
+                SaveMemoInternal<TEntity>(entity);
 
-            SaveInternal<TEntity>(entity, true, visited);
+                var saveError = new OperationResult();
+                await SaveInternal<TEntity>(entity, true, visited, messages, saveError);
+                if (saveError.HasError)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
 
-            await _repository.SaveAsync();
+                await _repository.SaveAsync();
+                transaction.Commit();
+            }
+
             return true;
         }
 
-        // TODO: use messages?
         public async Task<bool> DeleteAsync<TEntity>(TEntity entity, Messages messages) where TEntity : BaseTenantEntity
         {
             var visited = new EntityVisitTree();
             visited.Add<TEntity>(entity);
 
-            DeleteInternal<TEntity>(entity, true, visited);
+            using (var transaction = await _repository.BeginTransactionAsync())
+            {
+                var deleteError = new OperationResult();
+                await DeleteInternal<TEntity>(entity, true, visited, messages, deleteError);
+                if (deleteError.HasError)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
 
-            await _repository.SaveAsync();
+                await _repository.SaveAsync();
+                transaction.Commit();
+            }
+
             return true;
         }
 
@@ -66,6 +92,7 @@ namespace Infrastructure.Services.Common
             var now = Time.Now;
             var baseEntityId = entity.Id;
             var baseEntityName = entity.GetType().Name;
+            var changedById = _cacheServices.Get<int>("user_id");
 
             WalkTree(tree);
 
@@ -85,7 +112,8 @@ namespace Infrastructure.Services.Common
                         Property = entityChange.Property,
                         CreatedOn = now,
                         Version = 1,
-                        TenantId = _tenantProvider.GetTenantId()
+                        TenantId = _tenantProvider.GetTenantId(),
+                        ChangedById = changedById
                     };
 
                     _repository.Add(memo);
@@ -134,7 +162,7 @@ namespace Infrastructure.Services.Common
             }
         }
 
-        private void SaveInternal<TEntity>(TEntity entity, bool modifyRepo, EntityVisitTree visited) where TEntity : BaseTenantEntity
+        private async Task SaveInternal<TEntity>(TEntity entity, bool modifyRepo, EntityVisitTree visited, Messages messages, OperationResult operationResult) where TEntity : BaseTenantEntity
         {
             var method = typeof(EntityServices).GetMethod(nameof(SaveInternal), BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -144,7 +172,7 @@ namespace Infrastructure.Services.Common
                 if (!visited.IsVisited<BaseTenantEntity>(property))
                 {
                     visited.Add<BaseTenantEntity>(property);
-                    generic.Invoke(this, new[] { property, (object)false, visited });
+                    generic.Invoke(this, new[] { property, (object)false, visited, messages, operationResult });
                 }
             }
 
@@ -157,7 +185,7 @@ namespace Infrastructure.Services.Common
                     if (!childValue.IsSaved || (!visited.IsVisited<BaseTenantEntity>(childValue)))
                     {
                         visited.Add<BaseTenantEntity>(childValue);
-                        generic.Invoke(this, new[] { childValue, (object)false, visited });
+                        generic.Invoke(this, new[] { childValue, (object)false, visited, messages, operationResult });
                     }
                 }
             }
@@ -165,6 +193,14 @@ namespace Infrastructure.Services.Common
             if (entity.IsSaved && !_repository.HasEntityChanges<BaseTenantEntity>(entity))
             {
                 return;
+            }
+
+            foreach (var plugin in _container.GetAllInstances<IEntityServicePlugin<TEntity>>())
+            {
+                if (!await plugin.OnSave(entity, messages))
+                {
+                    operationResult.AddError();
+                }
             }
 
             entity.Version++;
@@ -188,7 +224,7 @@ namespace Infrastructure.Services.Common
             }
         }
 
-        private void DeleteInternal<TEntity>(TEntity entity, bool modifyRepo, EntityVisitTree visited) where TEntity : BaseTenantEntity
+        private async Task DeleteInternal<TEntity>(TEntity entity, bool modifyRepo, EntityVisitTree visited, Messages messages, OperationResult operationResult) where TEntity : BaseTenantEntity
         {
             var method = typeof(EntityServices).GetMethod(nameof(DeleteInternal), BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -200,8 +236,16 @@ namespace Infrastructure.Services.Common
                     if (!visited.IsVisited<BaseTenantEntity>(childValue))
                     {
                         visited.Add<BaseTenantEntity>(childValue);
-                        generic.Invoke(this, new[] { childValue, (object)false, visited });
+                        generic.Invoke(this, new[] { childValue, (object)false, visited, messages, operationResult });
                     }
+                }
+            }
+
+            foreach (var plugin in _container.GetAllInstances<IEntityServicePlugin<TEntity>>())
+            {
+                if (!await plugin.OnDelete(entity, messages))
+                {
+                    operationResult.AddError();
                 }
             }
 
@@ -278,6 +322,12 @@ namespace Infrastructure.Services.Common
                 var type = entity.GetType();
                 return $"{type.Name} - {type.GUID} - {entity.Id}";
             }
+        }
+
+        private class OperationResult
+        {
+            public bool HasError { get; private set; }
+            public void AddError() => HasError = true;
         }
     }
 }

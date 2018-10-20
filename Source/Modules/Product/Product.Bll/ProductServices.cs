@@ -315,14 +315,6 @@ namespace Product.Bll
 
         public async Task<bool> DeleteCategoryAsync(Entities.ProductCategory productCategory, Messages messages)
         {
-            foreach (var plugin in _container.GetAllInstances<IProductCategoryEntityPlugin>())
-            {
-                if (!await plugin.OnDelete(productCategory, messages))
-                {
-                    return false;
-                }
-            }
-
             return await _entityServices.DeleteAsync<Entities.ProductCategory>(productCategory, messages);
         }
 

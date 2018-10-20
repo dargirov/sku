@@ -1,4 +1,5 @@
 ﻿using Administration.Bll;
+using Infrastructure.Services.Common;
 using StructureMap;
 
 namespace Store.Bll
@@ -7,10 +8,8 @@ namespace Store.Bll
     {
         public static void RegisterServices(Container container)
         {
-            container.Configure(x => x.For<IUserEntityPlugin>().Add<UserEntityPlugin>().Named("StoreUserEntityPlugin"));
-
+            container.Configure(x => x.For<IEntityServicePlugin<Administration.Entities.User>>().Add<UserEntityServicePlugin>());
             container.Configure(x => x.For<IConfigOptionProvider>().Add<ConfigOptionProvider>().Named("StoreConfigOptionProvider"));
-
             container.Configure(x => x.For<IStoreServices>().Use<StoreServices>());
         }
     }

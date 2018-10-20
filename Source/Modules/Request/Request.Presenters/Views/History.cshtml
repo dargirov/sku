@@ -1,4 +1,4 @@
-﻿@model Request.Presenters.Dtos.HistoryViewModel
+﻿@model Administration.Presenters.Dtos.HistoryViewModel
 @{
     ViewData["Title"] = "View Request History";
 }
@@ -31,29 +31,30 @@
     @Html.Partial("_StatusPartial")
 
     <div class="content-box">
-        <table class="grid">
-            <thead>
-                <tr>
-                    <th>@Localizer["Entity name"]</th>
-                    <th>@Localizer["Property"]</th>
-                    <th>@Localizer["Old value"]</th>
-                    <th>@Localizer["New value"]</th>
-                    <th>@Localizer["Changed on"]</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var memo in Model.Memos.memos)
-                {
+        @*<table class="grid">
+                <thead>
                     <tr>
-                        <td>@memo.EntityName</td>
-                        <td>@memo.Property</td>
-                        <td>@memo.OldValue</td>
-                        <td>@memo.NewValue</td>
-                        <td>@memo.ChangedOn</td>
+                        <th>@Localizer["Entity name"]</th>
+                        <th>@Localizer["Property"]</th>
+                        <th>@Localizer["Old value"]</th>
+                        <th>@Localizer["New value"]</th>
+                        <th>@Localizer["Changed on"]</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var memo in Model.Memos.memos)
+                    {
+                        <tr>
+                            <td>@memo.EntityName</td>
+                            <td>@memo.Property</td>
+                            <td>@memo.OldValue</td>
+                            <td>@memo.NewValue</td>
+                            <td>@memo.ChangedOn</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>*@
+        @Html.Partial("_History")
 
     </div>
 

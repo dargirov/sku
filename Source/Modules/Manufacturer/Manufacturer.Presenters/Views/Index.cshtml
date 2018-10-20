@@ -17,7 +17,7 @@
             <h2>@Localizer["Manufacturer Search"]</h2>
         </div>
         <div>
-            <form method="post" asp-controller="manufacturer" asp-action="index">
+            <form method="get" asp-controller="manufacturer" asp-action="index">
                 <div>
                     <label asp-for="SearchCriteria.Name">@Localizer["Name"]</label>
                     <input asp-for="SearchCriteria.Name">

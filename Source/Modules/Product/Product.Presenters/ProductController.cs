@@ -74,9 +74,9 @@ namespace Product.Presenters
                 SearchCriteria = new IndexSearchCriteria()
                 {
                     Stores = stores.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),
-                    Categories = categories.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),
-                    Manufacturers = manufacturers.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),
-                    Suppliers = suppliers.ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true)
+                    Categories = categories.OrderBy(x => x.Name).ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),
+                    Manufacturers = manufacturers.OrderBy(x => x.Name).ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true),
+                    Suppliers = suppliers.OrderBy(x => x.Name).ToSelectList(x => x.Id.ToString(), x => x.Name, string.Empty, true)
                 }
             };
 
@@ -96,9 +96,9 @@ namespace Product.Presenters
                 return View(new EditViewModel()
                 {
                     Stores = stores,
-                    Categories = categories.ToSelectList(c => c.Id.ToString(), c => c.Name, string.Empty, false),
-                    Manufacturers = manufacturers.ToSelectList(c => c.Id.ToString(), c => c.Name, string.Empty, false),
-                    Suppliers = suppliers.ToSelectList(s => s.Id.ToString(), s => s.Name, string.Empty, true)
+                    Categories = categories.OrderBy(x => x.Name).ToSelectList(c => c.Id.ToString(), c => c.Name, string.Empty, false),
+                    Manufacturers = manufacturers.OrderBy(x => x.Name).ToSelectList(c => c.Id.ToString(), c => c.Name, string.Empty, false),
+                    Suppliers = suppliers.OrderBy(x => x.Name).ToSelectList(s => s.Id.ToString(), s => s.Name, string.Empty, true)
                 });
             }
 
@@ -112,9 +112,9 @@ namespace Product.Presenters
             var viewModel = Mapper.Map<EditViewModel>(product);
 
             viewModel.Stores = stores;
-            viewModel.Categories = categories.ToSelectList(c => c.Id.ToString(), c => c.Name, viewModel.CategoryId, false);
-            viewModel.Manufacturers = manufacturers.ToSelectList(s => s.Id.ToString(), s => s.Name, viewModel.SupplierId, false);
-            viewModel.Suppliers = suppliers.ToSelectList(s => s.Id.ToString(), s => s.Name, viewModel.SupplierId, true);
+            viewModel.Categories = categories.OrderBy(x => x.Name).ToSelectList(c => c.Id.ToString(), c => c.Name, viewModel.CategoryId, false);
+            viewModel.Manufacturers = manufacturers.OrderBy(x => x.Name).ToSelectList(s => s.Id.ToString(), s => s.Name, viewModel.SupplierId, false);
+            viewModel.Suppliers = suppliers.OrderBy(x => x.Name).ToSelectList(s => s.Id.ToString(), s => s.Name, viewModel.SupplierId, true);
 
             return View(viewModel);
         }

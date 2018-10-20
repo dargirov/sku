@@ -1,17 +1,17 @@
 ﻿using Infrastructure.Data.Common;
 using Infrastructure.Database.Repository;
+using Infrastructure.Services.Common;
 using Microsoft.EntityFrameworkCore;
-using Store.Bll;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Product.Bll
 {
-    public class StoreEntityPlugin : IStoreEntityPlugin
+    public class StoreEntityServicePlugin : IEntityServicePlugin<Store.Entities.Store>
     {
         private readonly IRepository _repository;
 
-        public StoreEntityPlugin(IRepository repository)
+        public StoreEntityServicePlugin(IRepository repository)
         {
             _repository = repository;
         }

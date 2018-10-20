@@ -17,7 +17,7 @@
             <h2>@Localizer["Product Search"]</h2>
         </div>
         <div>
-            <form method="post" asp-controller="product" asp-action="index">
+            <form method="get" asp-controller="product" asp-action="index">
                 <div>
                     <label asp-for="SearchCriteria.Name">@Localizer["Name"]</label>
                     <input asp-for="SearchCriteria.Name">
@@ -81,13 +81,13 @@
                                 <img src="@Url.Action("Index", "ContentServer", new { id = product.Pictures.FirstOrDefault()?.Thumb.Guid, area = string.Empty })">
                             }
                         </td>
-                        <td><a asp-area="sku" asp-controller="product" asp-action="edit" asp-route-id="@product.Id">@product.Name</a></td>
+                        <td><a asp-controller="product" asp-action="edit" asp-route-id="@product.Id">@product.Name</a></td>
                         <td>@product.Category.Name</td>
                         <td>@product.Manufacturer.Name</td>
                         <td>@((product.ModifiedOn ?? product.CreatedOn).ToString("dd.MM.yyyy"))</td>
                         <td>
                             <ul class="product-table-quantity">
-                                @foreach (var stock in product.Variants.SelectMany(x => x.Stocks))
+                                @foreach (var stock in product.Variants.SelectMany(x => x.Stocks).OrderByDescending(x => x.Store.Name))
                                 {
                                     <li>
                                         @stock.Store.Name

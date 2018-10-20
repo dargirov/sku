@@ -82,14 +82,6 @@ namespace Supplier.Bll
 
         public async Task<bool> DeleteAsync(Entities.Supplier supplier, Messages messages)
         {
-            foreach (var plugin in _container.GetAllInstances<ISupplierEntityPlugin>())
-            {
-                if (!await plugin.OnDelete(supplier, messages))
-                {
-                    return false;
-                }
-            }
-
             return await _entityServices.DeleteAsync<Entities.Supplier>(supplier, messages);
         }
     }

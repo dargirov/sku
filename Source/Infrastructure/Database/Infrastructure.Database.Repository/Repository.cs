@@ -95,6 +95,11 @@ namespace Infrastructure.Database.Repository
                 {
                     yield return GetResult(property.Name, originalValue, currentValue);
                 }
+
+                //if (entry.State == EntityState.Added)
+                //{
+                //    yield return GetResult(property.Name, null, currentValue);
+                //}
             }
 
             (string name, string original, string current) GetResult(string name, object originalObject, object currentObject)

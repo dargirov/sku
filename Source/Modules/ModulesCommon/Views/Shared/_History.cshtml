@@ -7,6 +7,7 @@
 <table class="grid">
     <thead>
         <tr>
+            <th>@Localizer["Changed by"]</th>
             <th>@Localizer["Entity name"]</th>
             <th>@Localizer["Property"]</th>
             <th>@Localizer["Old value"]</th>
@@ -18,6 +19,7 @@
         @foreach (var memo in Model.Memos.memos)
         {
             <tr>
+                <td>@memo.ChangedByName</td>
                 <td>@memo.EntityName</td>
                 <td>@memo.Property</td>
                 <td>@memo.OldValue</td>
@@ -28,7 +30,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="5">
+            <td colspan="6">
                 <div class="table-footer-wrapper">
                     <div>Показани @Model.Memos.pageData.ResultsFrom до @Model.Memos.pageData.ResultsTo от @Model.Memos.pageData.TotalResults разултата</div>
                     <div>

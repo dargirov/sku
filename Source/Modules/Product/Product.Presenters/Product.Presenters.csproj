@@ -20,6 +20,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Update="Widgets\LowQuantityProducts\Default.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Default.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
       <EmbeddedResource Update="Resources\Edit.bg.resx">
         <Generator>ResXFileCodeGenerator</Generator>
       </EmbeddedResource>

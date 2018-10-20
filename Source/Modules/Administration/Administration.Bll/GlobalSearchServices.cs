@@ -20,7 +20,7 @@ namespace Administration.Bll
 
             foreach (var plugin in _container.GetAllInstances<IGlobalSearchResult>())
             {
-                result.AddRange(await plugin.GetResults(search));
+                result.AddRange(await plugin.GetResults(search.Trim()));
             }
 
             return result;

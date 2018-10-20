@@ -1,5 +1,4 @@
-﻿using Administration.Bll;
-using Administration.Entities;
+﻿using Administration.Entities;
 using Infrastructure.Data.Common;
 using Infrastructure.Database.Repository;
 using Infrastructure.Services.Common;
@@ -7,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Store.Bll
+namespace Product.Bll
 {
-    public class UserEntityPlugin : IUserEntityPlugin
+    public class UserEntityServicePlugin : IEntityServicePlugin<Administration.Entities.User>
     {
         private readonly IRepository _repository;
         private readonly IEntityServices _entityServices;
 
-        public UserEntityPlugin(IRepository repository, IEntityServices entityServices)
+        public UserEntityServicePlugin(IRepository repository, IEntityServices entityServices)
         {
             _repository = repository;
             _entityServices = entityServices;
@@ -22,18 +21,23 @@ namespace Store.Bll
 
         public async Task<bool> OnDelete(User user, Messages messages)
         {
-            var storePrivileges = await _repository.GetQueryable<Entities.StorePrivilege>()
+            var productPriorities = await _repository.GetQueryable<Entities.ProductPriority>()
                 .Where(x => x.User == user)
                 .ToListAsync();
 
-            foreach (var storePrivilege in storePrivileges)
+            foreach (var productPriority in productPriorities)
             {
-                if (!await _entityServices.DeleteAsync<Entities.StorePrivilege>(storePrivilege, messages))
+                if (!await _entityServices.DeleteAsync<Entities.ProductPriority>(productPriority, messages))
                 {
                     return false;
                 }
             }
 
+            return true;
+        }
+
+        public async Task<bool> OnSave(User entity, Messages messages)
+        {
             return true;
         }
     }

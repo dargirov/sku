@@ -22,7 +22,17 @@ namespace Administration.Bll
                 .Where(x => x.BaseEntityId == entityId && x.BaseEntityName == entityName)
                 .OrderByDescending(x => x.ChangedOn);
 
-            return await query.ToListWithPageData(page, pageSize);
+            var memoData = await query.ToListWithPageData(page, pageSize);
+            var userNames = _repository.GetQueryable<Entities.User>()
+                .Where(x => memoData.results.Select(y => y.ChangedById).Contains(x.Id))
+                .ToDictionary(x => x.Id, x => x.Name);
+
+            foreach (var memo in memoData.results)
+            {
+                memo.ChangedByName = memo.ChangedById > 0 ? userNames[memo.ChangedById] : string.Empty;
+            }
+
+            return memoData;
         }
     }
 }

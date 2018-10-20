@@ -1,4 +1,7 @@
-﻿namespace Product.Presenters.Widgets.LowQuantityProducts
+﻿using System;
+using System.Collections.Generic;
+
+namespace Product.Presenters.Widgets.LowQuantityProducts
 {
     public class ProductDto
     {
@@ -6,10 +9,14 @@
 
         public string Name { get; set; }
 
-        public string StoreName { get; set; }
+        public IEnumerable<string> VariantNames { get; set; }
 
-        public int Quantity { get; set; }
+        public IEnumerable<string> StoreNames { get; set; }
 
-        public int LowQuantity { get; set; }
+        public IEnumerable<int> Quantities { get; set; }
+
+        public IEnumerable<int> LowQuantities { get; set; }
+
+        public IEnumerable<DateTime?> Dates { get; set; }
     }
 }

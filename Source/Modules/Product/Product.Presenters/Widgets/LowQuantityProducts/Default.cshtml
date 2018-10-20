@@ -3,32 +3,82 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 
-<div class="widget">
+<div class="widget" style="width: 100%;">
     <strong>@Localizer["Low Quantity Products"]</strong>
     <div>
         <table id="low-quantity-products-list" class="grid">
             <thead>
                 <tr>
                     <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Variant"]</th>
                     <th>@Localizer["Store"]</th>
                     <th>@Localizer["Quantity"]</th>
                     <th>@Localizer["Low Quantity"]</th>
+                    <th>@Localizer["Date"]</th>
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td colspan="6" class="widget-heading-col">
+                        <ul>
+                            @foreach (var store in Model.Stores)
+                            {
+                                var isChecked = store.Checked ? " checked=\"checked\"" : string.Empty;
+                                <li><label><input type="checkbox" value="@store.Id" @isChecked>@store.Name</label></li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
                 @foreach (var product in Model.Products)
                 {
                     <tr>
                         <td><a asp-controller="product" asp-action="edit" asp-route-id="@product.Id">@product.Name</a></td>
-                        <td>@product.StoreName</td>
-                        <td class="text-alert">@product.Quantity</td>
-                        <td>@product.LowQuantity</td>
+                        <td>
+                            <ul>
+                                @foreach (var variantName in product.VariantNames)
+                                {
+                                    <li>@variantName</li>
+                                }
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                @foreach (var storeName in @product.StoreNames)
+                                {
+                                    <li>@storeName</li>
+                                }
+                            </ul>
+                        </td>
+                        <td class="text-alert">
+                            <ul>
+                                @foreach (var quantity in @product.Quantities)
+                                {
+                                    <li>@quantity</li>
+                                }
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                @foreach (var lowQuantity in @product.LowQuantities)
+                                {
+                                    <li>@lowQuantity</li>
+                                }
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                @foreach (var date in @product.Dates)
+                                {
+                                    <li>@(date?.ToString() ?? "-")</li>
+                                }
+                            </ul>
+                        </td>
                     </tr>
                 }
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4">
+                    <td colspan="6">
                         <div class="table-footer-wrapper">
                             <div></div>
                             <div>
@@ -36,7 +86,8 @@
                                     @for (int i = 1; i <= Model.PageData.TotalPages; i++)
                                     {
                                         var current = i == Model.PageData.Page ? "current" : string.Empty;
-                                        <li><a href="?lowquantitypage=@i" class="@current">@i</a></li>
+                                        var stores = string.Join(",", Model.Stores.Where(x => x.Checked).Select(x => x.Id));
+                                        <li><a href="?lowquantitypage=@i&amp;lowquantitystores=@stores" class="@current">@i</a></li>
                                     }
                                 </ul>
                             </div>

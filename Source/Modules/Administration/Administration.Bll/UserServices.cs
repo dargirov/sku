@@ -81,14 +81,6 @@ namespace Administration.Bll
         {
             using (var transaction = await _repository.BeginTransactionAsync())
             {
-                foreach (var plugin in _container.GetAllInstances<IUserEntityPlugin>())
-                {
-                    if (!await plugin.OnDelete(user, messages))
-                    {
-                        return false;
-                    }
-                }
-
                 var modulePrivilegeCount = await _repository.GetQueryable<User>().Where(x => x.ModulePrivilege.Id == user.ModulePrivilege.Id).CountAsync();
                 if (modulePrivilegeCount == 1)
                 {

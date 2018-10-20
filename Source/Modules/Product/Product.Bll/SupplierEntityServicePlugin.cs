@@ -1,36 +1,36 @@
 ﻿using Infrastructure.Data.Common;
 using Infrastructure.Database.Repository;
+using Infrastructure.Services.Common;
 using Microsoft.EntityFrameworkCore;
-using Product.Entities;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Product.Bll
 {
-    public class ProductCategoryEntityPlugin : IProductCategoryEntityPlugin
+    public class SupplierEntityServicePlugin : IEntityServicePlugin<Supplier.Entities.Supplier>
     {
         private readonly IRepository _repository;
 
-        public ProductCategoryEntityPlugin(IRepository repository)
+        public SupplierEntityServicePlugin(IRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<bool> OnDelete(ProductCategory productCategory, Messages messages)
+        public async Task<bool> OnDelete(Supplier.Entities.Supplier supplier, Messages messages)
         {
             var hasProducts = await _repository.GetQueryable<Entities.Product>()
-                .Where(x => x.Category == productCategory)
+                .Where(x => x.Supplier == supplier)
                 .AnyAsync();
 
             if (hasProducts)
             {
-                messages.AddError("Cant delete category. It has products");
+                messages.AddError("Cant delete supplier. It has products");
             }
 
             return !hasProducts;
         }
 
-        public async Task<bool> OnSave(ProductCategory productCategory, Messages messages)
+        public async Task<bool> OnSave(Supplier.Entities.Supplier supplier, Messages messages)
         {
             return true;
         }

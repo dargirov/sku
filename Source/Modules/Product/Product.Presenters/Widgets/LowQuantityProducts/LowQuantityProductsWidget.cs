@@ -1,5 +1,5 @@
 ﻿using Administration.Bll;
-using Infrastructure.Data.Common;
+using Administration.Entities;
 using Infrastructure.Database.Repository;
 using Infrastructure.Utils;
 using Microsoft.AspNetCore.Mvc;
@@ -24,12 +24,16 @@ namespace Product.Presenters.Widgets.LowQuantityProducts
 
         public string Name => nameof(LowQuantityProductsWidget);
 
-        public async Task<IViewComponentResult> InvokeAsync(string page, int limit)
+        public async Task<IViewComponentResult> InvokeAsync(string page, int limit, string checkedStoreIdsAsString)
         {
             int currentPage = Parse.TryParseInt(page) ?? 1;
 
+            var checkedStoreIds = checkedStoreIdsAsString?.Split(",").Select(x => Parse.TryParseInt(x) ?? 0).Where(x => x > 0).ToList() ?? Enumerable.Empty<int>();
+
             var stores = await _storeServices.GetStoreListWithReadPrivilegeAsync();
-            var storeIds = stores.Select(x => x.Id);
+            var storeIds = checkedStoreIds.Any()
+                ? stores.Select(x => x.Id).Intersect(checkedStoreIds)
+                : stores.Select(x => x.Id);
 
             var productIds = await _repository.GetQueryable<Entities.Product>()
                 .Where(x => x.Variants.Any(v => v.Stocks.Any(s => storeIds.Contains(s.StoreId) && s.Quantity < s.LowQuantity)))
@@ -38,27 +42,40 @@ namespace Product.Presenters.Widgets.LowQuantityProducts
 
             var products = await _repository.GetQueryable<Entities.Product>()
                 .Include(x => x.Variants)
-                .ThenInclude(x => x.Stocks).ThenInclude(x => x.Store)
+                .ThenInclude(x => x.Stocks)
+                .ThenInclude(x => x.Store)
                 .Where(x => productIds.Contains(x.Id))
                 .Skip((currentPage - 1) * limit)
                 .Take(limit)
                 .ToListAsync();
 
-            //var pageCount = (int)Math.Ceiling((decimal)productIds.Count / limit);
-
             var productDtos = new List<ProductDto>();
 
             foreach (var product in products)
             {
-                var stock = product.Variants.First(v => v.Stocks.Any(s => storeIds.Contains(s.StoreId) && s.Quantity < s.LowQuantity)).Stocks.First(s => s.Quantity < s.LowQuantity);
+                var stocks = product.Variants
+                    .Where(v => v.Stocks.Any(s => storeIds.Contains(s.StoreId) && s.Quantity < s.LowQuantity))
+                    .SelectMany(x => x.Stocks.Where(s => s.Quantity < s.LowQuantity))
+                    .Where(x => storeIds.Contains(x.StoreId))
+                    .OrderBy(x => x.Id);
+
+                var memos = await _repository.GetQueryable<Memo>()
+                    .Where(x => x.BaseEntityId == product.Id
+                        && x.BaseEntityName == nameof(Entities.Product)
+                        && stocks.Select(s => s.Id).Contains(x.EntityId)
+                        && x.EntityName == nameof(Entities.ProductStock))
+                    .OrderBy(x => x.EntityId)
+                    .ToListAsync();
 
                 var dto = new ProductDto()
                 {
                     Id = product.Id,
                     Name = product.Name,
-                    StoreName = stores.FirstOrDefault(x => x.Id == stock.StoreId)?.Name,
-                    Quantity = stock.Quantity,
-                    LowQuantity = stock.LowQuantity
+                    StoreNames = stocks.Select(x => x.Store.Name),
+                    VariantNames = stocks.Select(x => x.Variant.Code),
+                    Quantities = stocks.Select(x => x.Quantity),
+                    LowQuantities = stocks.Select(x => x.LowQuantity),
+                    Dates = stocks.Select(x => memos.FirstOrDefault(m => m.EntityId == x.Id)?.CreatedOn)
                 };
 
                 productDtos.Add(dto);
@@ -66,8 +83,9 @@ namespace Product.Presenters.Widgets.LowQuantityProducts
 
             var viewModel = new ViewModel()
             {
+                Stores = stores.Select(x => new StoreDto() { Id = x.Id, Name = x.Name, Checked = !checkedStoreIds.Any() || checkedStoreIds.Contains(x.Id) }),
                 Products = productDtos,
-                PageData = new PageData(productIds.Count, currentPage, limit)
+                PageData = new Infrastructure.Data.Common.PageData(productIds.Count, currentPage, limit)
             };
 
             return View(viewModel);

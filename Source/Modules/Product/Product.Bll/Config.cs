@@ -1,4 +1,5 @@
 ﻿using Administration.Bll;
+using Infrastructure.Services.Common;
 using Manufacturer.Bll;
 using Store.Bll;
 using StructureMap;
@@ -11,11 +12,12 @@ namespace Product.Bll
         public static void RegisterServices(Container container)
         {
             // entity plugins
-            container.Configure(x => x.For<IStoreEntityPlugin>().Add<StoreEntityPlugin>().Named("ProductStoreEntityPlugin"));
-            container.Configure(x => x.For<IManufacturerEntityPlugin>().Add<ManufacturerEntityPlugin>().Named("ProductManufacturerEntityPlugin"));
-            container.Configure(x => x.For<ISupplierEntityPlugin>().Add<SupplierEntityPlugin>().Named("ProductSupplierEntityPlugin"));
-            container.Configure(x => x.For<IProductCategoryEntityPlugin>().Add<ProductCategoryEntityPlugin>().Named("ProductProductCategoryEntityPlugin"));
-            container.Configure(x => x.For<IUserEntityPlugin>().Add<UserEntityPlugin>().Named("ProductUserEntityPlugin"));
+            container.Configure(x => x.For<IEntityServicePlugin<Store.Entities.Store>>().Add<StoreEntityServicePlugin>());
+            container.Configure(x => x.For<IEntityServicePlugin<Manufacturer.Entities.Manufacturer>>().Add<ManufacturerEntityServicePlugin>());
+            container.Configure(x => x.For<IEntityServicePlugin<Supplier.Entities.Supplier>>().Add<SupplierEntityServicePlugin>());
+            container.Configure(x => x.For<IEntityServicePlugin<Entities.ProductCategory>>().Add<ProductCategoryEntityServicePlugin>());
+            container.Configure(x => x.For<IEntityServicePlugin<Administration.Entities.User>>().Add<UserEntityServicePlugin>());
+            container.Configure(x => x.For<IEntityServicePlugin<Entities.Product>>().Add<ProductEntityServicePlugin>());
 
             container.Configure(x => x.For<INotificationPlugin>().Add<ProductNotificationPlugin>().Named("ProductNotificationPlugin"));
 
