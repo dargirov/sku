@@ -42,6 +42,8 @@ namespace Product.Presenters.Dtos
 
         public IEnumerable<Entities.ProductPicture> Pictures { get; set; }
 
+        public bool HideMainInfo { get; set; }
+
         //public IEnumerable<Entities.StorePrivilege> StorePrivileges { get; set; }
     }
 }

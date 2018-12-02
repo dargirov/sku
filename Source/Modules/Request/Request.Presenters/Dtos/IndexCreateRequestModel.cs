@@ -9,9 +9,8 @@ namespace Request.Presenters.Dtos
         [Required]
         public IEnumerable<StockRequestDto> StockRequests { get; set; }
 
-        [Required]
-        public int RequestId { get; set; }
+        public int? RequestId { get; set; }
 
-        public bool CreateNewRequest => RequestId == 0;
+        public bool CreateNewRequest => RequestId == null || RequestId == 0;
     }
 }

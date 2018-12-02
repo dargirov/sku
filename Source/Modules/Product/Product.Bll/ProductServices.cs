@@ -27,9 +27,10 @@ namespace Product.Bll
         private readonly IManufacturerServices _manufacturerServices;
         private readonly ICountryServices _countryServices;
         private readonly IConfigServices _configServices;
+        private readonly IAuthenticationServices _authenticationServices;
         private IMapper Mapper => AutoMapperConfig.Mapper;
 
-        public ProductServices(IContainer container, IRepository repository, IEntityServices entityServices, IStoreServices storeServices, IManufacturerServices manufacturerServices, ICountryServices countryServices, IConfigServices configServices)
+        public ProductServices(IContainer container, IRepository repository, IEntityServices entityServices, IStoreServices storeServices, IManufacturerServices manufacturerServices, ICountryServices countryServices, IConfigServices configServices, IAuthenticationServices authenticationServices)
         {
             _container = container;
             _repository = repository;
@@ -38,6 +39,7 @@ namespace Product.Bll
             _manufacturerServices = manufacturerServices;
             _countryServices = countryServices;
             _configServices = configServices;
+            _authenticationServices = authenticationServices;
         }
 
         public async Task<Entities.Product> GetByIdAsync(int id)
@@ -446,6 +448,22 @@ namespace Product.Bll
         public async Task<IEnumerable<Dtos.Api.ProductDto>> GetByOrganization(string organizationHash)
         {
             return await GetByOrganizationAndVariantCodeInternalAsync(organizationHash, null);
+        }
+
+        public async Task<Entities.ProductSettings> GetSettingsAsync()
+        {
+            var user = await _authenticationServices.GetCurrentUserAsync();
+
+            return await _repository.GetQueryable<Entities.ProductSettings>()
+                .FirstOrDefaultAsync(x => x.User == user);
+        }
+
+        public async Task<bool> EditSettingsAsync(Entities.ProductSettings settings, Messages messages)
+        {
+            var user = await _authenticationServices.GetCurrentUserAsync();
+            settings.User = user;
+
+            return await _entityServices.SaveAsync<Entities.ProductSettings>(settings, messages);
         }
 
         private async Task<IEnumerable<Dtos.Api.ProductDto>> GetByOrganizationAndVariantCodeInternalAsync(string organizationHash, string code)

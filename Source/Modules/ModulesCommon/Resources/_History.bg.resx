@@ -98,16 +98,22 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-  <data name="Info" xml:space="preserve">
-    <value>Информация</value>
-  </data>
-  <data name="Pictures" xml:space="preserve">
-    <value>Снимки</value>
-  </data>
-  <data name="Priority" xml:space="preserve">
-    <value>Приоритет</value>
-  </data>
-  <data name="History" xml:space="preserve">
-    <value>История</value>
-  </data>
+    <data name="Changed by" xml:space="preserve">
+        <value>Промяна от</value>
+    </data>
+    <data name="Entity name" xml:space="preserve">
+        <value>Ентити</value>
+    </data>
+    <data name="Property" xml:space="preserve">
+        <value>Поле</value>
+    </data>
+    <data name="Old value" xml:space="preserve">
+        <value>Стара стойност</value>
+    </data>
+    <data name="New value" xml:space="preserve">
+        <value>Нова стойност</value>
+    </data>
+    <data name="Changed on" xml:space="preserve">
+        <value>Променено на</value>
+    </data>
 </root>

@@ -26,27 +26,21 @@ namespace Infrastructure.Services.Common
             _container = container;
         }
 
-        // TODO: use messages?
         public async Task<bool> SaveAsync<TEntity>(TEntity entity, Messages messages) where TEntity : BaseTenantEntity
         {
             var visited = new EntityVisitTree();
             visited.Add<TEntity>(entity);
 
-            using (var transaction = await _repository.BeginTransactionAsync())
+            SaveMemoInternal<TEntity>(entity);
+
+            var saveError = new OperationResult();
+            await SaveInternal<TEntity>(entity, true, visited, messages, saveError);
+            if (saveError.HasError)
             {
-                SaveMemoInternal<TEntity>(entity);
-
-                var saveError = new OperationResult();
-                await SaveInternal<TEntity>(entity, true, visited, messages, saveError);
-                if (saveError.HasError)
-                {
-                    transaction.Rollback();
-                    return false;
-                }
-
-                await _repository.SaveAsync();
-                transaction.Commit();
+                return false;
             }
+
+            await _repository.SaveAsync();
 
             return true;
         }
@@ -56,19 +50,14 @@ namespace Infrastructure.Services.Common
             var visited = new EntityVisitTree();
             visited.Add<TEntity>(entity);
 
-            using (var transaction = await _repository.BeginTransactionAsync())
+            var deleteError = new OperationResult();
+            await DeleteInternal<TEntity>(entity, true, visited, messages, deleteError);
+            if (deleteError.HasError)
             {
-                var deleteError = new OperationResult();
-                await DeleteInternal<TEntity>(entity, true, visited, messages, deleteError);
-                if (deleteError.HasError)
-                {
-                    transaction.Rollback();
-                    return false;
-                }
-
-                await _repository.SaveAsync();
-                transaction.Commit();
+                return false;
             }
+
+            await _repository.SaveAsync();
 
             return true;
         }

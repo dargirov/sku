@@ -38,21 +38,24 @@
             <div class="form-split">
                 <div class="padding-right">
                     <h3>@Localizer["Product description"]</h3>
+                    @{ 
+                        var hiddenInfoClass = Model.HideMainInfo ? "hidden" : string.Empty;
+                    }
 
                     <label asp-for="Name">@Localizer["Name"]</label>
                     <input asp-for="Name" class="form-control @readOnlyClass" readonly="@isReadOnly">
 
-                    <label asp-for="CategoryId">@Localizer["Category"]</label>
-                    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control @readOnlyClass"></select>
+                    <label asp-for="CategoryId" class="@hiddenInfoClass">@Localizer["Category"]</label>
+                    <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control @readOnlyClass @hiddenInfoClass"></select>
 
-                    <label asp-for="ManufacturerId">@Localizer["Manufacturer"]</label>
-                    <select asp-for="ManufacturerId" asp-items="Model.Manufacturers" class="form-control @readOnlyClass"></select>
+                    <label asp-for="ManufacturerId" class="@hiddenInfoClass">@Localizer["Manufacturer"]</label>
+                    <select asp-for="ManufacturerId" asp-items="Model.Manufacturers" class="form-control @readOnlyClass @hiddenInfoClass"></select>
 
-                    <label asp-for="SupplierId">@Localizer["Supplier"]</label>
-                    <select asp-for="SupplierId" asp-items="Model.Suppliers" class="form-control @readOnlyClass"></select>
+                    <label asp-for="SupplierId" class="@hiddenInfoClass">@Localizer["Supplier"]</label>
+                    <select asp-for="SupplierId" asp-items="Model.Suppliers" class="form-control @readOnlyClass @hiddenInfoClass"></select>
 
-                    <label asp-for="Warranty">@Localizer["Warranty"]</label>
-                    <input asp-for="Warranty" class="form-control @readOnlyClass" readonly="@isReadOnly">
+                    <label asp-for="Warranty" class="@hiddenInfoClass">@Localizer["Warranty"]</label>
+                    <input asp-for="Warranty" class="form-control @readOnlyClass @hiddenInfoClass" readonly="@isReadOnly">
 
                     @*<div>
                             @if (Model.Pictures != null && Model.Pictures.Any())
@@ -66,11 +69,11 @@
                                 </ul>
                             }
                         </div>*@
-                    <label for="file-select">@Localizer["Upload picture"]</label>
-                    <input type="file" name="FormFiles" class="form-control @readOnlyClass" id="file-select" readonly="@isReadOnly" multiple>
+                    <label for="file-select" class="@hiddenInfoClass">@Localizer["Upload picture"]</label>
+                    <input type="file" name="FormFiles" class="form-control @readOnlyClass @hiddenInfoClass" id="file-select" readonly="@isReadOnly" multiple>
 
-                    <label>@Localizer["Description"]</label>
-                    <textarea asp-for="Description" class="form-control @readOnlyClass" readonly="@isReadOnly"></textarea>
+                    <label class="@hiddenInfoClass">@Localizer["Description"]</label>
+                    <textarea asp-for="Description" class="form-control @readOnlyClass @hiddenInfoClass" readonly="@isReadOnly"></textarea>
 
                 </div>
                 <div>

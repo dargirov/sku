@@ -1,6 +1,20 @@
 ﻿$(document).ready(function () {
 
+    $(window).click(function () {
+        $('#search-results').hide();
+    });
+
+    $('#header-search-input').on('click', function (e) {
+        e.stopPropagation();
+        var $search = $('#search-results');
+        if ($search.html().length > 0) {
+            $search.show();
+        }
+    });
+
     $('#header-search-input').on('keyup', function (e) {
+        e.stopPropagation();
+        var $input = $(this);
         var text = $(this).val();
         var url = $(this).parent().data('url');
         var contentServerUrl = $(this).parent().data('content-server-url');
@@ -24,7 +38,7 @@
 
         var $search = $('#search-results');
 
-        if (text.length < 3) {
+        if (text.length < 2) {
             $search.hide().html('');
             return;
         }
@@ -35,10 +49,12 @@
                 var results = response.results;
 
                 if (count === 0) {
+                    $input.addClass('text-alert');
                     $search.hide().html('');
                     return;
                 }
 
+                $input.removeClass('text-alert');
                 var content = '<ul>';
 
                 for (var i = 0; i < results.length; i++) {

@@ -225,4 +225,7 @@
   <data name="Priority" xml:space="preserve">
     <value>Приоритет</value>
   </data>
+  <data name="History" xml:space="preserve">
+    <value>История</value>
+  </data>
 </root>

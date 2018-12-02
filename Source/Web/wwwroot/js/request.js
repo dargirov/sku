@@ -1,10 +1,10 @@
 ﻿$(document).ready(function () {
 
-    $('#new-requests-modal').iziModal({
-        title: 'Създаване на заявка',
-        width: 400,
-        headerColor: '#525157'
-    });
+    //$('#new-requests-modal').iziModal({
+    //    title: 'Създаване на заявка',
+    //    width: 400,
+    //    headerColor: '#525157'
+    //});
 
     $('.request-variant-select').on('change', requestVariantSelectChange);
     function requestVariantSelectChange(e) {
@@ -17,7 +17,7 @@
         $(this).parent().parent().find('.request-quantity-col').html(quantity);
     }
 
-    $('.request-store-select').on('change', requestStoreSelectChange);
+    $('.request-from-store-select').on('change', requestStoreSelectChange);
     function requestStoreSelectChange(e) {
         var quantity = $(this).find(':selected').data('quantity');
         $(this).parent().parent().find('.request-quantity-col').html(quantity);
@@ -30,17 +30,18 @@
             });
     }
 
-    function getNewRequestData(toStoreId) {
+    function getNewRequestData() {
         var data = [];
 
         $('#search-result-table').find('tbody > tr').each(function (index, element) {
             var quantity = parseInt($(element).find('.request-quantity-input').val());
             if (!isNaN(quantity) && quantity > 0) {
-                var stockId = parseInt($(element).find('.request-store-select option:selected').data('stock'));
-                var priority = parseInt($(element).find('.request-store-select option:selected').data('priority'));
-                var storeId = parseInt($(element).find('.request-store-select').val());
+                var stockId = parseInt($(element).find('.request-from-store-select option:selected').data('stock'));
+                var priority = parseInt($(element).find('.request-from-store-select option:selected').data('priority'));
+                var fromStoreId = parseInt($(element).find('.request-from-store-select').val());
+                var toStoreId = parseInt($(element).find('.request-to-store-select').val());
 
-                data.push({ stockId: stockId, fromStoreId: storeId, toStoreId: toStoreId === 0 ? storeId : toStoreId, quantity: quantity, priority: priority });
+                data.push({ stockId: stockId, fromStoreId: fromStoreId, toStoreId: toStoreId, quantity: quantity, priority: priority });
             }
         });
 
@@ -52,33 +53,41 @@
         e.preventDefault();
         var url = $(this).data('url');
         var token = $('body').find('input[name=__RequestVerificationToken]').val();
-        var data = getNewRequestData(0);
+        var data = getNewRequestData();
 
         if (data.length === 0) {
-            $.notify("Въведи заявено количество");
+            $.notify('Въведи заявено количество');
             return;
         }
 
-        if ($('#new-requests-modal').length === 0) {
-            requestAjax(url, { StockRequests: data, RequestId: 0 }, function (result) {
-                window.location.reload(true);
+        var requestId = sessionStorage.getItem('StockRequestId');
+
+        $.ajax({ method: 'POST', headers: { 'RequestVerificationToken': token }, contentType: 'application/json', url: url, data: JSON.stringify({ StockRequests: data, RequestId: requestId }) })
+            .done(function (result) {
+                console.log(result)
+                sessionStorage.setItem('StockRequestId', result);
             });
-            return;
-        }
 
-        $('#new-requests-modal').iziModal('open');
+        //if ($('#new-requests-modal').length === 0) {
+        //    requestAjax(url, { StockRequests: data, RequestId: 0 }, function (result) {
+        //        window.location.reload(true);
+        //    });
+        //    return;
+        //}
+
+        //$('#new-requests-modal').iziModal('open');
     }
 
-    $('#new-requests-modal-add').on('click', newRequestsModalAddClick);
-    function newRequestsModalAddClick(e) {
-        var url = $('#request-create').data('url');
-        var requestId = $('#new-requests-modal-select-request').val();
-        var storeId = $('#new-requests-modal-select-store').val();
-        var data = getNewRequestData(storeId);
+    //$('#new-requests-modal-add').on('click', newRequestsModalAddClick);
+    //function newRequestsModalAddClick(e) {
+    //    var url = $('#request-create').data('url');
+    //    var requestId = $('#new-requests-modal-select-request').val();
+    //    var storeId = $('#new-requests-modal-select-store').val();
+    //    var data = getNewRequestData(storeId);
 
-        requestAjax(url, { StockRequests: data, RequestId: requestId }, function (result) {
-            window.location.reload(true);
-        });
-    }
+    //    requestAjax(url, { StockRequests: data, RequestId: requestId }, function (result) {
+    //        window.location.reload(true);
+    //    });
+    //}
 
 });

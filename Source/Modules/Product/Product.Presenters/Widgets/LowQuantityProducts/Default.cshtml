@@ -69,7 +69,7 @@
                             <ul>
                                 @foreach (var date in @product.Dates)
                                 {
-                                    <li>@(date?.ToString() ?? "-")</li>
+                                    <li>@(date?.ToString("H:mm; dd.MM.yyyy") ?? "-")</li>
                                 }
                             </ul>
                         </td>

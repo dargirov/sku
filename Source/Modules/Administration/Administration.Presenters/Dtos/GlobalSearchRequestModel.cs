@@ -5,7 +5,7 @@ namespace Administration.Presenters.Dtos
     public class GlobalSearchRequestModel
     {
         [Required]
-        [MinLength(3)]
+        [MinLength(2)]
         public string SearchFor { get; set; }
     }
 }

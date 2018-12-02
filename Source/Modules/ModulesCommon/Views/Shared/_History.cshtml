@@ -24,7 +24,7 @@
                 <td>@memo.Property</td>
                 <td>@memo.OldValue</td>
                 <td>@memo.NewValue</td>
-                <td>@memo.ChangedOn</td>
+                <td>@(memo.ChangedOn?.ToString("H:mm; dd.MM.yyyy"))</td>
             </tr>
         }
     </tbody>

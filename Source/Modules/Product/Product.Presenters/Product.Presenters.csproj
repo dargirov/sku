@@ -34,6 +34,12 @@
       <EmbeddedResource Update="Resources\Index.bg.resx">
         <Generator>ResXFileCodeGenerator</Generator>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\History.bg.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Settings.bg.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+      </EmbeddedResource>
       <EmbeddedResource Update="Resources\Priority.bg.resx">
         <Generator>ResXFileCodeGenerator</Generator>
       </EmbeddedResource>

@@ -119,4 +119,7 @@
   <data name="User" xml:space="preserve">
     <value>Потребител</value>
   </data>
+  <data name="History" xml:space="preserve">
+    <value>История</value>
+  </data>
 </root>

@@ -123,8 +123,11 @@
     <data name="Name" xml:space="preserve">
         <value>Име на продукт</value>
     </data>
-    <data name="Store" xml:space="preserve">
-        <value>Склад</value>
+    <data name="From Store" xml:space="preserve">
+        <value>От склад</value>
+    </data>
+    <data name="To Store" xml:space="preserve">
+        <value>За склад</value>
     </data>
     <data name="Category" xml:space="preserve">
         <value>Категория</value>

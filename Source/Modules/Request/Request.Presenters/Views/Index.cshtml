@@ -49,7 +49,7 @@
             </form>
         </div>
         <div id="search-criteria-actions">
-            <a asp-controller="product" asp-action="index"><i class="fas fa-times"></i> @Localizer["Clear"]</a>
+            <a asp-controller="request" asp-action="index"><i class="fas fa-times"></i> @Localizer["Clear"]</a>
             <a href="#disabled" class="action-primary action-submit"><i class="fas fa-search"></i> @Localizer["Search"]</a>
         </div>
     </div>
@@ -67,7 +67,7 @@
         </div>
     }
 
-    <div id="new-requests-modal" class="hidden">
+    @*<div id="new-requests-modal" class="hidden">
         <form>
             <div>
                 <label for="new-requests-modal-select-request" class="label">Добави към заявка</label>
@@ -92,7 +92,7 @@
                 <input type="button" value="@Localizer["Add"]" id="new-requests-modal-add" class="btn-primary">
             </div>
         </form>
-    </div>
+    </div>*@
 
     <div id="search-result">
         <div>
@@ -105,7 +105,8 @@
                     <th>@Localizer["Picture"]</th>
                     <th>@Localizer["Name"]</th>
                     <th>@Localizer["Variant"]</th>
-                    <th>@Localizer["Store"]</th>
+                    <th>@Localizer["From Store"]</th>
+                    <th>@Localizer["To Store"]</th>
                     <th>@Localizer["Quantity"]</th>
                     <th>@Localizer["Request quantity"]</th>
                 </tr>
@@ -128,9 +129,9 @@
                             }
                         </td>
                         <td><a asp-controller="product" asp-action="edit" asp-route-id="@product.Id">@product.Name</a></td>
-                        <td><select asp-for="@variantId" asp-items="variantListItems" class="request-variant-select"></select></td>
+                        <td><select asp-for="@variantId" asp-items="variantListItems" class="request-variant-select max-width"></select></td>
                         <td>
-                            <select name="storeId" class="request-store-select">
+                            <select name="fromStoreId" class="request-from-store-select max-width">
                                 @foreach (var stock in product.Variants.SelectMany(x => x.Stocks))
                                 {
                                     var hidden = stock.VariantId == variantId ? string.Empty : "hidden";
@@ -143,6 +144,7 @@
                                 }
                             </select>
                         </td>
+                        <td><select name="toStoreId" asp-for="@Model.StoreId" asp-items="@Model.Stores" class="request-to-store-select max-width"></select></td>
                         <td class="request-quantity-col">@(product.Variants.SelectMany(v => v.Stocks).First(x => x.StoreId == storeId).Quantity)</td>
                         <td><input type="number" min="0" class="request-quantity-input input-small"></td>
                     </tr>
@@ -150,7 +152,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="7">
+                    <td colspan="8">
                         <div class="table-footer-wrapper">
                             <div>Показани @Model.Products.pageData.ResultsFrom до @Model.Products.pageData.ResultsTo от @Model.Products.pageData.TotalResults разултата</div>
                             <div>

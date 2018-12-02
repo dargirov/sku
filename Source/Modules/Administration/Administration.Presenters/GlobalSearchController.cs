@@ -23,7 +23,7 @@ namespace Administration.Presenters
                 return Json(new { });
             }
 
-            var results = await _globalSearchServices.GetResults(model.SearchFor);
+            var results = await _globalSearchServices.GetResults(model.SearchFor.Trim());
             var viewModel = new GlobalSearchViewModel()
             {
                 Count = results.Count,

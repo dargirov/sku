@@ -132,4 +132,10 @@
   <data name="Add category" xml:space="preserve">
     <value>Добави категория</value>
   </data>
+  <data name="Import products" xml:space="preserve">
+    <value>Импортиране на продукти</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
 </root>

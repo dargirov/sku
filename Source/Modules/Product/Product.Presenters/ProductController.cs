@@ -110,11 +110,13 @@ namespace Product.Presenters
             }
 
             var viewModel = Mapper.Map<EditViewModel>(product);
+            var settings = await _productServices.GetSettingsAsync();
 
             viewModel.Stores = stores;
             viewModel.Categories = categories.OrderBy(x => x.Name).ToSelectList(c => c.Id.ToString(), c => c.Name, viewModel.CategoryId, false);
             viewModel.Manufacturers = manufacturers.OrderBy(x => x.Name).ToSelectList(s => s.Id.ToString(), s => s.Name, viewModel.SupplierId, false);
             viewModel.Suppliers = suppliers.OrderBy(x => x.Name).ToSelectList(s => s.Id.ToString(), s => s.Name, viewModel.SupplierId, true);
+            viewModel.HideMainInfo = settings?.HideMainInfo ?? false;
 
             return View(viewModel);
         }
@@ -409,6 +411,37 @@ namespace Product.Presenters
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Settings()
+        {
+            var settings = await _productServices.GetSettingsAsync();
+            var viewModel = Mapper.Map<SettingsViewModel>(settings);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Settings(SettingsRequestModel model)
+        {
+            var settings = await _productServices.GetSettingsAsync();
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.GetErrors().ForEach(x => Messages.AddWarning(x));
+            }
+            else
+            {
+                settings = Mapper.Map(model, settings);
+                if (await _productServices.EditSettingsAsync(settings, Messages))
+                {
+                    Messages.AddSuccess("Settings Edited");
+                }
+            }
+
+            return RedirectToAction(nameof(Settings));
         }
     }
 }

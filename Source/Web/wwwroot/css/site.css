@@ -398,7 +398,7 @@ form select {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .store-quantities strong {
@@ -1393,6 +1393,14 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     margin-right: 10px;
 }
 
+.not-visible {
+    visibility: hidden;
+}
+
+.max-width {
+    width: 100% !important;
+}
+
 @media all and (max-width: 516px) {
     body > header > div {
         padding: 0 20px;
@@ -1529,7 +1537,7 @@ input[data-val-required], select[data-val-required], textarea[data-val-required]
     }
 
     .hidden-mobile {
-        display: none;
+        display: none !important;
     }
 
     #home-widgets {

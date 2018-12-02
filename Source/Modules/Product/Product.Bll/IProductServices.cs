@@ -20,5 +20,7 @@ namespace Product.Bll
         Task<bool> DeletePictureAsync(Entities.ProductPicture picture, Messages messages);
         Task<bool> DeleteCategoryAsync(Entities.ProductCategory productCategory, Messages messages);
         Task<bool> ImportAsync(IList<Dtos.Import.ProductDto> productDtos, Messages messages);
+        Task<Entities.ProductSettings> GetSettingsAsync();
+        Task<bool> EditSettingsAsync(Entities.ProductSettings settings, Messages messages);
     }
 }

@@ -101,6 +101,7 @@ namespace Request.Presenters
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> IndexRequest([FromBody]IndexCreateRequestModel model)
         {
             if (!IsAjax())
@@ -110,7 +111,7 @@ namespace Request.Presenters
 
             Entities.Request request = model.CreateNewRequest
                 ? new Entities.Request() { Status = Entities.RequestStatusEnum.New, StockRequests = new List<Entities.StockRequest>() }
-                : await _requestServices.GetByIdAsync(model.RequestId);
+                : await _requestServices.GetByIdAsync(model.RequestId.Value);
 
             if (request == null)
             {
@@ -119,7 +120,7 @@ namespace Request.Presenters
 
             await _requestServices.EditAsync(request, model.StockRequests, Messages);
 
-            return Ok();
+            return Ok(request.Id);
         }
 
         [HttpGet]
